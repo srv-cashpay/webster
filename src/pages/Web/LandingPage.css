@@ -413,33 +413,173 @@ body {
   margin-top: 2rem;
   font-size: 0.9rem;
 }
-
-
-
-
-
 /* ===== Responsive ===== */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
+  .hero {
+    padding: 70px 30px;
+  }
+
+  .hero-text h1 {
+    font-size: 2.6rem;
+  }
+
+  .hero-text p {
+    font-size: 1.1rem;
+    max-width: 450px;
+  }
+
+  .hero-image {
+    max-width: 380px;
+  }
+
+  .about-container,
+  .mission-container,
+  .vision-container {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
   .navbar {
     flex-direction: column;
     align-items: flex-start;
+    gap: 8px;
+    padding: 15px 25px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
     gap: 10px;
   }
 
   .hero {
     flex-direction: column;
     text-align: center;
+    padding: 60px 25px;
   }
 
   .hero-text h1 {
-    font-size: 2.2rem;
+    font-size: 2.3rem;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+    max-width: 100%;
   }
 
   .hero-buttons {
     justify-content: center;
+    gap: 10px;
+  }
+
+  .hero-image {
+    width: 100%;
+    max-width: 320px;
+    margin-top: 25px;
   }
 
   .feature-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .about-container,
+  .mission-container,
+  .vision-container {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 1.5rem;
+  }
+
+  .about-text,
+  .mission-text,
+  .vision-text {
+    min-width: 100%;
+  }
+
+  .about-image img,
+.mission-image img,
+.vision-image img,
+.hero-image {
+  width: 100%;
+  max-width: 400px; /* maksimal tetap 400px */
+  height: auto; /* proporsional */
+}
+
+  .about-text p,
+  .mission-text p,
+  .vision-text p {
+    font-size: 1rem;
+    text-align: center !important;
+  }
+
+  .contact-form {
+    width: 100%;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  .hero-text h1 {
+    font-size: 2rem;
+  }
+
+  .hero-text p {
+    font-size: 0.95rem;
+  }
+
+  .btn-primary,
+  .btn-outline {
+    padding: 7px 14px;
+    font-size: 0.9rem;
+  }
+
+  .section {
+    padding: 50px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-text h1 {
+    font-size: 1.7rem;
+  }
+
+  .hero-text p {
+    font-size: 0.9rem;
+  }
+
+  .about-text h2,
+  .mission-text h2,
+  .vision-text h2 {
+    font-size: 1.4rem;
+  }
+
+  .about-text p,
+  .mission-text p,
+  .vision-text p {
+    font-size: 0.88rem;
+  }
+
+  .hero-buttons {
+    gap: 8px;
+  }
+
+  .feature-card {
+    padding: 18px 12px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .footer {
+    font-size: 0.85rem;
+    padding: 15px 10px;
   }
 }

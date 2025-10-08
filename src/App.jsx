@@ -7,7 +7,7 @@ import User from "./pages/User";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Search from "./pages/Search";
-import Product from "./pages/Product/ListProduct";
+import Product from "./pages/Product/List";
 import LandingPage from "./pages/Web/Landing";
 import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
 
@@ -30,9 +30,9 @@ function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar }) {
           <Route path="/harbour" element={<Dashboard onLogout={onLogout} />} />
           <Route path="/user" element={<User onLogout={onLogout} />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/list" element={<Product />} />
+          <Route path="/product/list" element={<Product />} />
           {/* Default redirect jika route tidak dikenal */}
-          <Route path="*" element={<Navigate to="/harbour" />} />
+          {/* <Route path="*" element={<Navigate to="/harbour" />} /> */}
         </Routes>
       </div>
     </div>

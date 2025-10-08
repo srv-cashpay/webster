@@ -196,13 +196,22 @@ const Login = ({ onLogin }) => {
         style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
         <input
-          type="text"
+          type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={elementStyle}
-          onFocus={(e) => (e.target.style.borderColor = "#52796f")}
-          onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+          style={{
+          ...elementStyle,
+          display: "flex",
+          alignItems: "center",
+          textAlign: "left",
+          justifyContent: "center",
+          backgroundColor: "white",
+          color: "#555",
+          marginBottom: "20px",
+        }}
+          onFocus={(e) => (e.target.style.borderColor = "#d1d1d1")}
+          onBlur={(e) => (e.target.style.borderColor = "#d1d1d1s")}
         />
 
         {showPassword && (

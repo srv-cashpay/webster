@@ -149,12 +149,21 @@ const handleSignup = async (e) => {
         onSubmit={handleSignup}
         style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
-        <input
+          <input
           type="text"
           placeholder="Full Name"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          style={elementStyle}
+          style={{
+          ...elementStyle,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+          color: "#555",
+          marginBottom: "20px",
+        }}
+          
           onFocus={(e) => (e.target.style.borderColor = "#52796f")}
           onBlur={(e) => (e.target.style.borderColor = "#ccc")}
         />

@@ -7,9 +7,8 @@ body, html {
   color: #333;
   scroll-behavior: smooth;
 
-}
 
-/* Layout utama */
+}/* Layout utama */
 .app-container {
   display: flex;
   height: 100vh; /* penuh layar */
