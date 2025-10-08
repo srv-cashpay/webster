@@ -1,0 +1,172 @@
+/* Reset & basic */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fff;
+  color: #333;
+  scroll-behavior: smooth;
+
+}
+
+/* Layout utama */
+.app-container {
+  display: flex;
+  height: 100vh; /* penuh layar */
+  width: 100vw;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: #f2f2f2;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: width 0.3s;
+  overflow: hidden;
+  height: 100vh;       /* full height */
+  position: fixed; /* tetap di kiri */
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar.expanded {
+  width: 250px;
+}
+
+.sidebar h1 {
+  font-size: 14px;
+  margin-bottom: 40px;
+  transition: opacity 0.3s;
+    color: #000000;
+}
+
+.sidebar.collapsed h1 {
+  opacity: 0;
+}
+.sidebar.collapsed ul li a {
+  font-size: 12px;       /* sembunyikan teks */
+  padding: 12px 0;    /* hanya icon/space tersisa */
+    padding-left: 10px;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+    flex: 1;             /* supaya mengambil space tersisa */
+  overflow-y: auto;    /* scroll jika terlalu panjang */
+
+}
+
+.sidebar ul li a {
+  display: block;
+  padding: 6px 10px;   /* lebih compact */
+  border-radius: 5px;
+  color: #000000;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.sidebar ul li a:hover {
+  background-color: #fff;
+}
+
+.sidebar ul li a.active {
+  background-color: #d9d9d9; /* subtle highlight */
+}
+
+.sidebar-header h1 {
+  font-size: 14px;
+  color: #000000;
+  margin: 0;
+  white-space: nowrap; /* teks tidak pecah */
+}
+/* Toggle button */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px; /* jarak antara judul & tombol */
+}
+
+.toggle-btn {
+  background: none;          /* tidak pakai warna background */
+  border: none;              /* hilangkan border */
+  color: #52796f;            /* warna icon */
+  font-size: 15px;           /* ukuran icon */
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.toggle-btn:hover {
+  color: #354f52;            /* hover icon */
+}
+
+/* Content area */
+.content {
+  margin-left: 250px; /* lebar default sidebar */
+  flex: 1;
+  height: 100vh; /* penuh tinggi layar */
+  overflow-y: auto; /* scroll hanya di content */
+  padding: 20px;
+  transition: margin-left 0.3s;
+}
+
+.sidebar.collapsed ~ .content {
+  margin-left: 70px; /* menyesuaikan sidebar saat collapsed */
+}
+
+/* Header */
+.header {
+  background-color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+/* Cards */
+.card-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.card {
+  background-color: white;
+  padding: 20px;
+  flex: 1 1 200px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+  color: #555;
+  margin: 0;
+}
+
+.card p {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 10px 0 0 0;
+}
+
+/* Chart */
+.chart-container {
+  margin-top: 30px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
