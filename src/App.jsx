@@ -30,7 +30,7 @@ function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar }) {
           <Route path="/harbour" element={<Dashboard onLogout={onLogout} />} />
           <Route path="/user" element={<User onLogout={onLogout} />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/product/list" element={<Product />} />
+          <Route path="/list" element={<Product />} />
           {/* Default redirect jika route tidak dikenal */}
           <Route path="*" element={<Navigate to="/harbour" />} />
         </Routes>
