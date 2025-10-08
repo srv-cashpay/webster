@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaPen, FaTrash } from "react-icons/fa";
-import Headbar from "./Headbar";
+import Headbar from "./headbar";
 import { fetchProducts } from '../../services/product/api';
 
 const List = () => {

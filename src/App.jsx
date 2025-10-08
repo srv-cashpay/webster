@@ -7,7 +7,7 @@ import User from "./pages/User";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Search from "./pages/Search";
-import Product from "../src/pages/product/list";
+import Product from "./pages/product/list";
 import LandingPage from "./pages/Web/Landing";
 import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
 
