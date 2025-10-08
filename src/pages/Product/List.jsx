@@ -3,7 +3,7 @@ import { FaPen, FaTrash } from "react-icons/fa";
 import Headbar from "./Headbar";
 import { fetchProducts } from '../../services/product/api';
 
-const DataTablePage = () => {
+const List = () => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(10);
@@ -170,4 +170,4 @@ const btnEdit = { padding: "5px 8px", marginRight: "6px", borderRadius: "4px", b
 const btnDelete = { padding: "5px 8px", borderRadius: "4px", border: "1px solid #dc3545", backgroundColor: "#f8f9fa", cursor: "pointer" };
 const pageBtn = { padding: "6px 10px", borderRadius: "3px", border: "1px solid #ccc", cursor: "pointer" };
 
-export default DataTablePage;
+export default List;
