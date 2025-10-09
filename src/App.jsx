@@ -10,6 +10,7 @@ import Search from "./pages/Search";
 import Product from "./pages/Product/List";
 import LandingPage from "./pages/Web/Landing";
 import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
+import SignupForm from "./pages/SignupForm";
 
 import "./App.css";
 
@@ -73,6 +74,8 @@ function App() {
             )
           }
         />
+                <Route path="/signup/form" element={<SignupForm />} />
+
         <Route
           path="/signup"
           element={

@@ -225,6 +225,7 @@ const Login = ({ onLogin }) => {
                 ...elementStyle,
                 paddingRight: "40px",
                 textAlign: "left",
+                backgroundColor: "white",
               }}
               onFocus={(e) => (e.target.style.borderColor = "#52796f")}
               onBlur={(e) => (e.target.style.borderColor = "#ccc")}
@@ -245,20 +246,26 @@ const Login = ({ onLogin }) => {
             </span>
           </div>
         )}
-
-        <button
-          type="submit"
-          style={{
-            ...buttonStyle,
-            opacity: loading ? 0.6 : 1,
-            cursor: loading ? "not-allowed" : "pointer",
-          }}
-          disabled={loading}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#405d50")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#52796f")}
-        >
-          {showPassword ? (loading ? "Logging in..." : "Sign In") : "Continue"}
-        </button>
+      <button
+        type="submit"
+        style={{
+          ...buttonStyle,
+          opacity:
+            loading || (!showPassword && !email.includes("@")) ? 0.5 : 1,
+          cursor:
+            loading || (!showPassword && !email.includes("@"))
+              ? "not-allowed"
+              : "pointer",
+        }}
+        disabled={loading || (!showPassword && !email.includes("@"))}
+        onMouseEnter={(e) => {
+          if (!loading && (showPassword || email.includes("@")))
+            e.target.style.backgroundColor = "#405d50";
+        }}
+        onMouseLeave={(e) => (e.target.style.backgroundColor = "#52796f")}
+      >
+        {showPassword ? (loading ? "Logging in..." : "Sign In") : "Continue"}
+      </button>
       </form>
     </div>
   );

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FaPen, FaTrash } from "react-icons/fa";
+import { FaPen, FaTrash, FaImage } from "react-icons/fa";
 import Headbar from "./Headbar";
 import { fetchProducts } from '../../services/product/api';
+import ProductModal from "./ProductModal";
 
 const List = () => {
   const [data, setData] = useState([]);
@@ -11,6 +12,15 @@ const List = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [searchCategory, setSearchCategory] = useState("all");
   const [totalRows, setTotalRows] = useState(0);
+  const [showModal, setShowModal] = useState(false); // 🟢 state modal
+  const [newProduct, setNewProduct] = useState({
+    product_name: "",
+    price: "",
+    stock: "",
+  });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -43,6 +53,28 @@ const List = () => {
     return row.product_name.toLowerCase().includes(term) || row.id.toLowerCase().includes(term);
   });
 
+  const handleAddProduct = () => {
+    if (!newProduct.product_name || !newProduct.price) {
+      alert("Harap isi semua field");
+      return;
+    }
+
+    const newItem = {
+      id: "P" + (data.length + 1),
+      product_name: newProduct.product_name,
+      price: parseInt(newProduct.price),
+      stock: newProduct.stock || 0,
+      created_at: new Date().toISOString().split("T")[0],
+      status: 1,
+      image: null,
+    };
+
+    setData([newItem, ...data]);
+    setNewProduct({ product_name: "", price: "", stock: "" });
+    setShowModal(false);
+  };
+
+
   const totalPages = Math.ceil(totalRows / limit);
   const isAllSelected = filteredData.every((row) => selectedRows.includes(row.id));
 
@@ -60,11 +92,18 @@ const List = () => {
   };
 
   const handleEdit = (row) => alert(`Edit data ${row.product_name}`);
-  const handleDelete = (row) => {
-    if (window.confirm(`Hapus data ${row.product_name}?`)) {
-      setData(data.filter(d => d.id !== row.id));
-      setSelectedRows(selectedRows.filter(id => id !== row.id));
-    }
+ 
+    const confirmDelete = () => {
+    if (!selectedProduct) return;
+    setData(data.filter((d) => d.id !== selectedProduct.id));
+    setSelectedRows(selectedRows.filter((id) => id !== selectedProduct.id));
+    setShowDeleteModal(false);
+    setSelectedProduct(null);
+  };
+
+  const handleDeleteClick = (row) => {
+    setSelectedProduct(row);
+    setShowDeleteModal(true);
   };
 
   return (
@@ -81,6 +120,7 @@ const List = () => {
           data={data}
           setData={setData}
           setSelectedRows={setSelectedRows}
+          onAddNew={() => setShowModal(true)} // 🟢 kirim fungsi ke Headbar
         />
       </div>
 
@@ -115,7 +155,12 @@ const List = () => {
                       alt={row.product_name} style={{ width: "40px", height: "40px", borderRadius: "4px" }} />
                   </td>
                   <td style={tdText}>{row.id}</td>
-                  <td style={tdText}>{row.product_name}</td>
+                   <td
+                    style={nameClickable}
+                    onClick={() => handleEdit(row)}
+                  >
+                    {row.product_name}
+                  </td>
                   <td style={tdCenter}>{row.created_at}</td>
                   <td style={tdCenter}>{row.stock}</td>
                   <td style={tdCenter}>Rp {parseInt(row.price).toLocaleString("id-ID")}</td>
@@ -131,8 +176,9 @@ const List = () => {
                     </span>
                   </td>
                   <td style={tdCenter}>
-                    <button onClick={() => handleEdit(row)} style={btnEdit}><FaPen size={12} color="#007bff" /></button>
-                    <button onClick={() => handleDelete(row)} style={btnDelete}><FaTrash size={12} color="#dc3545" /></button>
+                    <button onClick={() => handleEdit(row)} style={btnEdit}><FaImage size={12} color="#000" /></button>
+                    <button onClick={() => handleEdit(row)} style={btnEdit}><FaPen size={12} color="#000" /></button>
+                    <button onClick={() => handleDeleteClick(row)} style={btnDelete}><FaTrash size={12} color="#dc3545" /></button>
                   </td>
                 </tr>
               ))
@@ -158,6 +204,35 @@ const List = () => {
         ))}
         <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} style={pageBtn}>Next</button>
       </div>
+      {/* ===== Modal Tambah Produk ===== */}
+      {showModal && (
+        <ProductModal
+          newProduct={newProduct}
+          setNewProduct={setNewProduct}
+          handleAddProduct={handleAddProduct}
+          setShowModal={setShowModal}
+        />
+      )}
+      {/* ===== Modal Konfirmasi Delete ===== */}
+      {showDeleteModal && (
+        <div style={modalOverlay}>
+          <div style={deleteModalContent}>
+            <h3 style={{ marginTop: 0 }}>Konfirmasi Hapus</h3>
+            <p>
+              Apakah Anda yakin ingin menghapus produk{" "}
+              <strong>{selectedProduct?.product_name}</strong>?
+            </p>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "15px" }}>
+              <button style={cancelBtn} onClick={() => setShowDeleteModal(false)}>
+                Batal
+              </button>
+              <button style={deleteBtn} onClick={confirmDelete}>
+                Hapus
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -166,8 +241,54 @@ const List = () => {
 const thStyle = { padding: "8px", textAlign: "center", borderBottom: "1px solid #ccc", fontWeight: "bold", fontSize: "13px", backgroundColor: "#f9f9f9" };
 const tdText = { padding: "8px", textAlign: "left" };
 const tdCenter = { padding: "8px", textAlign: "center" };
-const btnEdit = { padding: "5px 8px", marginRight: "6px", borderRadius: "4px", border: "1px solid #007bff", backgroundColor: "#f8f9fa", cursor: "pointer" };
+const btnEdit = { padding: "5px 8px", marginRight: "6px", borderRadius: "4px", border: "1px solid #000", backgroundColor: "#f8f9fa", cursor: "pointer" };
 const btnDelete = { padding: "5px 8px", borderRadius: "4px", border: "1px solid #dc3545", backgroundColor: "#f8f9fa", cursor: "pointer" };
 const pageBtn = { padding: "6px 10px", borderRadius: "3px", border: "1px solid #ccc", cursor: "pointer" };
+const nameClickable = {
+  ...tdText,
+  color: "#007bff",
+  cursor: "pointer",
+  textDecoration: "none",
+  fontWeight: 500,
+  transition: "0.2s",
+};
+nameClickable[":hover"] = {
+  textDecoration: "underline",
+};
+const modalOverlay = {
+  position: "fixed",
+  inset: 0,
+  backgroundColor: "rgba(0,0,0,0.5)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 999,
+};
+
+const deleteModalContent = {
+  backgroundColor: "#fff",
+  padding: "25px",
+  borderRadius: "8px",
+  width: "320px",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+};
+
+const cancelBtn = {
+  backgroundColor: "#ccc",
+  border: "none",
+  padding: "8px 12px",
+  borderRadius: "4px",
+  cursor: "pointer",
+};
+
+const deleteBtn = {
+  backgroundColor: "#dc3545",
+  color: "#fff",
+  border: "none",
+  padding: "8px 12px",
+  borderRadius: "4px",
+  cursor: "pointer",
+};
+
 
 export default List;

@@ -11,6 +11,7 @@ const Headbar = ({
   setData,
   data,
   setSelectedRows,
+  onAddNew
 }) => {
   return (
     <div
@@ -29,8 +30,7 @@ const Headbar = ({
     >
       {/* 🔹 Kiri: tombol aksi */}
       <div style={{ display: "flex", gap: "8px" }}>
-        <button
-          onClick={() => alert("Tambah Data baru")}
+        <button onClick={onAddNew}
           style={btnStyle}
         >
           + New
