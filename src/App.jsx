@@ -13,6 +13,7 @@ import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
 import SignupForm from "./pages/SignupForm";
 
 import "./App.css";
+import MenuList from "./pages/Web/order/MenuList";
 
 function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar }) {
   return (
@@ -33,7 +34,7 @@ function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar }) {
           <Route path="/search" element={<Search />} />
           <Route path="/product/list" element={<Product />} />
           {/* Default redirect jika route tidak dikenal */}
-          {/* <Route path="*" element={<Navigate to="/harbour" />} /> */}
+          {/* <Route path="*" element={<Navigate to="/" />} /> */}
         </Routes>
       </div>
     </div>
@@ -74,7 +75,8 @@ function App() {
             )
           }
         />
-                <Route path="/signup/form" element={<SignupForm />} />
+        <Route path="/signup/form" element={<SignupForm />} />
+        <Route path="/menu" element={<MenuList />} />
 
         <Route
           path="/signup"
