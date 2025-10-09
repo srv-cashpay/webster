@@ -42,7 +42,6 @@ export default function LandingPage() {
         <div className="nav-links">
           <button onClick={() => scrollToSection(featuresRef)}>Features</button>
           <button onClick={() => scrollToSection(aboutRef)}>About</button>
-          <button onClick={() => scrollToSection(contactRef)}>Contact</button>
           <button
               className="btn-login"
               onClick={() => navigate("/login?ref=auth")}

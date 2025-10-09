@@ -11,6 +11,10 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
+  const handleContinue = () => {
+    navigate("/signup/form");
+  };
+
   const elementStyle = {
     width: "320px",
     maxWidth: "100%",
@@ -112,41 +116,8 @@ const handleSignup = async (e) => {
         Join the future of digital payments
       </h4>
 
-      <button
-        type="button"
-        onClick={handleGoogleSignup}
-        style={{
-          ...elementStyle,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "white",
-          color: "#555",
-          marginBottom: "20px",
-        }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = "white")}
-      >
-        <FcGoogle style={{ width: "20px", height: "20px", marginRight: "10px" }} />
-        Sign up with Google
-      </button>
-
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          width: "320px",
-          maxWidth: "100%",
-          marginBottom: "20px",
-        }}
-      >
-        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
-        <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>OR</span>
-        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
-      </div>
 
       <form
-        onSubmit={handleSignup}
         style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
           <input
@@ -176,11 +147,46 @@ const handleSignup = async (e) => {
             cursor: loading ? "not-allowed" : "pointer",
           }}
           disabled={loading}
+          onClick={handleContinue}
           onMouseEnter={(e) => (e.target.style.backgroundColor = "#405d50")}
           onMouseLeave={(e) => (e.target.style.backgroundColor = "#52796f")}
         >
-          {loading ? "Creating Account..." : "Sign Up"}
+          {loading ? "Creating Account..." : "Continue"}
         </button>
+        <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          width: "320px",
+          maxWidth: "100%",
+          marginBottom: "20px",
+        }}
+      >
+        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
+        <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>OR</span>
+        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
+      </div>
+              <button
+        type="button"
+        onClick={handleGoogleSignup}
+        style={{
+          ...elementStyle,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+          color: "#555",
+          marginBottom: "20px",
+        }}
+        onMouseEnter={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+        onMouseLeave={(e) => (e.target.style.backgroundColor = "white")}
+      >
+        <FcGoogle style={{ width: "20px", height: "20px", marginRight: "10px" }} />
+        Sign up with Google
+      </button>
+
+      
+
       </form>
     </div>
   );
