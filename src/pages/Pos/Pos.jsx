@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./POS.css";
+import "./Pos.css";
 import Headbar from "./Headbar";
 import { getProducts } from "../../services/pos/get_product";
 
