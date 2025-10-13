@@ -1,16 +1,55 @@
 import { NavLink } from "react-router-dom";
+import {
+  FaSearch,
+  FaUser,
+  FaShoppingCart,
+  FaBoxOpen,
+  FaCashRegister,
+  FaUsers,
+  FaChartLine,
+  FaMoneyBillWave,
+  FaFileInvoice,
+  FaEnvelope,
+  FaLifeRing,
+  FaCog,
+  FaBell,
+  FaUsersCog,
+  FaTasks,
+  FaFileAlt,
+  FaPuzzlePiece,
+} from "react-icons/fa";
 
 const Sidebar = ({ collapsed }) => {
-  const linkClass = ({ isActive }) =>
-    isActive ? "active" : "";
+  const linkClass = ({ isActive }) => (isActive ? "active" : "");
+
+  const menuItems = [
+    { label: "Search", to: "/search", icon: <FaSearch /> },
+    { label: "User", to: "/user", icon: <FaUser /> },
+    { label: "Orders", to: "/orders", icon: <FaShoppingCart /> },
+    { label: "Products", to: "/product/list", icon: <FaBoxOpen /> },
+    { label: "Pos", to: "/pos", icon: <FaCashRegister /> },
+    { label: "Customers", to: "/customers", icon: <FaUsers /> },
+    { label: "Reports", to: "/reports", icon: <FaChartLine /> },
+    { label: "Finance", to: "/finance", icon: <FaMoneyBillWave /> },
+    { label: "Invoices", to: "/invoices", icon: <FaFileInvoice /> },
+    { label: "Messages", to: "/messages", icon: <FaEnvelope /> },
+    { label: "Support", to: "/support", icon: <FaLifeRing /> },
+    { label: "Settings", to: "/settings", icon: <FaCog /> },
+    { label: "Notifications", to: "/notifications", icon: <FaBell /> },
+    { label: "Users", to: "/users", icon: <FaUsersCog /> },
+    { label: "Activities", to: "/activities", icon: <FaTasks /> },
+    { label: "Logs", to: "/logs", icon: <FaFileAlt /> },
+    { label: "Integrations", to: "/integrations", icon: <FaPuzzlePiece /> },
+  ];
 
   return (
     <div
       className={`sidebar ${collapsed ? "collapsed" : "expanded"}`}
       style={{
         position: "fixed",
-        top: "50px", // di bawah topbar
+        top: "50px",
         left: 0,
+        padding: "2px 0", // beri padding vertikal saja
         bottom: 0,
         width: collapsed ? "70px" : "250px",
         transition: "width 0.3s",
@@ -25,26 +64,29 @@ const Sidebar = ({ collapsed }) => {
           padding: "10px",
           listStyle: "none",
           margin: 0,
-          fontSize: collapsed ? "11px" : "14px", // ukuran font disesuaikan
+          fontSize: collapsed ? "11px" : "14px",
           transition: "font-size 0.3s ease",
         }}
       >
-        <li><NavLink to="/search" className={linkClass}>Search</NavLink></li>
-        <li><NavLink to="/user" className={linkClass}>User</NavLink></li>
-        <li><NavLink to="/orders" className={linkClass}>Orders</NavLink></li>
-        <li><NavLink to="/product/list" className={linkClass}>Products</NavLink></li>
-        <li><NavLink to="/customers" className={linkClass}>Customers</NavLink></li>
-        <li><NavLink to="/reports" className={linkClass}>Reports</NavLink></li>
-        <li><NavLink to="/finance" className={linkClass}>Finance</NavLink></li>
-        <li><NavLink to="/invoices" className={linkClass}>Invoices</NavLink></li>
-        <li><NavLink to="/messages" className={linkClass}>Messages</NavLink></li>
-        <li><NavLink to="/support" className={linkClass}>Support</NavLink></li>
-        <li><NavLink to="/settings" className={linkClass}>Settings</NavLink></li>
-        <li><NavLink to="/notifications" className={linkClass}>Notifications</NavLink></li>
-        <li><NavLink to="/users" className={linkClass}>Users</NavLink></li>
-        <li><NavLink to="/activities" className={linkClass}>Activities</NavLink></li>
-        <li><NavLink to="/logs" className={linkClass}>Logs</NavLink></li>
-        <li><NavLink to="/integrations" className={linkClass}>Integrations</NavLink></li>
+        {menuItems.map((item) => (
+          <li key={item.to} style={{ marginBottom: "10px" }}>
+            <NavLink
+              to={item.to}
+              className={linkClass}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                color: "#333",
+                textDecoration: "none",
+                padding: "6px",
+              }}
+            >
+              <span style={{ fontSize: "12px" }}>{item.icon}</span>
+              {!collapsed && <span>{item.label}</span>}
+            </NavLink>
+          </li>
+        ))}
       </ul>
     </div>
   );

@@ -57,7 +57,7 @@ const handleSignup = async (e) => {
 
   try {
     const response = await axios.post(
-      "https://cashpay.my.id:2356/api/auth/signup",
+      "https://cashpay.my.id/api/auth/signup",
       {
         full_name: fullName,
       },

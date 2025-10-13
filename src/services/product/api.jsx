@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 // 🔧 Membuat instance Axios
 const axiosInstance = axios.create({
-  baseURL: "https://cashpay.my.id:2358/api",
+  baseURL: "https://cashpay.my.id/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,7 +21,7 @@ const refreshAuthToken = async () => {
 
   try {
     const response = await axios.post(
-      "https://cashpay.my.id:2356/api/auth/refresh",
+      "https://cashpay.my.id/api/auth/refresh",
       { refresh_token: refreshToken },
       {
         headers: {
@@ -156,6 +156,16 @@ export const updateExistingProduct = async (product) => {
   }
 };
 
+// 📦 Get Product by ID
+export const fetchProductById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/merchant/product/${id}`);
+    return response.data.data; // Mengembalikan object product
+  } catch (error) {
+    console.error(`Error fetching product with ID ${id}:`, error);
+    throw error;
+  }
+};
 export const uploadImage = async (id, file) => {
   try {
     const formData = new FormData();

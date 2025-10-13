@@ -1,11 +1,73 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import {
+  fetchMerkData,
+  fetchCategoryData,
+  createProduct,
+} from "../../services/product/api";
+import { toast } from "react-toastify";
 
-const ProductModal = ({
-  newProduct,
-  setNewProduct,
-  handleAddProduct,
-  setShowModal,
-}) => {
+const ProductModal = ({ setShowModal, onSuccess }) => {
+  const [newProduct, setNewProduct] = useState({
+    barcode: "",
+    sku: "",
+    product_name: "",
+    price: "",
+    stock: "",
+    min_stock: "",
+    description: "",
+    status: "active",
+    merk_id: "",
+    category_id: "",
+  });
+
+  const [merkList, setMerkList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+
+  useEffect(() => {
+    const loadDropdownData = async () => {
+      try {
+        const merkRes = await fetchMerkData();
+        const categoryRes = await fetchCategoryData();
+        setMerkList(merkRes?.data || merkRes || []);
+        setCategoryList(categoryRes?.data || categoryRes || []);
+      } catch (error) {
+        console.error("Gagal memuat data dropdown:", error);
+      }
+    };
+    loadDropdownData();
+  }, []);
+
+  const handleAddProduct = async () => {
+    if (!newProduct.product_name || !newProduct.price) {
+      toast.warning("Harap isi semua field wajib");
+      return;
+    }
+
+    try {
+      const payload = {
+        barcode: newProduct.barcode,
+        sku: newProduct.sku,
+        product_name: newProduct.product_name,
+        price: parseInt(newProduct.price) || 0,
+        stock: parseInt(newProduct.stock) || 0,
+        min_stock: parseInt(newProduct.min_stock) || 0,
+        description: newProduct.description,
+        status: newProduct.status === "active" ? 1 : 2,
+        merk_id: newProduct.merk_id || null,
+        category_id: newProduct.category_id || null,
+
+      };
+
+      await createProduct(payload);
+      toast.success("✅ Produk berhasil ditambahkan!");
+      setShowModal(false);
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error("Gagal menambahkan produk:", error);
+      toast.error("❌ Gagal menambahkan produk!");
+    }
+  };
+
   return (
     <div style={modalOverlay}>
       <div style={modalBox}>
@@ -20,11 +82,22 @@ const ProductModal = ({
         >
           {/* Kolom Kiri */}
           <div style={column}>
+            <label style={labelStyle}>Barcode</label>
+            <input
+              type="text"
+              placeholder="Contoh: 8991234567890"
+              value={newProduct.barcode}
+              onChange={(e) =>
+                setNewProduct({ ...newProduct, barcode: e.target.value })
+              }
+              style={inputStyle}
+            />
+
             <label style={labelStyle}>SKU / Kode Produk</label>
             <input
               type="text"
               placeholder="SKU12345"
-              value={newProduct.sku || ""}
+              value={newProduct.sku}
               onChange={(e) =>
                 setNewProduct({ ...newProduct, sku: e.target.value })
               }
@@ -43,43 +116,49 @@ const ProductModal = ({
               required
             />
 
-            {/* Merek & Kategori sejajar */}
-            <div style={rowGroup}>
+            {/* Merek & Kategori */}
+           <div style={rowGroup}>
               <div style={{ flex: 1 }}>
                 <label style={labelStyle}>Merek</label>
-                <input
-                  type="text"
-                  placeholder="Contoh: Adidas"
-                  value={newProduct.brand || ""}
+                <select
+                  value={newProduct.merk_id}
                   onChange={(e) =>
-                    setNewProduct({ ...newProduct, brand: e.target.value })
+                    setNewProduct({ ...newProduct, merk_id: e.target.value })
                   }
                   style={inputSmall}
-                />
+                  required
+                >
+                  <option value="">Pilih Merek</option>
+                  {merkList.map((merk) => (
+                    <option key={merk.id} value={merk.id}>
+                      {merk.merk_name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div style={{ flex: 1 }}>
                 <label style={labelStyle}>Kategori</label>
                 <select
-                  value={newProduct.category || ""}
+                  value={newProduct.category_id}
                   onChange={(e) =>
-                    setNewProduct({ ...newProduct, category: e.target.value })
+                    setNewProduct({ ...newProduct, category_id: e.target.value })
                   }
                   style={inputSmall}
                   required
                 >
                   <option value="">Pilih Kategori</option>
-                  <option value="fashion">Fashion</option>
-                  <option value="elektronik">Elektronik</option>
-                  <option value="makanan">Makanan</option>
-                  <option value="aksesoris">Aksesoris</option>
-                  <option value="lainnya">Lainnya</option>
+                  {categoryList.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.category_name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
 
-            {/* Harga & Stok sejajar */}
-            <div style={rowGroup}>
+            {/* Harga, Stok, Minimal Stok (3 sejajar) */}
+            <div style={rowGroup3}>
               <div style={{ flex: 1 }}>
                 <label style={labelStyle}>Harga (Rp)</label>
                 <input
@@ -107,6 +186,20 @@ const ProductModal = ({
                   required
                 />
               </div>
+
+              <div style={{ flex: 1 }}>
+                <label style={labelStyle}>Minimal Stok</label>
+                <input
+                  type="number"
+                  placeholder="5"
+                  value={newProduct.min_stock}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, min_stock: e.target.value })
+                  }
+                  style={inputSmall}
+                  required
+                />
+              </div>
             </div>
           </div>
 
@@ -115,14 +208,13 @@ const ProductModal = ({
             <label style={labelStyle}>Deskripsi</label>
             <textarea
               placeholder="Tuliskan deskripsi produk..."
-              value={newProduct.description || ""}
+              value={newProduct.description}
               onChange={(e) =>
                 setNewProduct({ ...newProduct, description: e.target.value })
               }
               style={textareaStyle}
             />
 
-            {/* Status Produk (Option Button) */}
             <label style={labelStyle}>Status Produk</label>
             <div style={optionGroup}>
               <label style={optionLabel}>
@@ -221,6 +313,13 @@ const rowGroup = {
   marginTop: "10px",
 };
 
+const rowGroup3 = {
+  display: "flex",
+  gap: "20px",
+  marginTop: "10px",
+  flexWrap: "wrap",
+};
+
 const labelStyle = {
   marginTop: "10px",
   fontWeight: "600",
@@ -250,7 +349,6 @@ const textareaStyle = {
   resize: "vertical",
 };
 
-/* ⚙️ Option Button */
 const optionGroup = {
   display: "flex",
   alignItems: "center",
@@ -270,7 +368,7 @@ const optionLabel = {
 const radioBtn = {
   width: "16px",
   height: "16px",
-  accentColor: "#007bff", // warna biru elegan
+  accentColor: "#007bff",
 };
 
 const buttonGroup = {

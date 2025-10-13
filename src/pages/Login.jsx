@@ -48,7 +48,7 @@ const Login = ({ onLogin }) => {
 
     try {
       const response = await axios.post(
-        "https://cashpay.my.id:2356/api/auth/signin",
+        "https://cashpay.my.id/api/auth/signin",
         { email, password },
         { headers: { "X-Api-Key": "3f=Pr#g1@RU-nw=30" } }
       );

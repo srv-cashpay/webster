@@ -1,44 +1,12 @@
 import React, { useState } from "react";
-import { FaUser } from "react-icons/fa";
-import { FiLogOut } from "react-icons/fi";
+import { FaUserCog, FaShoppingBag } from "react-icons/fa"; // settings & order icon
 import { HiMenuAlt2 } from "react-icons/hi";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Setting from "../pages/Setting/Setting";
 
 const Topbar = ({ onToggleSidebar }) => {
-  const [loading, setLoading] = useState(false);
-
-  const handleLogout = async () => {
-    setLoading(true);
-    try {
-      const token = Cookies.get("token");
-
-      // Hit API logout
-      await axios.post(
-        "https://cashpay.my.id:2356/api/logout",
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      // Bersihkan token
-      Cookies.remove("token");
-      Cookies.remove("refresh_token");
-      localStorage.removeItem("token");
-
-      toast.success("Logout successful!", { autoClose: 1500 });
-
-      // Redirect / reload page atau callback
-      setTimeout(() => {
-        window.location.href = "/login"; // ganti sesuai routing
-      }, 1500);
-    } catch (error) {
-      toast.error(error.response?.data?.meta?.message || "Logout failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <>
@@ -69,28 +37,20 @@ const Topbar = ({ onToggleSidebar }) => {
           zIndex: 1000,
         }}
       >
-        {/* Kiri: Toggle + Logo + Judul */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <button
             onClick={onToggleSidebar}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "16px",
-            }}
+            style={{ background: "none", border: "none", cursor: "pointer", fontSize: "16px" }}
             title="Toggle Sidebar"
           >
-            <HiMenuAlt2 />
+            <HiMenuAlt2 color="#000" />
           </button>
 
-          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            Cashier Dashboard
-          </div>
+          <div style={{ fontSize: "18px", fontWeight: "bold" }}>Cashier Dashboard</div>
         </div>
 
-        {/* Kanan: User icon + Logout */}
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {/* Icon Pesanan Masuk */}
           <div
             style={{
               display: "flex",
@@ -102,36 +62,58 @@ const Topbar = ({ onToggleSidebar }) => {
               backgroundColor: "#f5f5f5",
               border: "1px solid #ccc",
               color: "#333",
+              cursor: "pointer",
             }}
+            title="Pesanan Masuk"
+            onClick={() => alert("Pesanan masuk clicked!")}
           >
-            <FaUser size={16} />
+            <FaShoppingBag size={16} />
           </div>
 
-          <button
-            onClick={handleLogout}
-            disabled={loading}
+          {/* Icon Settings */}
+          <div
+            onClick={() => setShowModal(true)}
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "6px",
-              padding: "6px 12px",
-              border: "1px solid #000",
-              backgroundColor: "#000",
-              color: "#fff",
-              borderRadius: "4px",
-              cursor: loading ? "not-allowed" : "pointer",
-              fontSize: "13px",
-              transition: "0.2s ease",
-              opacity: loading ? 0.6 : 1,
+              justifyContent: "center",
+              width: "34px",
+              height: "34px",
+              borderRadius: "50%",
+              backgroundColor: "#f5f5f5",
+              border: "1px solid #ccc",
+              color: "#333",
+              cursor: "pointer",
             }}
-            onMouseOver={(e) => !loading && (e.currentTarget.style.backgroundColor = "#222")}
-            onMouseOut={(e) => !loading && (e.currentTarget.style.backgroundColor = "#000")}
+            title="Settings"
           >
-            <FiLogOut size={14} />
-            {loading ? "Logging out..." : "Logout"}
-          </button>
+            <FaUserCog size={16} />
+          </div>
         </div>
       </div>
+
+      {/* Modal Settings */}
+      {showModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 2000,
+          }}
+          onClick={() => setShowModal(false)}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <Setting onClose={() => setShowModal(false)} />
+          </div>
+        </div>
+      )}
     </>
   );
 };

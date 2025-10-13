@@ -65,7 +65,7 @@ const SignupForm = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "https://cashpay.my.id:2356/api/auth/signup",
+        "https://cashpay.my.id/api/auth/signup",
         { email, whatsapp: `+62${whatsapp}`, password },
         { headers: { "X-Api-Key": "3f=Pr#g1@RU-nw=30" } }
       );

@@ -11,8 +11,24 @@ const Headbar = ({
   setData,
   data,
   setSelectedRows,
-  onAddNew
+  onAddNew,
+  isBulkEditMode,
+  setIsBulkEditMode,
+  handleSaveBulkEdit,
+  onBulkDelete, // ✅ Tambahkan ini!
 }) => {
+  const handleBulkEditClick = () => {
+    if (isBulkEditMode) {
+      handleSaveBulkEdit();
+    } else {
+      if (selectedRows.length === 0) {
+        alert("Tidak ada data yang dipilih!");
+        return;
+      }
+      setIsBulkEditMode(true);
+    }
+  };
+
   return (
     <div
       style={{
@@ -30,9 +46,7 @@ const Headbar = ({
     >
       {/* 🔹 Kiri: tombol aksi */}
       <div style={{ display: "flex", gap: "8px" }}>
-        <button onClick={onAddNew}
-          style={btnStyle}
-        >
+        <button onClick={onAddNew} style={btnStyle}>
           + New
         </button>
 
@@ -42,20 +56,24 @@ const Headbar = ({
               alert("Tidak ada data yang dipilih!");
               return;
             }
-            if (window.confirm(`Delete ${selectedRows.length} selected data?`)) {
-              setData(data.filter((d) => !selectedRows.includes(d.id)));
-              setSelectedRows([]);
-            }
+            // ✅ Ganti confirm jadi modal
+            if (typeof onBulkDelete === "function") onBulkDelete();
           }}
           disabled={selectedRows.length === 0}
           style={{
             ...btnStyle,
-            backgroundColor: selectedRows.length === 0 ? "#f9f9f9" : "#fff",
+            backgroundColor:
+              selectedRows.length === 0 ? "#f9f9f9" : "#fff",
             color: selectedRows.length === 0 ? "#aaa" : "#000",
-            cursor: selectedRows.length === 0 ? "not-allowed" : "pointer",
+            cursor:
+              selectedRows.length === 0 ? "not-allowed" : "pointer",
           }}
         >
           Bulk Delete
+        </button>
+
+        <button onClick={handleBulkEditClick} style={btnStyle}>
+          {isBulkEditMode ? "Save Changes" : "Bulk Edit"}
         </button>
 
         <button style={btnStyle} onClick={() => alert("Import Data")}>
@@ -66,7 +84,7 @@ const Headbar = ({
         </button>
       </div>
 
-      {/* 🔹 Kategori filter */}
+      {/* 🔹 Filter Kategori */}
       <select
         value={searchCategory}
         onChange={(e) => setSearchCategory(e.target.value)}
@@ -78,7 +96,7 @@ const Headbar = ({
         <option value="role">Role</option>
       </select>
 
-      {/* 🔹 Search input */}
+      {/* 🔹 Search Input */}
       <input
         type="text"
         placeholder="Search by name or email"

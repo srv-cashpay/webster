@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { FaPen, FaTrash, FaImage } from "react-icons/fa";
+import React, { useState, useEffect, useCallback } from "react";
 import Headbar from "./Headbar";
-import { fetchProducts } from '../../services/product/api';
+import { fetchProducts, createProduct, bulkDeleteProducts, fetchProductById  } from "../../services/product/api";
 import ProductModal from "./ProductModal";
+import DeleteModal from "./DeleteModal";
+import BulkDeleteModal from "./BulkDeleteModal"; // 🔹 Tambah import
+import Pagination from "./Pagination";
+import DataTable from "./DataTable"; 
+import ImageUploadModal from "./ImageUploadModal"; // 🔹 import modal baru
+import ProductDetailModal from "./ProductDetailModal"; // 🔹 import
 
 const List = () => {
   const [data, setData] = useState([]);
@@ -12,46 +17,42 @@ const List = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [searchCategory, setSearchCategory] = useState("all");
   const [totalRows, setTotalRows] = useState(0);
-  const [showModal, setShowModal] = useState(false); // 🟢 state modal
+  const [showModal, setShowModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [newProduct, setNewProduct] = useState({
     product_name: "",
     price: "",
     stock: "",
   });
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
+  const [isBulkEditMode, setIsBulkEditMode] = useState(false);
+  const [editableData, setEditableData] = useState({});
 
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const paginationData = { page: currentPage, limit, search };
-        const response = await fetchProducts(paginationData);
-
-        if (response && response.rows) {
-          setData(response.rows);
-          setTotalRows(response.total_rows || 0);
-        } else {
-          setData([]);
-          setTotalRows(0);
-        }
-      } catch (error) {
-        console.error("Gagal mengambil data produk:", error);
+  const loadProducts = useCallback(async () => {
+    try {
+      const paginationData = { page: currentPage, limit, search };
+      const response = await fetchProducts(paginationData);
+      if (response && response.rows) {
+        setData(response.rows);
+        setTotalRows(response.total_rows || 0);
+      } else {
         setData([]);
         setTotalRows(0);
       }
-    };
-
-    loadProducts();
+    } catch (error) {
+      console.error("Gagal mengambil data produk:", error);
+      setData([]);
+      setTotalRows(0);
+    }
   }, [currentPage, limit, search]);
 
-  const filteredData = data.filter((row) => {
-    if (!search.trim()) return true;
-    const term = search.toLowerCase();
-    if (searchCategory === "name") return row.product_name.toLowerCase().includes(term);
-    if (searchCategory === "id") return row.id.toLowerCase().includes(term);
-    return row.product_name.toLowerCase().includes(term) || row.id.toLowerCase().includes(term);
-  });
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   const handleAddProduct = () => {
     if (!newProduct.product_name || !newProduct.price) {
@@ -74,37 +75,36 @@ const List = () => {
     setShowModal(false);
   };
 
-
-  const totalPages = Math.ceil(totalRows / limit);
-  const isAllSelected = filteredData.every((row) => selectedRows.includes(row.id));
-
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedRows([...new Set([...selectedRows, ...filteredData.map(r => r.id)])]);
-    } else {
-      setSelectedRows(selectedRows.filter(id => !filteredData.some(r => r.id === id)));
+  const confirmBulkDelete = async () => {
+    try {
+      if (selectedRows.length === 0) return;
+      await bulkDeleteProducts(selectedRows);
+      await loadProducts();
+      setSelectedRows([]);
+      setShowBulkDeleteModal(false);
+    } catch (error) {
+      console.error("Bulk delete gagal:", error);
+      alert("Gagal menghapus data! Silakan coba lagi.");
     }
   };
 
-  const handleSelectRow = (id) => {
-    if (selectedRows.includes(id)) setSelectedRows(selectedRows.filter(r => r !== id));
-    else setSelectedRows([...selectedRows, id]);
-  };
+const handleShowDetail = async (row) => {
+  try {
+    const product = await fetchProductById(row.id); // API call
+    if (product) {
+      setSelectedProduct(product);
+      setShowDetailModal(true);
+    } else {
+      alert("Gagal mengambil detail produk!");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Terjadi kesalahan saat mengambil data produk.");
+  }
+};
 
-  const handleEdit = (row) => alert(`Edit data ${row.product_name}`);
- 
-    const confirmDelete = () => {
-    if (!selectedProduct) return;
-    setData(data.filter((d) => d.id !== selectedProduct.id));
-    setSelectedRows(selectedRows.filter((id) => id !== selectedProduct.id));
-    setShowDeleteModal(false);
-    setSelectedProduct(null);
-  };
 
-  const handleDeleteClick = (row) => {
-    setSelectedProduct(row);
-    setShowDeleteModal(true);
-  };
+  const totalPages = Math.ceil(totalRows / limit);
 
   return (
     <div style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", fontSize: "13px" }}>
@@ -120,175 +120,90 @@ const List = () => {
           data={data}
           setData={setData}
           setSelectedRows={setSelectedRows}
-          onAddNew={() => setShowModal(true)} // 🟢 kirim fungsi ke Headbar
+          onAddNew={() => setShowModal(true)}
+          isBulkEditMode={isBulkEditMode}
+          setIsBulkEditMode={setIsBulkEditMode}
+          handleSaveBulkEdit={() => {
+            const updatedData = data.map((row) =>
+              editableData[row.id] ? { ...row, ...editableData[row.id] } : row
+            );
+            setData(updatedData);
+            setEditableData({});
+            setIsBulkEditMode(false);
+          }}
+          onBulkDelete={() => setShowBulkDeleteModal(true)}
         />
       </div>
 
-      <div style={{ overflow: "auto", maxHeight: "80vh" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>
-                <input type="checkbox" checked={isAllSelected} onChange={handleSelectAll} />
-              </th>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>No</th>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>Image</th>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>ID</th>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>Name</th>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>Date</th>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>Stock</th>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>Price</th>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>Status</th>
-              <th style={{ ...thStyle, position: "sticky", top: 0, zIndex: 5 }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.length > 0 ? (
-              filteredData.map((row, index) => (
-                <tr key={row.id}>
-                  <td style={tdCenter}>
-                    <input type="checkbox" checked={selectedRows.includes(row.id)} onChange={() => handleSelectRow(row.id)} />
-                  </td>
-                  <td style={tdCenter}>{(currentPage - 1) * limit + index + 1}</td>
-                  <td style={tdCenter}>
-                    <img src={row.image?.file_path ? `https://cashpay.my.id:2358/${row.image.file_path}` : "https://via.placeholder.com/40"} 
-                      alt={row.product_name} style={{ width: "40px", height: "40px", borderRadius: "4px" }} />
-                  </td>
-                  <td style={tdText}>{row.id}</td>
-                   <td
-                    style={nameClickable}
-                    onClick={() => handleEdit(row)}
-                  >
-                    {row.product_name}
-                  </td>
-                  <td style={tdCenter}>{row.created_at}</td>
-                  <td style={tdCenter}>{row.stock}</td>
-                  <td style={tdCenter}>Rp {parseInt(row.price).toLocaleString("id-ID")}</td>
-                  <td style={tdCenter}>
-                    <span style={{
-                      backgroundColor: row.status === 1 ? "#d4edda" : "#f8d7da",
-                      color: row.status === 1 ? "#155724" : "#721c24",
-                      padding: "3px 8px",
-                      borderRadius: "10px",
-                      fontSize: "12px"
-                    }}>
-                      {row.status === 1 ? "Available" : "Unavailable"}
-                    </span>
-                  </td>
-                  <td style={tdCenter}>
-                    <button onClick={() => handleEdit(row)} style={btnEdit}><FaImage size={12} color="#000" /></button>
-                    <button onClick={() => handleEdit(row)} style={btnEdit}><FaPen size={12} color="#000" /></button>
-                    <button onClick={() => handleDeleteClick(row)} style={btnDelete}><FaTrash size={12} color="#dc3545" /></button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={10} style={{ textAlign: "center", padding: "10px" }}>No data found</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        data={data}
+        setData={setData}
+        search={search}
+        searchCategory={searchCategory}
+        limit={limit}
+        currentPage={currentPage}
+        selectedRows={selectedRows}
+        setSelectedRows={setSelectedRows}
+        isBulkEditMode={isBulkEditMode}
+        editableData={editableData}
+        setEditableData={setEditableData}
+        setShowDeleteModal={setShowDeleteModal}
+        setShowImageModal={setShowImageModal}
+        setSelectedProduct={setSelectedProduct}
+        onDetail={handleShowDetail}
+      />
 
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "13px", gap: "6px", flexWrap: "wrap" }}>
-        <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1} style={pageBtn}>Prev</button>
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-          <button key={page} onClick={() => setCurrentPage(page)}
-            style={{
-              ...pageBtn,
-              backgroundColor: page === currentPage ? "#000" : "#fff",
-              color: page === currentPage ? "#fff" : "#000",
-              border: page === currentPage ? "2px solid #000" : "1px solid #ccc"
-            }}>{page}</button>
-        ))}
-        <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} style={pageBtn}>Next</button>
-      </div>
-      {/* ===== Modal Tambah Produk ===== */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
+
       {showModal && (
         <ProductModal
+          product={selectedProduct} 
           newProduct={newProduct}
           setNewProduct={setNewProduct}
           handleAddProduct={handleAddProduct}
           setShowModal={setShowModal}
         />
       )}
-      {/* ===== Modal Konfirmasi Delete ===== */}
-      {showDeleteModal && (
-        <div style={modalOverlay}>
-          <div style={deleteModalContent}>
-            <h3 style={{ marginTop: 0 }}>Konfirmasi Hapus</h3>
-            <p>
-              Apakah Anda yakin ingin menghapus produk{" "}
-              <strong>{selectedProduct?.product_name}</strong>?
-            </p>
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "15px" }}>
-              <button style={cancelBtn} onClick={() => setShowDeleteModal(false)}>
-                Batal
-              </button>
-              <button style={deleteBtn} onClick={confirmDelete}>
-                Hapus
-              </button>
-            </div>
-          </div>
-        </div>
+      
+      {showDetailModal && (
+        <ProductDetailModal
+          product={selectedProduct}
+          onClose={() => setShowDetailModal(false)}
+        />
       )}
+
+      <DeleteModal
+        show={showDeleteModal}
+        product={selectedProduct}
+        onCancel={() => setShowDeleteModal(false)}
+        onDeleted={() => {
+          setShowDeleteModal(false);
+          loadProducts();
+        }}
+      />
+
+      <ImageUploadModal
+        show={showImageModal}
+        product={selectedProduct}
+        onCancel={() => setShowImageModal(false)}
+        onDeleted={() => {
+          setShowImageModal(false);
+          loadProducts();
+        }}
+      />
+
+      <BulkDeleteModal
+        show={showBulkDeleteModal}
+        count={selectedRows.length}
+        onCancel={() => setShowBulkDeleteModal(false)}
+        onConfirm={confirmBulkDelete}
+      />
     </div>
   );
 };
-
-/* Styles */
-const thStyle = { padding: "8px", textAlign: "center", borderBottom: "1px solid #ccc", fontWeight: "bold", fontSize: "13px", backgroundColor: "#f9f9f9" };
-const tdText = { padding: "8px", textAlign: "left" };
-const tdCenter = { padding: "8px", textAlign: "center" };
-const btnEdit = { padding: "5px 8px", marginRight: "6px", borderRadius: "4px", border: "1px solid #000", backgroundColor: "#f8f9fa", cursor: "pointer" };
-const btnDelete = { padding: "5px 8px", borderRadius: "4px", border: "1px solid #dc3545", backgroundColor: "#f8f9fa", cursor: "pointer" };
-const pageBtn = { padding: "6px 10px", borderRadius: "3px", border: "1px solid #ccc", cursor: "pointer" };
-const nameClickable = {
-  ...tdText,
-  color: "#007bff",
-  cursor: "pointer",
-  textDecoration: "none",
-  fontWeight: 500,
-  transition: "0.2s",
-};
-nameClickable[":hover"] = {
-  textDecoration: "underline",
-};
-const modalOverlay = {
-  position: "fixed",
-  inset: 0,
-  backgroundColor: "rgba(0,0,0,0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 999,
-};
-
-const deleteModalContent = {
-  backgroundColor: "#fff",
-  padding: "25px",
-  borderRadius: "8px",
-  width: "320px",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-};
-
-const cancelBtn = {
-  backgroundColor: "#ccc",
-  border: "none",
-  padding: "8px 12px",
-  borderRadius: "4px",
-  cursor: "pointer",
-};
-
-const deleteBtn = {
-  backgroundColor: "#dc3545",
-  color: "#fff",
-  border: "none",
-  padding: "8px 12px",
-  borderRadius: "4px",
-  cursor: "pointer",
-};
-
 
 export default List;
