@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,12 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
-
-  const handleContinue = () => {
-    navigate("/signup/form");
-  };
 
   const elementStyle = {
     width: "320px",
@@ -39,47 +33,26 @@ const Signup = () => {
     transition: "0.3s",
   };
 
-const handleSignup = async (e) => {
-  e.preventDefault();
+  const handleContinue = (e) => {
+    e.preventDefault();
 
-  if (!fullName.trim()) {
-    toast.warn("Full name is required");
-    return;
-  }
-
-  const nameRegex = /^[A-Za-z\s]+$/;
-  if (!nameRegex.test(fullName.trim())) {
-    toast.error("Full name can only contain letters and spaces");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const response = await axios.post(
-      "https://cashpay.my.id/api/auth/signup",
-      {
-        full_name: fullName,
-      },
-      {
-        headers: {
-          "X-Api-Key": "3f=Pr#g1@RU-nw=30",
-        },
-      }
-    );
-
-    if (response.data.status) {
-      toast.success("Sign up successful! Redirecting...", { autoClose: 1800 });
-      setTimeout(() => navigate("/login?ref=auth"), 2000);
-    } else {
-      toast.error(response.data.meta?.message || "Signup failed");
+    if (!fullName.trim()) {
+      toast.warn("Full name is required");
+      return;
     }
-  } catch (err) {
-    toast.error(err.response?.data?.meta?.message || err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+
+    const nameRegex = /^[A-Za-z\s]+$/;
+    if (!nameRegex.test(fullName.trim())) {
+      toast.error("Full name can only contain letters and spaces");
+      return;
+    }
+
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/signup/form", { state: { fullName } });
+    }, 600);
+  };
 
   const handleGoogleSignup = () => {
     toast.info("Google Sign Up clicked!");
@@ -98,16 +71,7 @@ const handleSignup = async (e) => {
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       }}
     >
-      <ToastContainer
-        position="top-right"
-        hideProgressBar
-        newestOnTop
-        closeOnClick
-        pauseOnHover
-        draggable
-        theme="colored"
-        style={{ fontSize: "14px" }}
-      />
+      <ToastContainer theme="colored" position="top-right" />
 
       <h2 style={{ color: "#333", fontWeight: "bold", marginBottom: "5px" }}>
         Create your account
@@ -116,25 +80,19 @@ const handleSignup = async (e) => {
         Join the future of digital payments
       </h4>
 
-
       <form
         style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
-          <input
+        <input
           type="text"
           placeholder="Full Name"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           style={{
-          ...elementStyle,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "white",
-          color: "#555",
-          marginBottom: "20px",
-        }}
-          
+            ...elementStyle,
+            backgroundColor: "white",
+            color: "#555",
+          }}
           onFocus={(e) => (e.target.style.borderColor = "#52796f")}
           onBlur={(e) => (e.target.style.borderColor = "#ccc")}
         />
@@ -151,42 +109,63 @@ const handleSignup = async (e) => {
           onMouseEnter={(e) => (e.target.style.backgroundColor = "#405d50")}
           onMouseLeave={(e) => (e.target.style.backgroundColor = "#52796f")}
         >
-          {loading ? "Creating Account..." : "Continue"}
+          {loading ? "Processing..." : "Continue"}
         </button>
+
         <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          width: "320px",
-          maxWidth: "100%",
-          marginBottom: "20px",
-        }}
-      >
-        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
-        <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>OR</span>
-        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
-      </div>
-              <button
-        type="button"
-        onClick={handleGoogleSignup}
-        style={{
-          ...elementStyle,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "white",
-          color: "#555",
-          marginBottom: "20px",
-        }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = "white")}
-      >
-        <FcGoogle style={{ width: "20px", height: "20px", marginRight: "10px" }} />
-        Sign up with Google
-      </button>
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "320px",
+            marginBottom: "20px",
+          }}
+        >
+          <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
+          <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>OR</span>
+          <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
+        </div>
 
-      
+        <button
+          type="button"
+          onClick={handleGoogleSignup}
+          style={{
+            ...elementStyle,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "white",
+            color: "#555",
+          }}
+          onMouseEnter={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "white")}
+        >
+          <FcGoogle style={{ width: "20px", height: "20px", marginRight: "10px" }} />
+          Sign up with Google
+        </button>
 
+        {/* 🔹 Tambahan: Already have account? */}
+        <p
+          style={{
+            marginTop: "15px",
+            color: "#333",
+            fontSize: "14px",
+          }}
+        >
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate("/login?ref=auth")}
+            style={{
+              color: "#2a9d8f",
+              fontWeight: "bold",
+              cursor: "pointer",
+              textDecoration: "underline",
+            }}
+            onMouseEnter={(e) => (e.target.style.color = "#1f776f")}
+            onMouseLeave={(e) => (e.target.style.color = "#2a9d8f")}
+          >
+            Login
+          </span>
+        </p>
       </form>
     </div>
   );

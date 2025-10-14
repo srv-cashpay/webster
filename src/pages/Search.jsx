@@ -69,7 +69,7 @@ export default function ChatGPTSearch() {
       {/* Log halaman terakhir (seperti recent files di Word) */}
       {logs.length > 0 && (
         <div style={styles.recentBox}>
-          <h3 style={styles.recentTitle}>Recent Pages</h3>
+          <h3 style={styles.recentTitle}>Quick Access</h3>
           <ul style={styles.recentList}>
             {logs.map((path, index) => (
               <li key={index} style={styles.recentItem}>
@@ -164,6 +164,7 @@ const styles = {
     marginBottom: "10px",
     borderBottom: "1px solid #ddd",
     paddingBottom: "5px",
+    textAlign: "left"
   },
   recentList: {
     listStyle: "none",

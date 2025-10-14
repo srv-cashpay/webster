@@ -112,7 +112,7 @@ const MenuList = () => {
 
     try {
       const response = await axios.post(
-        `https://cashpay.my.id:/menu/order?merchant_id=${merchantId}`,
+        `https://cashpay.my.id/menu/order?merchant_id=${merchantId}`,
         orderPayload
       );
 

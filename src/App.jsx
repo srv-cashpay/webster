@@ -12,6 +12,7 @@ import Pos from "./pages/Pos/Pos";
 import LandingPage from "./pages/Web/Landing";
 import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
 import SignupForm from "./pages/SignupForm";
+import OtpForm from "./pages/OtpForm";
 import MenuList from "./pages/Web/order/MenuList";
 import Setting from "./pages/Setting/Setting";
 import Cookies from "js-cookie";
@@ -97,6 +98,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/signup/form" element={<SignupForm />} />
+        <Route path="/signup/otp" element={<OtpForm />} />
         <Route path="/menu" element={<MenuList />} />
 
         {/* Auth */}

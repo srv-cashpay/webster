@@ -8,18 +8,20 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // email atau whatsapp
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loginWithWhatsapp, setLoginWithWhatsapp] = useState(false); // toggle
+  const [countryCode, setCountryCode] = useState("+62"); // 🔹 default Indonesia
 
   const navigate = useNavigate();
   const location = useLocation();
-
   const queryParams = new URLSearchParams(location.search);
   const ref = queryParams.get("ref");
 
+  // 🔒 Hanya boleh diakses dari ?ref=auth
   useEffect(() => {
     if (ref !== "auth") {
       toast.warn("Akses tidak diizinkan", { autoClose: 1800 });
@@ -29,11 +31,11 @@ const Login = ({ onLogin }) => {
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
-    if (email.trim()) {
+    if (identifier.trim()) {
       setShowPassword(true);
       toast.info("Please enter your password", { autoClose: 1800 });
     } else {
-      toast.warn("Email cannot be empty");
+      toast.warn(loginWithWhatsapp ? "Nomor tidak boleh kosong" : "Email tidak boleh kosong");
     }
   };
 
@@ -45,11 +47,16 @@ const Login = ({ onLogin }) => {
     }
 
     setLoading(true);
-
     try {
+      const payload = loginWithWhatsapp
+        ? { whatsapp: countryCode + identifier } // 🔹 tambahkan kode negara
+        : { email: identifier };
+
+      payload.password = password;
+
       const response = await axios.post(
-        "https://cashpay.my.id/api/auth/signin",
-        { email, password },
+        "https://cashpay.my.id:2356/api/auth/signin",
+        payload,
         { headers: { "X-Api-Key": "3f=Pr#g1@RU-nw=30" } }
       );
 
@@ -150,6 +157,7 @@ const Login = ({ onLogin }) => {
         Simplifying payments one transaction at a time
       </h4>
 
+      {/* 🔹 Tombol Google */}
       <button
         type="button"
         onClick={handleGoogleLogin}
@@ -165,12 +173,11 @@ const Login = ({ onLogin }) => {
         onMouseEnter={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
         onMouseLeave={(e) => (e.target.style.backgroundColor = "white")}
       >
-        <FcGoogle
-          style={{ width: "20px", height: "20px", marginRight: "10px" }}
-        />
+        <FcGoogle style={{ width: "20px", height: "20px", marginRight: "10px" }} />
         Continue with Google
       </button>
 
+      {/* 🔸 Separator */}
       <div
         style={{
           display: "flex",
@@ -180,42 +187,99 @@ const Login = ({ onLogin }) => {
           marginBottom: "20px",
         }}
       >
-        <hr
-          style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }}
-        />
-        <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>
-          OR
-        </span>
-        <hr
-          style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }}
-        />
+        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
+        <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>OR</span>
+        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
       </div>
 
+      {/* 🔹 Form Login */}
       <form
         onSubmit={showPassword ? handleLogin : handleEmailSubmit}
         style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{
-          ...elementStyle,
-          display: "flex",
-          alignItems: "center",
-          textAlign: "left",
-          justifyContent: "center",
-          backgroundColor: "white",
-          color: "#555",
-          marginBottom: "20px",
-        }}
-          onFocus={(e) => (e.target.style.borderColor = "#d1d1d1")}
-          onBlur={(e) => (e.target.style.borderColor = "#d1d1d1s")}
-        />
+        {/* 🔹 Input Email atau WhatsApp */}
+        {loginWithWhatsapp ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "320px",
+              maxWidth: "100%",
+              marginBottom: "20px",
+              border: "1px solid #ccc",
+              borderRadius: "30px",
+              overflow: "hidden",
+              transition: "0.2s",
+            }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "#52796f")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "#ccc")}
+          >
+            <select
+              style={{
+                border: "none",
+                outline: "none",
+                background: "white",
+                padding: "0 10px",
+                fontSize: "15px",
+                height: "48px",
+                cursor: "pointer",
+                color: "#333",
+                borderRight: "1px solid #ccc",
+              }}
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value)}
+            >
+              <option value="+62">+62</option>
+              <option value="+60">+60</option>
+              <option value="+65">+65</option>
+            </select>
 
+            <input
+              type="tel"
+              placeholder="811-2345-6789"
+              value={
+                identifier
+                  .replace(/\D/g, "")                    // buang semua non-angka
+                  .replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") // tampilkan format 819-5294-4296
+                  .substring(0, 13)                      // batasi agar tidak kelebihan karakter
+              }
+              onChange={(e) => {
+                const numeric = e.target.value.replace(/\D/g, ""); // simpan murni angka
+                setIdentifier(numeric);
+              }}
+              style={{
+                flex: 1,
+                border: "none",
+                outline: "none",
+                padding: "14px 16px",
+                fontSize: "15px",
+                backgroundColor: "white",
+                color: "#555",
+                letterSpacing: "0.5px",
+              }}
+            />
+
+          </div>
+        ) : (
+          <input
+            type="email"
+            placeholder="Email"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+            style={{
+              ...elementStyle,
+              textAlign: "left",
+              backgroundColor: "white",
+              color: "#555",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#52796f")}
+            onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+          />
+        )}
+
+        {/* 🔹 Password */}
         {showPassword && (
-          <div style={{ position: "relative", width: "320px", maxWidth: "100%", marginBottom: "20px" }}>
+          <div style={{ position: "relative", width: "320px", maxWidth: "100%" }}>
             <input
               type={isPasswordVisible ? "text" : "password"}
               placeholder="Password"
@@ -225,7 +289,6 @@ const Login = ({ onLogin }) => {
                 ...elementStyle,
                 paddingRight: "40px",
                 textAlign: "left",
-                backgroundColor: "white",
               }}
               onFocus={(e) => (e.target.style.borderColor = "#52796f")}
               onBlur={(e) => (e.target.style.borderColor = "#ccc")}
@@ -246,27 +309,112 @@ const Login = ({ onLogin }) => {
             </span>
           </div>
         )}
-      <button
-        type="submit"
-        style={{
-          ...buttonStyle,
-          opacity:
-            loading || (!showPassword && !email.includes("@")) ? 0.5 : 1,
-          cursor:
-            loading || (!showPassword && !email.includes("@"))
-              ? "not-allowed"
-              : "pointer",
-        }}
-        disabled={loading || (!showPassword && !email.includes("@"))}
-        onMouseEnter={(e) => {
-          if (!loading && (showPassword || email.includes("@")))
-            e.target.style.backgroundColor = "#405d50";
-        }}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = "#52796f")}
-      >
-        {showPassword ? (loading ? "Logging in..." : "Sign In") : "Continue"}
-      </button>
+
+        {/* 🔹 Forgot Password */}
+        <p
+          onClick={() => navigate("/forgot-password")}
+          style={{
+            alignSelf: "flex-end",
+            width: "200px",
+            textAlign: "right",
+            color: "#2a9d8f",
+            fontSize: "15px",
+            fontWeight: "500",
+            marginTop: "5px",
+            marginBottom: "20px",
+            cursor: "pointer",
+            textDecoration: "underline",
+            transition: "color 0.2s ease",
+          }}
+          onMouseEnter={(e) => (e.target.style.color = "#1f776f")}
+          onMouseLeave={(e) => (e.target.style.color = "#2a9d8f")}
+        >
+          Forgot password?
+        </p>
+
+        <button
+          type="submit"
+          style={{
+            ...buttonStyle,
+            opacity: loading || (!showPassword && !identifier.trim()) ? 0.5 : 1,
+            cursor:
+              loading || (!showPassword && !identifier.trim())
+                ? "not-allowed"
+                : "pointer",
+          }}
+          disabled={loading || (!showPassword && !identifier.trim())}
+          onMouseEnter={(e) => {
+            if (!loading && identifier.trim())
+              e.target.style.backgroundColor = "#405d50";
+          }}
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "#52796f")}
+        >
+          {showPassword ? (loading ? "Logging in..." : "Sign In") : "Continue"}
+        </button>
       </form>
+
+      {/* 🔁 Toggle Email / Whatsapp */}
+      <p style={{ marginTop: "15px", fontSize: "14px", color: "#333" }}>
+        {loginWithWhatsapp ? (
+          <>
+            <span
+              onClick={() => {
+                setLoginWithWhatsapp(false);
+                setIdentifier("");
+                setShowPassword(false);
+              }}
+              style={{
+                color: "#2a9d8f",
+                fontWeight: "bold",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
+              Log in with email
+            </span>
+          </>
+        ) : (
+          <>
+            <span
+              onClick={() => {
+                setLoginWithWhatsapp(true);
+                setIdentifier("");
+                setShowPassword(false);
+              }}
+              style={{
+                color: "#2a9d8f",
+                fontWeight: "bold",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
+              Log in with WhatsApp Number
+            </span>
+          </>
+        )}
+      </p>
+
+      {/* 🆕 Link ke signup */}
+      <p
+        style={{
+          marginTop: "10px",
+          color: "#333",
+          fontSize: "14px",
+        }}
+      >
+        No account?{" "}
+        <span
+          onClick={() => navigate("/signup")}
+          style={{
+            color: "#2a9d8f",
+            fontWeight: "bold",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+        >
+          Create one!
+        </span>
+      </p>
     </div>
   );
 };
