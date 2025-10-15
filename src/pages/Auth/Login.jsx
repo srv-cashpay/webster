@@ -32,47 +32,64 @@ const Login = ({ onLogin }) => {
   }, [ref, navigate]);
 
   // 🔹 Google Login (gunakan id_token, bukan access_token)
-  const login = useGoogleLogin({
-    flow: "implicit", // ambil token langsung dari Google popup
+    const login = useGoogleLogin({
+    flow: "token", // ✅ gunakan flow token
+    access_type: "offline",
+    prompt: "select_account",
     onSuccess: async (tokenResponse) => {
+      console.log("Google tokenResponse:", tokenResponse);
+
+      const access_token = tokenResponse?.access_token;
+      if (!access_token) {
+        toast.error("Google login gagal: access_token tidak ditemukan");
+        return;
+      }
+
       try {
-        // ✅ Ambil ID Token dari Google
-        const idToken = tokenResponse?.id_token;
-
-        if (!idToken) {
-          toast.error("Google login gagal: idToken tidak ditemukan");
-          return;
-        }
-
-        // Optional: decode token untuk debugging
-        const userInfo = jwtDecode(idToken);
-        console.log("Google User:", userInfo);
-
-        // ✅ Kirim ke backend
-        const res = await axios.post(
-          "https://cashpay.my.id:2356/api/google",
-          { idToken }, // backend kamu minta field ini
-          { headers: { "X-Api-Key": "3f=Pr#g1@RU-nw=30" } }
+        // 🔹 Ambil user info dari Google API
+        const { data: userInfo } = await axios.get(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: { Authorization: `Bearer ${access_token}` },
+          }
         );
 
-        if (res.data.status) {
-          const data = res.data.data;
-          Cookies.set("token", data.token);
-          Cookies.set("refresh_token", data.refresh_token);
-          localStorage.setItem("token", data.merchant_id);
+        console.log("Google User Info:", userInfo);
+
+        // 🔹 Kirim user info ke backend kamu
+        const { data } = await axios.post(
+          `${API_URL}/api/google`,
+          {
+            email: userInfo.email,
+            name: userInfo.name,
+            picture: userInfo.picture,
+            sub: userInfo.sub,
+          },
+        );
+
+        // ✅ Simpan token kalau login berhasil
+        if (data.status) {
+          const user = data.data;
+          Cookies.set("token", user.token);
+          Cookies.set("refresh_token", user.refresh_token);
+          localStorage.setItem("token", user.merchant_id);
 
           toast.success("Login with Google successful!", { autoClose: 1500 });
           setTimeout(() => onLogin && onLogin(), 1500);
         } else {
-          toast.error(res.data.meta?.message || "Google login failed");
+          toast.error(data.meta?.message || "Google login failed");
         }
       } catch (err) {
-        console.error(err);
-        toast.error("Google login error");
+        console.error("Google login error:", err);
+        toast.error("Google login error: " + (err.message || "unknown"));
       }
     },
-    onError: () => toast.error("Google login failed!"),
+    onError: (err) => {
+      console.error("Google login failed", err);
+      toast.error("Google login failed!");
+    },
   });
+
 
   // 🔹 Submit email / nomor
   const handleEmailSubmit = (e) => {
