@@ -21,6 +21,7 @@ const ForgotPassword = () => {
     marginBottom: "20px",
     boxSizing: "border-box",
     textAlign: "left",
+    backgroundColor: "white",
   };
 
   const buttonStyle = {

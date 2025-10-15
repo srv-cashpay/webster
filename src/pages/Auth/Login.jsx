@@ -289,6 +289,7 @@ const Login = ({ onLogin }) => {
                 ...elementStyle,
                 paddingRight: "40px",
                 textAlign: "left",
+                backgroundColor: "#fff",
               }}
               onFocus={(e) => (e.target.style.borderColor = "#52796f")}
               onBlur={(e) => (e.target.style.borderColor = "#ccc")}
@@ -316,7 +317,7 @@ const Login = ({ onLogin }) => {
           onClick={() => navigate("/forgot-password")}
           style={{
             alignSelf: "flex-end",
-            width: "200px",
+            width: "130px",
             textAlign: "right",
             color: "#2a9d8f",
             fontSize: "15px",
