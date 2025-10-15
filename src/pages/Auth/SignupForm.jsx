@@ -118,7 +118,8 @@ export default function SignupForm() {
             border: "1px solid #ccc",
             marginBottom: "15px",
             textAlign: "center",
-            backgroundColor: "white",
+            backgroundColor: "#fff",   // 🟢 kolom putih
+            color: "#000",
           }}
         />
         <input
@@ -134,7 +135,8 @@ export default function SignupForm() {
             border: "1px solid #ccc",
             marginBottom: "15px",
             textAlign: "center",
-            backgroundColor: "white",
+            backgroundColor: "#fff",   // 🟢 kolom putih
+            color: "#000",
           }}
         />
         <input
@@ -150,8 +152,9 @@ export default function SignupForm() {
             border: "1px solid #ccc",
             marginBottom: "25px",
             textAlign: "center",
-            backgroundColor: "white",
-          }}
+            backgroundColor: "#fff",   // 🟢 kolom putih
+            color: "#000",
+            }}
         />
 
         <button

@@ -289,8 +289,9 @@ const Login = ({ onLogin }) => {
                 ...elementStyle,
                 paddingRight: "40px",
                 textAlign: "left",
-                backgroundColor: "#fff",
-              }}
+                backgroundColor: "#fff",   // 🟢 kolom putih
+                color: "#000",
+                }}
               onFocus={(e) => (e.target.style.borderColor = "#52796f")}
               onBlur={(e) => (e.target.style.borderColor = "#ccc")}
             />
