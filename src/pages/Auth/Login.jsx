@@ -5,9 +5,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useGoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import "react-toastify/dist/ReactToastify.css";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const Login = ({ onLogin }) => {
   const [identifier, setIdentifier] = useState(""); // email atau whatsapp
@@ -15,15 +14,15 @@ const Login = ({ onLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loginWithWhatsapp, setLoginWithWhatsapp] = useState(false);
-  const [countryCode, setCountryCode] = useState("+62");
+  const [loginWithWhatsapp, setLoginWithWhatsapp] = useState(false); // toggle
+  const [countryCode, setCountryCode] = useState("+62"); // 🔹 default Indonesia
 
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ref = queryParams.get("ref");
 
-  // 🔒 Akses hanya dari ?ref=auth
+  // 🔒 Hanya boleh diakses dari ?ref=auth
   useEffect(() => {
     if (ref !== "auth") {
       toast.warn("Akses tidak diizinkan", { autoClose: 1800 });
@@ -31,80 +30,16 @@ const Login = ({ onLogin }) => {
     }
   }, [ref, navigate]);
 
-  // 🔹 Google Login (gunakan id_token, bukan access_token)
-    const login = useGoogleLogin({
-    flow: "token", // ✅ gunakan flow token
-    access_type: "offline",
-    prompt: "select_account",
-    onSuccess: async (tokenResponse) => {
-      console.log("Google tokenResponse:", tokenResponse);
-
-      const access_token = tokenResponse?.access_token;
-      if (!access_token) {
-        toast.error("Google login gagal: access_token tidak ditemukan");
-        return;
-      }
-
-      try {
-        // 🔹 Ambil user info dari Google API
-        const { data: userInfo } = await axios.get(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          {
-            headers: { Authorization: `Bearer ${access_token}` },
-          }
-        );
-
-        console.log("Google User Info:", userInfo);
-
-        // 🔹 Kirim user info ke backend kamu
-        const { data } = await axios.post(
-          `${API_URL}/api/google`,
-          {
-            email: userInfo.email,
-            name: userInfo.name,
-            picture: userInfo.picture,
-            sub: userInfo.sub,
-          },
-        );
-
-        // ✅ Simpan token kalau login berhasil
-        if (data.status) {
-          const user = data.data;
-          Cookies.set("token", user.token);
-          Cookies.set("refresh_token", user.refresh_token);
-          localStorage.setItem("token", user.merchant_id);
-
-          toast.success("Login with Google successful!", { autoClose: 1500 });
-          setTimeout(() => onLogin && onLogin(), 1500);
-        } else {
-          toast.error(data.meta?.message || "Google login failed");
-        }
-      } catch (err) {
-        console.error("Google login error:", err);
-        toast.error("Google login error: " + (err.message || "unknown"));
-      }
-    },
-    onError: (err) => {
-      console.error("Google login failed", err);
-      toast.error("Google login failed!");
-    },
-  });
-
-
-  // 🔹 Submit email / nomor
   const handleEmailSubmit = (e) => {
     e.preventDefault();
     if (identifier.trim()) {
       setShowPassword(true);
       toast.info("Please enter your password", { autoClose: 1800 });
     } else {
-      toast.warn(
-        loginWithWhatsapp ? "Nomor tidak boleh kosong" : "Email tidak boleh kosong"
-      );
+      toast.warn(loginWithWhatsapp ? "Nomor tidak boleh kosong" : "Email tidak boleh kosong");
     }
   };
 
-  // 🔹 Login manual
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!password.trim()) {
@@ -115,7 +50,7 @@ const Login = ({ onLogin }) => {
     setLoading(true);
     try {
       const payload = loginWithWhatsapp
-        ? { whatsapp: countryCode + identifier }
+        ? { whatsapp: countryCode + identifier } // 🔹 tambahkan kode negara
         : { email: identifier };
 
       payload.password = password;
@@ -143,8 +78,60 @@ const Login = ({ onLogin }) => {
       setLoading(false);
     }
   };
+  
+ const handleGoogleLogin = useGoogleLogin({
+  flow: "implicit",
+  onSuccess: async (tokenResponse) => {
+    try {
+      console.log("Google tokenResponse:", tokenResponse);
 
-  // 🔹 Style umum
+      // Ambil profil user dari Google
+      const profileRes = await fetch(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        }
+      );
+      const profile = await profileRes.json();
+      console.log("Google profile:", profile);
+
+      // Kirim ke backend
+      const res = await axios.post(
+        "https://cashpay.my.id:2356/api/web/google",
+        {
+          accessToken: tokenResponse.access_token, // backend harus support access_token dari web
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      if (res.data.status && res.data.code === 200) {
+        const { token, refresh_token, whatsapp } = res.data.data;
+
+        // Simpan token di cookies / localStorage
+        Cookies.set("token", token);
+        Cookies.set("refresh_token", refresh_token);
+        localStorage.setItem("token", token);
+
+        // 🟢 Trigger callback onLogin supaya App tahu login berhasil
+        if (onLogin) onLogin();
+
+        // Navigasi sesuai WhatsApp
+        if (!whatsapp || whatsapp === "/bvTmYgHVZjVt85fktdsXA==") {
+          window.location.href = "/input-whatsapp-google";
+        } else {
+          window.location.href = "/harbour";
+        }
+      } else {
+        console.warn("Login failed:", res.data);
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+    }
+  },
+  onError: (err) => console.error("Google login failed:", err),
+});
+
+
   const elementStyle = {
     width: "320px",
     maxWidth: "100%",
@@ -223,7 +210,7 @@ const Login = ({ onLogin }) => {
       {/* 🔹 Tombol Google */}
       <button
         type="button"
-        onClick={() => login()}
+        onClick={handleGoogleLogin}
         style={{
           ...elementStyle,
           display: "flex",
@@ -260,6 +247,7 @@ const Login = ({ onLogin }) => {
         onSubmit={showPassword ? handleLogin : handleEmailSubmit}
         style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
+        {/* 🔹 Input Email atau WhatsApp */}
         {loginWithWhatsapp ? (
           <div
             style={{
@@ -271,7 +259,10 @@ const Login = ({ onLogin }) => {
               border: "1px solid #ccc",
               borderRadius: "30px",
               overflow: "hidden",
+              transition: "0.2s",
             }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "#52796f")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "#ccc")}
           >
             <select
               style={{
@@ -296,12 +287,14 @@ const Login = ({ onLogin }) => {
             <input
               type="tel"
               placeholder="811-2345-6789"
-              value={identifier
-                .replace(/\D/g, "")
-                .replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
-                .substring(0, 13)}
+              value={
+                identifier
+                  .replace(/\D/g, "")                    // buang semua non-angka
+                  .replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") // tampilkan format 819-5294-4296
+                  .substring(0, 13)                      // batasi agar tidak kelebihan karakter
+              }
               onChange={(e) => {
-                const numeric = e.target.value.replace(/\D/g, "");
+                const numeric = e.target.value.replace(/\D/g, ""); // simpan murni angka
                 setIdentifier(numeric);
               }}
               style={{
@@ -312,8 +305,10 @@ const Login = ({ onLogin }) => {
                 fontSize: "15px",
                 backgroundColor: "white",
                 color: "#555",
+                letterSpacing: "0.5px",
               }}
             />
+
           </div>
         ) : (
           <input
@@ -332,6 +327,7 @@ const Login = ({ onLogin }) => {
           />
         )}
 
+        {/* 🔹 Password */}
         {showPassword && (
           <div style={{ position: "relative", width: "320px", maxWidth: "100%" }}>
             <input
@@ -343,9 +339,11 @@ const Login = ({ onLogin }) => {
                 ...elementStyle,
                 paddingRight: "40px",
                 textAlign: "left",
-                backgroundColor: "#fff",
-                color: "#000",
-              }}
+                backgroundColor: "#fff",   // 🟢 kolom putih
+                    color: "#000",
+                }}
+              onFocus={(e) => (e.target.style.borderColor = "#52796f")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
             />
             <span
               onClick={() => setIsPasswordVisible((prev) => !prev)}
@@ -365,6 +363,7 @@ const Login = ({ onLogin }) => {
           </div>
         )}
 
+        {/* 🔹 Forgot Password */}
         <p
           onClick={() => navigate("/forgot-password")}
           style={{
@@ -378,7 +377,10 @@ const Login = ({ onLogin }) => {
             marginBottom: "20px",
             cursor: "pointer",
             textDecoration: "underline",
+            transition: "color 0.2s ease",
           }}
+          onMouseEnter={(e) => (e.target.style.color = "#1f776f")}
+          onMouseLeave={(e) => (e.target.style.color = "#2a9d8f")}
         >
           Forgot password?
         </p>
@@ -388,49 +390,64 @@ const Login = ({ onLogin }) => {
           style={{
             ...buttonStyle,
             opacity: loading || (!showPassword && !identifier.trim()) ? 0.5 : 1,
+            cursor:
+              loading || (!showPassword && !identifier.trim())
+                ? "not-allowed"
+                : "pointer",
           }}
           disabled={loading || (!showPassword && !identifier.trim())}
+          onMouseEnter={(e) => {
+            if (!loading && identifier.trim())
+              e.target.style.backgroundColor = "#405d50";
+          }}
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "#52796f")}
         >
           {showPassword ? (loading ? "Logging in..." : "Sign In") : "Continue"}
         </button>
       </form>
 
+      {/* 🔁 Toggle Email / Whatsapp */}
       <p style={{ marginTop: "15px", fontSize: "14px", color: "#333" }}>
         {loginWithWhatsapp ? (
-          <span
-            onClick={() => {
-              setLoginWithWhatsapp(false);
-              setIdentifier("");
-              setShowPassword(false);
-            }}
-            style={{
-              color: "#2a9d8f",
-              fontWeight: "bold",
-              cursor: "pointer",
-              textDecoration: "underline",
-            }}
-          >
-            Log in with email
-          </span>
+          <>
+            <span
+              onClick={() => {
+                setLoginWithWhatsapp(false);
+                setIdentifier("");
+                setShowPassword(false);
+              }}
+              style={{
+                color: "#2a9d8f",
+                fontWeight: "bold",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
+              Log in with email
+            </span>
+          </>
         ) : (
-          <span
-            onClick={() => {
-              setLoginWithWhatsapp(true);
-              setIdentifier("");
-              setShowPassword(false);
-            }}
-            style={{
-              color: "#2a9d8f",
-              fontWeight: "bold",
-              cursor: "pointer",
-              textDecoration: "underline",
-            }}
-          >
-            Log in with WhatsApp Number
-          </span>
+          <>
+            <span
+              onClick={() => {
+                setLoginWithWhatsapp(true);
+                setIdentifier("");
+                setShowPassword(false);
+              }}
+              style={{
+                color: "#2a9d8f",
+                fontWeight: "bold",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
+              Log in with WhatsApp Number
+            </span>
+          </>
         )}
       </p>
 
+      {/* 🆕 Link ke signup */}
       <p
         style={{
           marginTop: "10px",
