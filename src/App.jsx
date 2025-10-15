@@ -4,15 +4,18 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import Dashboard from "./pages/Dashboard";
 import User from "./pages/User";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import Login from "./pages/Auth/Login";
+import Signup from "./pages/Auth/Signup";
+import Forgot from "./pages/Auth/Forgot/ForgotPassword";
+import VerifyOtp from "./pages/Auth/Forgot/VerifyReset";
+import ResetPassword from "./pages/Auth/Forgot/ResetPassword";
 import Search from "./pages/Search";
 import Product from "./pages/Product/List";
 import Pos from "./pages/Pos/Pos";
 import LandingPage from "./pages/Web/Landing";
 import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
-import SignupForm from "./pages/SignupForm";
-import OtpForm from "./pages/OtpForm";
+import SignupForm from "./pages/Auth/SignupForm";
+import OtpForm from "./pages/Auth/OtpForm";
 import MenuList from "./pages/Web/order/MenuList";
 import Setting from "./pages/Setting/Setting";
 import Cookies from "js-cookie";
@@ -99,6 +102,9 @@ function App() {
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/signup/form" element={<SignupForm />} />
         <Route path="/signup/otp" element={<OtpForm />} />
+        <Route path="/forgot-password" element={<Forgot />} />
+        <Route path="/verify-reset" element={<VerifyOtp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/menu" element={<MenuList />} />
 
         {/* Auth */}

@@ -303,6 +303,7 @@ const Login = ({ onLogin }) => {
                 cursor: "pointer",
                 color: "#999",
                 fontSize: "18px",
+                backgroundColor: "white",
               }}
             >
               {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}

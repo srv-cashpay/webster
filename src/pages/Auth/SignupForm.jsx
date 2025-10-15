@@ -96,10 +96,6 @@ export default function SignupForm() {
       <h2 style={{ color: "#333", fontWeight: "bold" }}>
         Complete your account
       </h2>
-      <p style={{ color: "#777", marginBottom: "20px" }}>
-        Full Name: <b>{fullName}</b>
-      </p>
-
       <form
         onSubmit={handleSignup}
         style={{
@@ -122,6 +118,7 @@ export default function SignupForm() {
             border: "1px solid #ccc",
             marginBottom: "15px",
             textAlign: "center",
+            backgroundColor: "white",
           }}
         />
         <input
@@ -137,6 +134,7 @@ export default function SignupForm() {
             border: "1px solid #ccc",
             marginBottom: "15px",
             textAlign: "center",
+            backgroundColor: "white",
           }}
         />
         <input
@@ -152,6 +150,7 @@ export default function SignupForm() {
             border: "1px solid #ccc",
             marginBottom: "25px",
             textAlign: "center",
+            backgroundColor: "white",
           }}
         />
 
