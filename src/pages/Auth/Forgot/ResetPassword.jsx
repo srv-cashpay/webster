@@ -108,6 +108,7 @@ const ResetPassword = () => {
               marginBottom: "25px",
               outline: "none",
               transition: "0.3s",
+              color: "black",
             }}
             onFocus={(e) => (e.target.style.borderColor = "#52796f")}
             onBlur={(e) => (e.target.style.borderColor = "#ccc")}

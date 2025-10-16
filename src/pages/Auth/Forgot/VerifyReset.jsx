@@ -163,6 +163,7 @@ const VerifyReset = () => {
                 border: "2px solid #ccc",
                 outline: "none",
                 background: "#fff",
+                color: "black",
                 transition: "0.2s",
               }}
             />

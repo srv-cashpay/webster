@@ -163,6 +163,7 @@ const OtpForm = () => {
                 outline: "none",
                 background: "#fff",
                 transition: "0.2s",
+                color: "black",
               }}
             />
           ))}
