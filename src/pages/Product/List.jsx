@@ -189,7 +189,7 @@ const handleShowDetail = async (row) => {
       <ImageUploadModal
         show={showImageModal}
         product={selectedProduct}
-        onCancel={() => setShowImageModal(false)}
+        onClose={() => setShowImageModal(false)}
         onDeleted={() => {
           setShowImageModal(false);
           loadProducts();

@@ -1,70 +1,269 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import {
+  fetchMerkData,
+  fetchCategoryData,
+  updateExistingProduct
+} from "../../services/product/api";
+import { toast } from "react-toastify";
 
-const ProductDetailModal = ({ product, onClose }) => {
-  if (!product) return null;
+const ProductDetailModal = ({ product, onClose, onSuccess }) => {
+  const [updatedProduct, setUpdatedProduct] = useState({ ...product });
+  const [merkList, setMerkList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+
+  useEffect(() => {
+    const loadDropdownData = async () => {
+      try {
+        const merkRes = await fetchMerkData();
+        const categoryRes = await fetchCategoryData();
+        setMerkList(merkRes?.data || merkRes || []);
+        setCategoryList(categoryRes?.data || categoryRes || []);
+      } catch (error) {
+        console.error("Gagal memuat data dropdown:", error);
+      }
+    };
+    loadDropdownData();
+  }, []);
+
+  useEffect(() => {
+    setUpdatedProduct({ ...product });
+  }, [product]);
+
+  const handleUpdateProduct = async () => {
+    if (!updatedProduct.product_name || !updatedProduct.price) {
+      toast.warning("Harap isi semua field wajib");
+      return;
+    }
+
+    try {
+      const payload = {
+        id: updatedProduct.id,
+        barcode: updatedProduct.barcode,
+        sku: updatedProduct.sku,
+        product_name: updatedProduct.product_name,
+        price: parseInt(updatedProduct.price) || 0,
+        stock: parseInt(updatedProduct.stock) || 0,
+        min_stock: parseInt(updatedProduct.min_stock) || 0,
+        description: updatedProduct.description,
+        status: updatedProduct.status === "active" ? 1 : 2,
+        merk_id: updatedProduct.merk_id || null,
+        category_id: updatedProduct.category_id || null,
+      };
+
+      await updateExistingProduct(updatedProduct.id, payload);
+      toast.success("✅ Produk berhasil diperbarui!");
+      onClose(false);
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error("Gagal memperbarui produk:", error);
+      toast.error("❌ Gagal memperbarui produk!");
+    }
+  };
 
   return (
     <div style={modalOverlay}>
       <div style={modalBox}>
-        <h2 style={modalTitle}>🛒 Detail Produk</h2>
+        <h2 style={modalTitle}>✏️ Edit Produk</h2>
 
-        <div style={formGrid}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleUpdateProduct();
+          }}
+          style={formGrid}
+        >
           {/* Kolom Kiri */}
           <div style={column}>
-            <label style={labelStyle}>ID Produk</label>
-            <input type="text" value={product.id} readOnly style={inputStyle} />
+            <label style={labelStyle}>Barcode</label>
+            <input
+              type="text"
+              value={updatedProduct.barcode || ""}
+              onChange={(e) =>
+                setUpdatedProduct({ ...updatedProduct, barcode: e.target.value })
+              }
+              style={inputStyle}
+            />
+
+            <label style={labelStyle}>SKU / Kode Produk</label>
+            <input
+              type="text"
+              value={updatedProduct.sku || ""}
+              onChange={(e) =>
+                setUpdatedProduct({ ...updatedProduct, sku: e.target.value })
+              }
+              style={inputStyle}
+            />
 
             <label style={labelStyle}>Nama Produk</label>
-            <input type="text" value={product.product_name} readOnly style={inputStyle} />
+            <input
+              type="text"
+              value={updatedProduct.product_name || ""}
+              onChange={(e) =>
+                setUpdatedProduct({
+                  ...updatedProduct,
+                  product_name: e.target.value,
+                })
+              }
+              style={inputStyle}
+              required
+            />
 
-            <label style={labelStyle}>Merek</label>
-            <input type="text" value={product.merk_name || "-"} readOnly style={inputStyle} />
+            {/* Merek & Kategori */}
+            <div style={rowGroup}>
+              <div style={{ flex: 1 }}>
+                <label style={labelStyle}>Merek</label>
+                <select
+                  value={updatedProduct.merk_id || ""}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      merk_id: e.target.value,
+                    })
+                  }
+                  style={inputSmall}
+                >
+                  <option value="">Pilih Merek</option>
+                  {merkList.map((merk) => (
+                    <option key={merk.id} value={merk.id}>
+                      {merk.merk_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <label style={labelStyle}>Kategori</label>
-            <input type="text" value={product.category_name || "-"} readOnly style={inputStyle} />
+              <div style={{ flex: 1 }}>
+                <label style={labelStyle}>Kategori</label>
+                <select
+                  value={updatedProduct.category_id || ""}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      category_id: e.target.value,
+                    })
+                  }
+                  style={inputSmall}
+                >
+                  <option value="">Pilih Kategori</option>
+                  {categoryList.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.category_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
-            <label style={labelStyle}>Stok</label>
-            <input type="number" value={product.stock} readOnly style={inputSmall} />
+            {/* Harga, Stok, Minimal Stok */}
+            <div style={rowGroup3}>
+              <div style={{ flex: 1 }}>
+                <label style={labelStyle}>Harga (Rp)</label>
+                <input
+                  type="number"
+                  value={updatedProduct.price || ""}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      price: e.target.value,
+                    })
+                  }
+                  style={inputSmall}
+                  required
+                />
+              </div>
 
-            <label style={labelStyle}>Minimal Stok</label>
-            <input type="number" value={product.min_stock || 0} readOnly style={inputSmall} />
+              <div style={{ flex: 1 }}>
+                <label style={labelStyle}>Stok</label>
+                <input
+                  type="number"
+                  value={updatedProduct.stock || ""}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      stock: e.target.value,
+                    })
+                  }
+                  style={inputSmall}
+                  required
+                />
+              </div>
+
+              <div style={{ flex: 1 }}>
+                <label style={labelStyle}>Minimal Stok</label>
+                <input
+                  type="number"
+                  value={updatedProduct.min_stock || ""}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      min_stock: e.target.value,
+                    })
+                  }
+                  style={inputSmall}
+                  required
+                />
+              </div>
+            </div>
           </div>
 
           {/* Kolom Kanan */}
           <div style={column}>
-            <label style={labelStyle}>Harga (Rp)</label>
-            <input
-              type="text"
-              value={product.price?.toLocaleString("id-ID")}
-              readOnly
-              style={inputSmall}
-            />
-
-            <label style={labelStyle}>Status</label>
-            <input
-              type="text"
-              value={product.status === 1 ? "Available" : "Unavailable"}
-              readOnly
-              style={inputStyle}
-            />
-
-            <label style={labelStyle}>Barcode</label>
-            <input type="text" value={product.barcode || "-"} readOnly style={inputStyle} />
-
-            <label style={labelStyle}>SKU</label>
-            <input type="text" value={product.sku || "-"} readOnly style={inputStyle} />
-
             <label style={labelStyle}>Deskripsi</label>
-            <textarea value={product.description || "-"} readOnly style={textareaStyle} />
-          </div>
-        </div>
+            <textarea
+              value={updatedProduct.description || ""}
+              onChange={(e) =>
+                setUpdatedProduct({
+                  ...updatedProduct,
+                  description: e.target.value,
+                })
+              }
+              style={textareaStyle}
+            />
 
-        {/* Tombol Close */}
-        <div style={buttonGroup}>
-          <button onClick={onClose} style={cancelBtn}>
-            Tutup
-          </button>
-        </div>
+            <label style={labelStyle}>Status Produk</label>
+            <div style={optionGroup}>
+              <label style={optionLabel}>
+                <input
+                  type="radio"
+                  name="status"
+                  value="active"
+                  checked={updatedProduct.status === "active" || updatedProduct.status === 1}
+                  onChange={(e) =>
+                    setUpdatedProduct({ ...updatedProduct, status: e.target.value })
+                  }
+                  style={radioBtn}
+                />
+                Active
+              </label>
+              <label style={optionLabel}>
+                <input
+                  type="radio"
+                  name="status"
+                  value="inactive"
+                  checked={updatedProduct.status === "inactive" || updatedProduct.status === 2}
+                  onChange={(e) =>
+                    setUpdatedProduct({ ...updatedProduct, status: e.target.value })
+                  }
+                  style={radioBtn}
+                />
+                Inactive
+              </label>
+            </div>
+          </div>
+
+          {/* Tombol */}
+          <div style={buttonGroup}>
+            <button
+              type="button"
+              onClick={() => onClose(false)}
+              style={cancelBtn}
+            >
+              Batal
+            </button>
+            <button type="submit" style={saveBtn}>
+              Simpan Perubahan
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
@@ -112,6 +311,19 @@ const column = {
   flexDirection: "column",
 };
 
+const rowGroup = {
+  display: "flex",
+  gap: "30px",
+  marginTop: "10px",
+};
+
+const rowGroup3 = {
+  display: "flex",
+  gap: "20px",
+  marginTop: "10px",
+  flexWrap: "wrap",
+};
+
 const labelStyle = {
   marginTop: "10px",
   fontWeight: "600",
@@ -127,7 +339,6 @@ const inputStyle = {
   border: "1px solid #ccc",
   fontSize: "14px",
   outline: "none",
-  backgroundColor: "#f5f5f5",
 };
 
 const inputSmall = {
@@ -140,6 +351,28 @@ const textareaStyle = {
   ...inputStyle,
   height: "100px",
   resize: "vertical",
+};
+
+const optionGroup = {
+  display: "flex",
+  alignItems: "center",
+  gap: "20px",
+  marginTop: "8px",
+};
+
+const optionLabel = {
+  display: "flex",
+  alignItems: "center",
+  gap: "6px",
+  fontSize: "14px",
+  color: "#333",
+  cursor: "pointer",
+};
+
+const radioBtn = {
+  width: "16px",
+  height: "16px",
+  accentColor: "#007bff",
 };
 
 const buttonGroup = {
@@ -158,6 +391,16 @@ const cancelBtn = {
   borderRadius: "6px",
   cursor: "pointer",
   fontWeight: "500",
+};
+
+const saveBtn = {
+  backgroundColor: "#007bff",
+  color: "#fff",
+  border: "none",
+  padding: "10px 18px",
+  borderRadius: "6px",
+  cursor: "pointer",
+  fontWeight: "600",
 };
 
 export default ProductDetailModal;

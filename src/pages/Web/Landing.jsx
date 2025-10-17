@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./LandingPage.css";
+import text from "../../locales/text";
 
 import heroImage from "../../assets/head.png";
 import addImage from "../../assets/add.png";
@@ -16,20 +17,24 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [language, setLanguage] = useState("en"); // ✅ definisi bahasa
 
   const queryParams = new URLSearchParams(location.search);
   const ref = queryParams.get("ref");
 
   useEffect(() => {
-    if (ref === "auth") {
+    if (ref === "encrypt") {
       console.log("✅ Parameter 'auth' terdeteksi!");
     }
   }, [ref]);
 
   const scrollToSection = (ref) => {
     if (ref.current) ref.current.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false); // Tutup menu saat klik
+    setMenuOpen(false);
   };
+
+  // ✅ semua teks bilingual
+  const t = text[language];
 
   return (
     <div className="landing-container">
@@ -39,49 +44,52 @@ export default function LandingPage() {
           CashPay
         </div>
 
-        {/* Tombol toggle hanya muncul di mobile */}
-        <div
-          className="menu-toggle"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? "✖" : "☰"}
         </div>
 
         <div className={`nav-right ${menuOpen ? "active" : ""}`}>
           <div className="nav-links">
-            <button onClick={() => scrollToSection(featuresRef)}>Features</button>
-            <button onClick={() => scrollToSection(aboutRef)}>About</button>
+            <button onClick={() => scrollToSection(featuresRef)}>{t.features}</button>
+            <button onClick={() => scrollToSection(aboutRef)}>{t.about}</button>
           </div>
 
-          <button
-            className="btn-login"
-            onClick={() => navigate("/login?ref=auth")}
-          >
-            Try for Free 3 months
+          {/* 🔤 Tombol Bahasa */}
+          <div className="language-toggle">
+            <button
+              className={language === "id" ? "active-lang" : ""}
+              onClick={() => setLanguage("id")}
+            >
+              ID
+            </button>
+            <button
+              className={language === "en" ? "active-lang" : ""}
+              onClick={() => setLanguage("en")}
+            >
+              EN
+            </button>
+          </div>
+
+          <button className="btn-login" onClick={() => navigate("/auth?ref=encrypt")}>
+            {t.tryFree}
           </button>
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section ref={heroRef} className="hero">
         <div className="hero-text">
-          <h1>
-            Power your <span>future</span> with Cashier Payment
-          </h1>
-          <p>
-            Smart, Secure, Simple Point Of Sale. Simplifying payments one transaction at a time.
-          </p>
+          <h1>{t.heroTitle}</h1>
+          <p>{t.heroDesc}</p>
 
           <div className="hero-buttons">
             <button
               className="btn-appstore"
-              onClick={() =>
-                window.open("https://apps.apple.com/app/idXXXXXXXXX", "_blank")
-              }
+              onClick={() => window.open("https://apps.apple.com/app/idXXXXXXXXX", "_blank")}
             >
               <img
                 src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
-                alt="Download on the App Store"
+                alt="App Store"
               />
             </button>
 
@@ -96,7 +104,7 @@ export default function LandingPage() {
             >
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                alt="Get it on Google Play"
+                alt="Play Store"
               />
             </button>
           </div>
@@ -107,19 +115,19 @@ export default function LandingPage() {
 
       {/* Features */}
       <section ref={featuresRef} className="section features">
-        <h2>Our Features</h2>
+        <h2>{t.ourFeatures}</h2>
         <div className="feature-grid">
           <div className="feature-card">
-            <h3>⚡ Fast Performance</h3>
-            <p>Optimized systems that run efficiently and sustainably.</p>
+            <h3>{t.f1}</h3>
+            <p>{t.f1desc}</p>
           </div>
           <div className="feature-card">
-            <h3>🌱 Eco-Friendly Tech</h3>
-            <p>We use green hosting and sustainable digital practices.</p>
+            <h3>{t.f2}</h3>
+            <p>{t.f2desc}</p>
           </div>
           <div className="feature-card">
-            <h3>🔒 Secure & Reliable</h3>
-            <p>Data protection with next-gen encryption standards.</p>
+            <h3>{t.f3}</h3>
+            <p>{t.f3desc}</p>
           </div>
         </div>
       </section>
@@ -131,15 +139,9 @@ export default function LandingPage() {
             <img src={dashboard1} alt="About" />
           </div>
           <div className="about-text">
-            <h2>Smart Dashboard</h2>
-            <p>
-              We are a team of innovators building technology with a purpose — to make
-              digital transformation greener and more efficient.
-            </p>
-            <p>
-              Our vision is to combine sustainability with performance, empowering
-              companies to grow responsibly.
-            </p>
+            <h2>{t.aboutTitle}</h2>
+            <p>{t.aboutP1}</p>
+            <p>{t.aboutP2}</p>
           </div>
         </div>
       </section>
@@ -151,15 +153,9 @@ export default function LandingPage() {
             <img src={scanImage} alt="Mission" />
           </div>
           <div className="mission-text">
-            <h2>Self Order</h2>
-            <p>
-              At CashPay, our mission is to simplify payment processes while promoting
-              innovation, transparency, and efficiency.
-            </p>
-            <p>
-              We aim to empower every business to manage transactions seamlessly with
-              cutting-edge technology.
-            </p>
+            <h2>{t.missionTitle}</h2>
+            <p>{t.missionP1}</p>
+            <p>{t.missionP2}</p>
           </div>
         </div>
       </section>
@@ -168,15 +164,9 @@ export default function LandingPage() {
       <section className="section vision">
         <div className="vision-container">
           <div className="vision-text">
-            <h2>Inventory Management</h2>
-            <p>
-              We envision a future where every business can access smart, secure, and
-              sustainable payment solutions.
-            </p>
-            <p>
-              CashPay strives to be at the forefront of digital transformation by providing
-              tools that help businesses grow effortlessly.
-            </p>
+            <h2>{t.visionTitle}</h2>
+            <p>{t.visionP1}</p>
+            <p>{t.visionP2}</p>
           </div>
           <div className="vision-image">
             <img src={addImage} alt="Vision" />
@@ -188,7 +178,7 @@ export default function LandingPage() {
       <footer className="footer">
         <p>© {new Date().getFullYear()} CashPay. All rights reserved.</p>
         <button onClick={() => navigate("/privacy")} className="privacy-link">
-          Privacy Policy
+          {t.privacy}
         </button>
       </footer>
     </div>

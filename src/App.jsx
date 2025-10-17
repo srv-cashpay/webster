@@ -24,14 +24,14 @@ import "./App.css";
 // ====================== PROTECTED LAYOUT ======================
 function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar, setSidebarCollapsed }) {
   const location = useLocation();
-
+  const { lang } = useParams(); 
   useEffect(() => {
-    if (location.pathname.startsWith("/pos")) {
+    if (location.pathname.startsWith(`/${lang}/pos`)) {
       setSidebarCollapsed(true);
     } else {
       setSidebarCollapsed(false);
     }
-  }, [location.pathname, setSidebarCollapsed]);
+  }, [location.pathname, lang, setSidebarCollapsed]);
 
   return (
     <div className="app-container">
@@ -46,13 +46,13 @@ function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar, setSideb
         }}
       >
         <Routes>
-          <Route path="/harbour" element={<Dashboard />} />
-          <Route path="/user" element={<User />} />
-          <Route path="/setting" element={<Setting />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/product/list" element={<Product />} />
-          <Route path="/pos" element={<Pos />} />
-          <Route path="/" element={<Navigate to="/harbour" replace />} />
+          <Route path={`/${lang}/harbour`} element={<Dashboard />} />
+          <Route path={`/${lang}/user`} element={<User />} />
+          <Route path={`/${lang}/setting`} element={<Setting />} />
+          <Route path={`/${lang}/search`} element={<Search />} />
+          <Route path={`/${lang}/product/list`} element={<Product />} />
+          <Route path={`/${lang}/pos`} element={<Pos />} />
+          <Route path={`/${lang}`} element={<Navigate to={`/${lang}/harbour`} replace />} />
         </Routes>
       </div>
     </div>
@@ -109,7 +109,7 @@ function App() {
 
         {/* Auth */}
         <Route
-          path="/login"
+          path="/auth"
           element={
             token ? (
               <Navigate to="/harbour" replace />
@@ -137,7 +137,7 @@ function App() {
             }
           />
         ) : (
-          <Route path="*" element={<Navigate to="/login?ref=auth" replace />} />
+          <Route path="*" element={<Navigate to="/auth?ref=encrypt" replace />} />
         )}
       </Routes>
     </Router>

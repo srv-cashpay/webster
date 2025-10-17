@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const API_BASE_URL = "https://cashpay.my.id:2411/api";
+const API_BASE_URL = "https://cashpay.my.id:2360/api";
 
 // 🔧 Buat instance axios
 const axiosInstance = axios.create({

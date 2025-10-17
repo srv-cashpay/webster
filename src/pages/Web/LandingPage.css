@@ -467,6 +467,27 @@ body {
   font-size: 0.9rem;
 }
 
+.lang-toggle {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.lang-toggle button {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.lang-toggle .active-lang {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+
 /* ======================================================
    📱 RESPONSIVE DESIGN
 ====================================================== */
@@ -557,6 +578,7 @@ body {
     padding: 20px 0;
     animation: fadeIn 0.3s ease-in-out;
   }
+  
 
   .nav-right.active {
     display: flex;
@@ -584,3 +606,37 @@ body {
     transform: translateY(0);
   }
 }
+
+.language-toggle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.language-toggle button {
+  background: transparent;
+  border: none;
+  color: #d4d4d4;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.language-toggle button:hover {
+  color: #00ff80;
+}
+
+.language-toggle .active-lang {
+  color: #00ff80;
+  font-weight: 700;
+}
+
+/* Saat mobile (ikut toggle menu) */
+@media (max-width: 768px) {
+  .language-toggle {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+}
+

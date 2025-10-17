@@ -1,30 +1,31 @@
 import { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import axios from "axios";
-import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { useGoogleLogin } from "@react-oauth/google";
+import loginLocales from "../../locales/loginLocales";
+import { loginUser, loginWithGoogle, saveTokens } from "../../services/auth/login";
 
 const Login = ({ onLogin }) => {
-  const [identifier, setIdentifier] = useState(""); // email atau whatsapp
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loginWithWhatsapp, setLoginWithWhatsapp] = useState(false); // toggle
-  const [countryCode, setCountryCode] = useState("+62"); // 🔹 default Indonesia
-
+  const [loginWithWhatsapp, setLoginWithWhatsapp] = useState(false);
+  const [countryCode, setCountryCode] = useState("+62");
+  const [language, setLanguage] = useState("en");
+  const t = loginLocales[language];
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ref = queryParams.get("ref");
 
-  // 🔒 Hanya boleh diakses dari ?ref=auth
+  // 🔒 Validasi akses
   useEffect(() => {
-    if (ref !== "auth") {
+    if (ref !== "encrypt") {
       toast.warn("Akses tidak diizinkan", { autoClose: 1800 });
       setTimeout(() => navigate("/", { replace: true }), 1500);
     }
@@ -50,87 +51,52 @@ const Login = ({ onLogin }) => {
     setLoading(true);
     try {
       const payload = loginWithWhatsapp
-        ? { whatsapp: countryCode + identifier } // 🔹 tambahkan kode negara
+        ? { whatsapp: countryCode + identifier }
         : { email: identifier };
 
       payload.password = password;
 
-      const response = await axios.post(
-        "https://cashpay.my.id:2356/api/auth/signin",
-        payload,
-        { headers: { "X-Api-Key": "3f=Pr#g1@RU-nw=30" } }
-      );
+      const data = await loginUser(payload);
 
-      if (response.data.status) {
-        const data = response.data.data;
-        Cookies.set("token", data.token);
-        Cookies.set("refresh_token", data.refresh_token);
-        localStorage.setItem("token", data.merchant_id);
-
+      if (data.status) {
+        saveTokens(data.data);
         toast.success("Login successful!", { autoClose: 1500 });
         setTimeout(() => onLogin && onLogin(), 1500);
       } else {
-        toast.error(response.data.meta?.message || "Login failed");
+        toast.error(data.meta?.message || "Login failed");
       }
     } catch (error) {
-      toast.error(error.response?.data?.meta?.message || error.message);
+      toast.error(error.meta?.message || error.message);
     } finally {
       setLoading(false);
     }
   };
-  
- const handleGoogleLogin = useGoogleLogin({
-  flow: "implicit",
-  onSuccess: async (tokenResponse) => {
-    try {
-      console.log("Google tokenResponse:", tokenResponse);
 
-      // Ambil profil user dari Google
-      const profileRes = await fetch(
-        "https://www.googleapis.com/oauth2/v3/userinfo",
-        {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-        }
-      );
-      const profile = await profileRes.json();
-      console.log("Google profile:", profile);
+  // 🔹 Google Login
+  const handleGoogleLogin = useGoogleLogin({
+    flow: "implicit",
+    onSuccess: async (tokenResponse) => {
+      try {
+        const res = await loginWithGoogle(tokenResponse.access_token);
+        if (res.status && res.code === 200) {
+          saveTokens(res.data);
+          if (onLogin) onLogin();
 
-      // Kirim ke backend
-      const res = await axios.post(
-        "https://cashpay.my.id:2356/api/web/google",
-        {
-          accessToken: tokenResponse.access_token, // backend harus support access_token dari web
-        },
-        { headers: { "Content-Type": "application/json" } }
-      );
-
-      if (res.data.status && res.data.code === 200) {
-        const { token, refresh_token, whatsapp } = res.data.data;
-
-        // Simpan token di cookies / localStorage
-        Cookies.set("token", token);
-        Cookies.set("refresh_token", refresh_token);
-        localStorage.setItem("token", token);
-
-        // 🟢 Trigger callback onLogin supaya App tahu login berhasil
-        if (onLogin) onLogin();
-
-        // Navigasi sesuai WhatsApp
-        if (!whatsapp || whatsapp === "/bvTmYgHVZjVt85fktdsXA==") {
-          window.location.href = "/input-whatsapp-google";
+          if (!res.data.whatsapp || res.data.whatsapp === "/bvTmYgHVZjVt85fktdsXA==") {
+            window.location.href = "/input-whatsapp-google";
+          } else {
+            window.location.href = "/harbour";
+          }
         } else {
-          window.location.href = "/harbour";
+          toast.error("Login gagal, coba lagi.");
         }
-      } else {
-        console.warn("Login failed:", res.data);
+      } catch (err) {
+        toast.error("Google login error.");
+        console.error(err);
       }
-    } catch (err) {
-      console.error("Login error:", err);
-    }
-  },
-  onError: (err) => console.error("Google login failed:", err),
-});
-
+    },
+    onError: (err) => console.error("Google login failed:", err),
+  });
 
   const elementStyle = {
     width: "320px",
@@ -156,7 +122,7 @@ const Login = ({ onLogin }) => {
     transition: "0.3s",
   };
 
-  if (ref !== "auth") {
+  if (ref !== "encrypt") {
     return (
       <div
         style={{
@@ -175,289 +141,237 @@ const Login = ({ onLogin }) => {
   }
 
   return (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "#fff",
+      flexDirection: "column",
+      margin: 0,
+      padding: 0,
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      position: "relative",
+    }}
+  >
+    <ToastContainer
+      position="top-right"
+      hideProgressBar
+      newestOnTop
+      closeOnClick
+      pauseOnHover
+      draggable
+      theme="colored"
+      style={{ fontSize: "14px" }}
+    />
+
+    <h2 style={{ color: "#333", fontWeight: "bold", marginBottom: "5px" }}>
+      {t.title}
+    </h2>
+    <h4 style={{ marginBottom: "30px", color: "#333", fontWeight: "normal" }}>
+      {t.subtitle}
+    </h4>
+
+    {/* 🔹 Tombol Google */}
+    <button
+      type="button"
+      onClick={handleGoogleLogin}
+      style={{
+        ...elementStyle,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
+        color: "#555",
+        marginBottom: "20px",
+      }}
+      onMouseEnter={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+      onMouseLeave={(e) => (e.target.style.backgroundColor = "white")}
+    >
+      <FcGoogle style={{ width: "20px", height: "20px", marginRight: "10px" }} />
+      {t.google}
+    </button>
+
+    {/* 🔸 Separator */}
     <div
       style={{
         display: "flex",
-        justifyContent: "center",
         alignItems: "center",
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "#fff",
-        flexDirection: "column",
-        margin: 0,
-        padding: 0,
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        width: "320px",
+        maxWidth: "100%",
+        marginBottom: "20px",
       }}
     >
-      <ToastContainer
-        position="top-right"
-        hideProgressBar
-        newestOnTop
-        closeOnClick
-        pauseOnHover
-        draggable
-        theme="colored"
-        style={{ fontSize: "14px" }}
+      <hr
+        style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }}
       />
+      <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>
+        {t.or}
+      </span>
+      <hr
+        style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }}
+      />
+    </div>
 
-      <h2 style={{ color: "#333", fontWeight: "bold", marginBottom: "5px" }}>
-        Sign in to your account
-      </h2>
-      <h4 style={{ marginBottom: "30px", color: "#333", fontWeight: "normal" }}>
-        Simplifying payments one transaction at a time
-      </h4>
-
-      {/* 🔹 Tombol Google */}
-      <button
-        type="button"
-        onClick={handleGoogleLogin}
-        style={{
-          ...elementStyle,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "white",
-          color: "#555",
-          marginBottom: "20px",
-        }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = "white")}
-      >
-        <FcGoogle style={{ width: "20px", height: "20px", marginRight: "10px" }} />
-        Continue with Google
-      </button>
-
-      {/* 🔸 Separator */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          width: "320px",
-          maxWidth: "100%",
-          marginBottom: "20px",
-        }}
-      >
-        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
-        <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>OR</span>
-        <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
-      </div>
-
-      {/* 🔹 Form Login */}
-      <form
-        onSubmit={showPassword ? handleLogin : handleEmailSubmit}
-        style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-      >
-        {/* 🔹 Input Email atau WhatsApp */}
-        {loginWithWhatsapp ? (
-          <div
+    {/* 🔹 Form Login */}
+    <form
+      onSubmit={showPassword ? handleLogin : handleEmailSubmit}
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      {/* 🔹 Input Email / WhatsApp */}
+      {loginWithWhatsapp ? (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "320px",
+            maxWidth: "100%",
+            marginBottom: "20px",
+            border: "1px solid #ccc",
+            borderRadius: "30px",
+            overflow: "hidden",
+            transition: "0.2s",
+          }}
+        >
+          <select
             style={{
-              display: "flex",
-              alignItems: "center",
-              width: "320px",
-              maxWidth: "100%",
-              marginBottom: "20px",
-              border: "1px solid #ccc",
-              borderRadius: "30px",
-              overflow: "hidden",
-              transition: "0.2s",
+              border: "none",
+              outline: "none",
+              background: "white",
+              padding: "0 10px",
+              fontSize: "15px",
+              height: "48px",
+              cursor: "pointer",
+              color: "#333",
+              borderRight: "1px solid #ccc",
             }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = "#52796f")}
-            onBlur={(e) => (e.currentTarget.style.borderColor = "#ccc")}
+            value={countryCode}
+            onChange={(e) => setCountryCode(e.target.value)}
           >
-            <select
-              style={{
-                border: "none",
-                outline: "none",
-                background: "white",
-                padding: "0 10px",
-                fontSize: "15px",
-                height: "48px",
-                cursor: "pointer",
-                color: "#333",
-                borderRight: "1px solid #ccc",
-              }}
-              value={countryCode}
-              onChange={(e) => setCountryCode(e.target.value)}
-            >
-              <option value="+62">+62</option>
-              <option value="+60">+60</option>
-              <option value="+65">+65</option>
-            </select>
+            <option value="+62">+62</option>
+            <option value="+60">+60</option>
+            <option value="+65">+65</option>
+          </select>
 
-            <input
-              type="tel"
-              placeholder="811-2345-6789"
-              value={
-                identifier
-                  .replace(/\D/g, "")                    // buang semua non-angka
-                  .replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") // tampilkan format 819-5294-4296
-                  .substring(0, 13)                      // batasi agar tidak kelebihan karakter
-              }
-              onChange={(e) => {
-                const numeric = e.target.value.replace(/\D/g, ""); // simpan murni angka
-                setIdentifier(numeric);
-              }}
-              style={{
-                flex: 1,
-                border: "none",
-                outline: "none",
-                padding: "14px 16px",
-                fontSize: "15px",
-                backgroundColor: "white",
-                color: "#555",
-                letterSpacing: "0.5px",
-              }}
-            />
-
-          </div>
-        ) : (
           <input
-            type="email"
-            placeholder="Email"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
+            type="tel"
+            placeholder={t.whatsappPlaceholder}
+            value={identifier
+              .replace(/\D/g, "")
+              .replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
+              .substring(0, 13)}
+            onChange={(e) => {
+              const numeric = e.target.value.replace(/\D/g, "");
+              setIdentifier(numeric);
+            }}
             style={{
-              ...elementStyle,
-              textAlign: "left",
+              flex: 1,
+              border: "none",
+              outline: "none",
+              padding: "14px 16px",
+              fontSize: "15px",
               backgroundColor: "white",
               color: "#555",
+              letterSpacing: "0.5px",
             }}
-            onFocus={(e) => (e.target.style.borderColor = "#52796f")}
-            onBlur={(e) => (e.target.style.borderColor = "#ccc")}
           />
-        )}
-
-        {/* 🔹 Password */}
-        {showPassword && (
-          <div style={{ position: "relative", width: "320px", maxWidth: "100%" }}>
-            <input
-              type={isPasswordVisible ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={{
-                ...elementStyle,
-                paddingRight: "40px",
-                textAlign: "left",
-                backgroundColor: "#fff",   // 🟢 kolom putih
-                    color: "#000",
-                }}
-              onFocus={(e) => (e.target.style.borderColor = "#52796f")}
-              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
-            />
-            <span
-              onClick={() => setIsPasswordVisible((prev) => !prev)}
-              style={{
-                position: "absolute",
-                right: "15px",
-                top: "35%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-                color: "#999",
-                fontSize: "18px",
-                backgroundColor: "white",
-              }}
-            >
-              {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-        )}
-
-        {/* 🔹 Forgot Password */}
-        <p
-          onClick={() => navigate("/forgot-password")}
+        </div>
+      ) : (
+        <input
+          type="email"
+          placeholder={t.emailPlaceholder}
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
           style={{
-            alignSelf: "flex-end",
-            width: "130px",
-            textAlign: "right",
-            color: "#2a9d8f",
-            fontSize: "15px",
-            fontWeight: "500",
-            marginTop: "5px",
-            marginBottom: "20px",
-            cursor: "pointer",
-            textDecoration: "underline",
-            transition: "color 0.2s ease",
+            ...elementStyle,
+            textAlign: "left",
+            backgroundColor: "white",
+            color: "#555",
           }}
-          onMouseEnter={(e) => (e.target.style.color = "#1f776f")}
-          onMouseLeave={(e) => (e.target.style.color = "#2a9d8f")}
-        >
-          Forgot password?
-        </p>
+        />
+      )}
 
-        <button
-          type="submit"
-          style={{
-            ...buttonStyle,
-            opacity: loading || (!showPassword && !identifier.trim()) ? 0.5 : 1,
-            cursor:
-              loading || (!showPassword && !identifier.trim())
-                ? "not-allowed"
-                : "pointer",
-          }}
-          disabled={loading || (!showPassword && !identifier.trim())}
-          onMouseEnter={(e) => {
-            if (!loading && identifier.trim())
-              e.target.style.backgroundColor = "#405d50";
-          }}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#52796f")}
-        >
-          {showPassword ? (loading ? "Logging in..." : "Sign In") : "Continue"}
-        </button>
-      </form>
+      {/* 🔹 Password */}
+      {showPassword && (
+        <div style={{ position: "relative", width: "320px", maxWidth: "100%" }}>
+          <input
+            type={isPasswordVisible ? "text" : "password"}
+            placeholder={t.passwordPlaceholder}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{
+              ...elementStyle,
+              paddingRight: "40px",
+              textAlign: "left",
+              backgroundColor: "#fff",
+              color: "#000",
+            }}
+          />
+          <span
+            onClick={() => setIsPasswordVisible((prev) => !prev)}
+            style={{
+              position: "absolute",
+              right: "15px",
+              top: "35%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+              color: "#999",
+              fontSize: "18px",
+              backgroundColor: "white",
+            }}
+          >
+            {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </div>
+      )}
 
-      {/* 🔁 Toggle Email / Whatsapp */}
-      <p style={{ marginTop: "15px", fontSize: "14px", color: "#333" }}>
-        {loginWithWhatsapp ? (
-          <>
-            <span
-              onClick={() => {
-                setLoginWithWhatsapp(false);
-                setIdentifier("");
-                setShowPassword(false);
-              }}
-              style={{
-                color: "#2a9d8f",
-                fontWeight: "bold",
-                cursor: "pointer",
-                textDecoration: "underline",
-              }}
-            >
-              Log in with email
-            </span>
-          </>
-        ) : (
-          <>
-            <span
-              onClick={() => {
-                setLoginWithWhatsapp(true);
-                setIdentifier("");
-                setShowPassword(false);
-              }}
-              style={{
-                color: "#2a9d8f",
-                fontWeight: "bold",
-                cursor: "pointer",
-                textDecoration: "underline",
-              }}
-            >
-              Log in with WhatsApp Number
-            </span>
-          </>
-        )}
-      </p>
-
-      {/* 🆕 Link ke signup */}
+      {/* 🔹 Forgot Password */}
       <p
+        onClick={() => navigate("/forgot-password")}
         style={{
-          marginTop: "10px",
-          color: "#333",
-          fontSize: "14px",
+          alignSelf: "flex-end",
+          width: "130px",
+          textAlign: "right",
+          color: "#2a9d8f",
+          fontSize: "15px",
+          fontWeight: "500",
+          marginTop: "5px",
+          marginBottom: "20px",
+          cursor: "pointer",
+          textDecoration: "underline",
         }}
       >
-        No account?{" "}
+        {t.forgot}
+      </p>
+
+      {/* 🔹 Tombol Utama */}
+      <button
+        type="submit"
+        style={{
+          ...buttonStyle,
+          opacity: loading || (!showPassword && !identifier.trim()) ? 0.5 : 1,
+          cursor:
+            loading || (!showPassword && !identifier.trim())
+              ? "not-allowed"
+              : "pointer",
+        }}
+        disabled={loading || (!showPassword && !identifier.trim())}
+      >
+        {showPassword ? (loading ? t.loggingIn : t.signIn) : t.continue}
+      </button>
+    </form>
+
+    {/* 🔁 Toggle Email / Whatsapp */}
+    <p style={{ marginTop: "15px", fontSize: "14px", color: "#333" }}>
+      {loginWithWhatsapp ? (
         <span
-          onClick={() => navigate("/signup")}
+          onClick={() => {
+            setLoginWithWhatsapp(false);
+            setIdentifier("");
+            setShowPassword(false);
+          }}
           style={{
             color: "#2a9d8f",
             fontWeight: "bold",
@@ -465,11 +379,69 @@ const Login = ({ onLogin }) => {
             textDecoration: "underline",
           }}
         >
-          Create one!
+          {t.loginWithEmail}
         </span>
-      </p>
+      ) : (
+        <span
+          onClick={() => {
+            setLoginWithWhatsapp(true);
+            setIdentifier("");
+            setShowPassword(false);
+          }}
+          style={{
+            color: "#2a9d8f",
+            fontWeight: "bold",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+        >
+          {t.loginWithWhatsapp}
+        </span>
+      )}
+    </p>
+
+    {/* 🆕 Create Account */}
+    <p
+      style={{
+        marginTop: "10px",
+        color: "#333",
+        fontSize: "14px",
+      }}
+    >
+      {t.noAccount}{" "}
+      <span
+        onClick={() => navigate("/signup")}
+        style={{
+          color: "#2a9d8f",
+          fontWeight: "bold",
+          cursor: "pointer",
+          textDecoration: "underline",
+        }}
+      >
+        {t.createOne}
+      </span>
+    </p>
+
+    {/* 🌐 Toggle Bahasa - DIPINDAH KE BAWAH */}
+        <div
+      style={{
+        marginTop: "25px",
+        fontSize: "15px",
+        color: "#2a9d8f",
+        fontWeight: "600",
+        cursor: "pointer",
+        userSelect: "none",
+      }}
+      onClick={() => {
+        const newLang = language === "id" ? "en" : "id";
+        setLanguage(newLang);
+        localStorage.setItem("lang", newLang);
+      }}
+    >
+      {language === "id" ? "ID | EN" : "EN | ID"}
     </div>
-  );
+  </div>
+);
 };
 
 export default Login;
