@@ -1,4 +1,10 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
@@ -21,17 +27,21 @@ import Setting from "./pages/Setting/Setting";
 import Cookies from "js-cookie";
 import "./App.css";
 
-// ====================== PROTECTED LAYOUT ======================
-function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar, setSidebarCollapsed }) {
+function ProtectedLayout({
+  onLogout,
+  sidebarCollapsed,
+  onToggleSidebar,
+  setSidebarCollapsed,
+}) {
   const location = useLocation();
-  const { lang } = useParams(); 
+
   useEffect(() => {
-    if (location.pathname.startsWith(`/${lang}/pos`)) {
+    if (location.pathname.includes("/pos")) {
       setSidebarCollapsed(true);
     } else {
       setSidebarCollapsed(false);
     }
-  }, [location.pathname, lang, setSidebarCollapsed]);
+  }, [location.pathname, setSidebarCollapsed]);
 
   return (
     <div className="app-container">
@@ -46,26 +56,28 @@ function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar, setSideb
         }}
       >
         <Routes>
-          <Route path={`/${lang}/harbour`} element={<Dashboard />} />
-          <Route path={`/${lang}/user`} element={<User />} />
-          <Route path={`/${lang}/setting`} element={<Setting />} />
-          <Route path={`/${lang}/search`} element={<Search />} />
-          <Route path={`/${lang}/product/list`} element={<Product />} />
-          <Route path={`/${lang}/pos`} element={<Pos />} />
-          <Route path={`/${lang}`} element={<Navigate to={`/${lang}/harbour`} replace />} />
+          <Route path="/:lang/harbour" element={<Dashboard />} />
+          <Route path="/:lang/user" element={<User />} />
+          <Route path="/:lang/setting" element={<Setting />} />
+          <Route path="/:lang/search" element={<Search />} />
+          <Route path="/:lang/product/list" element={<Product />} />
+          <Route path="/:lang/pos" element={<Pos />} />
+          <Route path="/" element={<Navigate to="/id/harbour" replace />} />
         </Routes>
       </div>
     </div>
   );
 }
 
-// ====================== APP ROOT ======================
 function App() {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const location = useLocation();
 
-  // 🟢 Cek token dari cookie setiap kali aplikasi dibuka / di-refresh
+  // ambil lang dari URL (default ke id)
+  const currentLang = location.pathname.split("/")[1] || "id";
+
   useEffect(() => {
     const accessToken = Cookies.get("token");
     const refreshToken = Cookies.get("refresh_token");
@@ -90,58 +102,90 @@ function App() {
     setToken(null);
   };
 
-  const handleToggleSidebar = () => setSidebarCollapsed((prev) => !prev);
-
   if (loading) return <div>Loading...</div>;
 
   return (
-    <Router>
-      <Routes>
-        {/* Public */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/signup/form" element={<SignupForm />} />
-        <Route path="/signup/otp" element={<OtpForm />} />
-        <Route path="/forgot-password" element={<Forgot />} />
-        <Route path="/verify-reset" element={<VerifyOtp />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/menu" element={<MenuList />} />
+    <Routes>
+      {/* 🟢 Jika buka root "/" */}
+      <Route
+        path="/"
+        element={
+          token ? (
+            // jika sudah login, arahkan ke dashboard default
+            <Navigate to={`/${currentLang}/harbour`} replace />
+          ) : (
+            // jika belum login, arahkan ke landing page
+            <Navigate to="/id" replace />
+          )
+        }
+      />
 
-        {/* Auth */}
+      {/* 🌍 Public Routes */}
+      <Route path="/:lang" element={<LandingPage />} />
+      <Route path="/:lang/privacy" element={<PrivacyPolicy />} />
+      <Route path="/:lang/signup/form" element={<SignupForm />} />
+      <Route path="/:lang/signup/otp" element={<OtpForm />} />
+      <Route path="/:lang/forgot-password" element={<Forgot />} />
+      <Route path="/:lang/verify-reset" element={<VerifyOtp />} />
+      <Route path="/:lang/reset-password" element={<ResetPassword />} />
+      <Route path="/:lang/menu" element={<MenuList />} />
+
+      {/* 🔐 Auth Routes */}
+      <Route
+        path="/:lang/auth"
+        element={
+          token ? (
+            <Navigate to={`/${currentLang}/harbour`} replace />
+          ) : (
+            <Login onLogin={handleLoginSuccess} />
+          )
+        }
+      />
+      <Route
+        path="/:lang/signup"
+        element={
+          token ? (
+            <Navigate to={`/${currentLang}/harbour`} replace />
+          ) : (
+            <Signup />
+          )
+        }
+      />
+
+      {/* 🔒 Protected Routes */}
+      {token ? (
         <Route
-          path="/auth"
+          path="*"
           element={
-            token ? (
-              <Navigate to="/harbour" replace />
+            <ProtectedLayout
+              onLogout={handleLogout}
+              sidebarCollapsed={sidebarCollapsed}
+              onToggleSidebar={() => setSidebarCollapsed((prev) => !prev)}
+              setSidebarCollapsed={setSidebarCollapsed}
+            />
+          }
+        />
+      ) : (
+        // kalau belum login dan buka route yang tidak dikenal
+        <Route
+          path="*"
+          element={
+            location.pathname === "/" ? (
+              <Navigate to="/id" replace />
             ) : (
-              <Login onLogin={handleLoginSuccess} />
+              <Navigate to={`/${currentLang}/auth?ref=encrypt`} replace />
             )
           }
         />
-        <Route
-          path="/signup"
-          element={token ? <Navigate to="/harbour" replace /> : <Signup />}
-        />
-
-        {/* Protected */}
-        {token ? (
-          <Route
-            path="*"
-            element={
-              <ProtectedLayout
-                onLogout={handleLogout}
-                sidebarCollapsed={sidebarCollapsed}
-                onToggleSidebar={handleToggleSidebar}
-                setSidebarCollapsed={setSidebarCollapsed}
-              />
-            }
-          />
-        ) : (
-          <Route path="*" element={<Navigate to="/auth?ref=encrypt" replace />} />
-        )}
-      </Routes>
-    </Router>
+      )}
+    </Routes>
   );
 }
 
-export default App;
+export default function RootApp() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}

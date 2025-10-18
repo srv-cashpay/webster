@@ -1,15 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom"; // ✅ ambil param dari URL
+
+// 🔹 Components
 import Headbar from "./Headbar";
-import { fetchProducts, createProduct, bulkDeleteProducts, fetchProductById  } from "../../services/product/api";
+import DataTable from "./DataTable";
+import Pagination from "./Pagination";
 import ProductModal from "./ProductModal";
 import DeleteModal from "./DeleteModal";
-import BulkDeleteModal from "./BulkDeleteModal"; // 🔹 Tambah import
-import Pagination from "./Pagination";
-import DataTable from "./DataTable"; 
-import ImageUploadModal from "./ImageUploadModal"; // 🔹 import modal baru
-import ProductDetailModal from "./ProductDetailModal"; // 🔹 import
+import BulkDeleteModal from "./BulkDeleteModal";
+import ImageUploadModal from "./ImageUploadModal";
+import ProductDetailModal from "./ProductDetailModal";
+
+// 🔹 API services
+import {
+  fetchProducts,
+  createProduct,
+  bulkDeleteProducts,
+  fetchProductById,
+} from "../../services/product/api";
 
 const List = () => {
+  // 🟢 Ambil parameter bahasa dari URL (misal: /id/dashboard atau /en/dashboard)
+  const { lang } = useParams();
+  const currentLang = lang || "id";
+
+  // 🧠 State management
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(10);
@@ -23,15 +38,15 @@ const List = () => {
   const [showImageModal, setShowImageModal] = useState(false);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isBulkEditMode, setIsBulkEditMode] = useState(false);
+  const [editableData, setEditableData] = useState({});
   const [newProduct, setNewProduct] = useState({
     product_name: "",
     price: "",
     stock: "",
   });
 
-  const [isBulkEditMode, setIsBulkEditMode] = useState(false);
-  const [editableData, setEditableData] = useState({});
-
+  // 🧭 Load data produk
   const loadProducts = useCallback(async () => {
     try {
       const paginationData = { page: currentPage, limit, search };
@@ -54,9 +69,10 @@ const List = () => {
     loadProducts();
   }, [loadProducts]);
 
+  // ➕ Tambah produk baru
   const handleAddProduct = () => {
     if (!newProduct.product_name || !newProduct.price) {
-      alert("Harap isi semua field");
+      alert(currentLang === "id" ? "Harap isi semua field" : "Please fill in all fields");
       return;
     }
 
@@ -75,6 +91,7 @@ const List = () => {
     setShowModal(false);
   };
 
+  // 🗑️ Hapus banyak produk sekaligus
   const confirmBulkDelete = async () => {
     try {
       if (selectedRows.length === 0) return;
@@ -84,32 +101,39 @@ const List = () => {
       setShowBulkDeleteModal(false);
     } catch (error) {
       console.error("Bulk delete gagal:", error);
-      alert("Gagal menghapus data! Silakan coba lagi.");
+      alert(currentLang === "id" ? "Gagal menghapus data!" : "Failed to delete data!");
     }
   };
 
-const handleShowDetail = async (row) => {
-  try {
-    const product = await fetchProductById(row.id); // API call
-    if (product) {
-      setSelectedProduct(product);
-      setShowDetailModal(true);
-    } else {
-      alert("Gagal mengambil detail produk!");
+  // 🔍 Lihat detail produk
+  const handleShowDetail = async (row) => {
+    try {
+      const product = await fetchProductById(row.id);
+      if (product) {
+        setSelectedProduct(product);
+        setShowDetailModal(true);
+      } else {
+        alert(currentLang === "id" ? "Gagal mengambil detail produk!" : "Failed to fetch product details!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert(currentLang === "id" ? "Terjadi kesalahan saat mengambil data produk." : "An error occurred while fetching product data.");
     }
-  } catch (error) {
-    console.error(error);
-    alert("Terjadi kesalahan saat mengambil data produk.");
-  }
-};
-
+  };
 
   const totalPages = Math.ceil(totalRows / limit);
 
   return (
-    <div style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", fontSize: "13px" }}>
+    <div
+      style={{
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        fontSize: "13px",
+      }}
+    >
+      {/* 🔝 Header */}
       <div style={{ position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <Headbar
+          lang={currentLang}
           search={search}
           setSearch={setSearch}
           searchCategory={searchCategory}
@@ -135,7 +159,9 @@ const handleShowDetail = async (row) => {
         />
       </div>
 
+      {/* 📋 Tabel Produk */}
       <DataTable
+        lang={currentLang}
         data={data}
         setData={setData}
         search={search}
@@ -153,30 +179,27 @@ const handleShowDetail = async (row) => {
         onDetail={handleShowDetail}
       />
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        setCurrentPage={setCurrentPage}
-      />
+      {/* 📄 Pagination */}
+      <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
 
+      {/* 💬 Modals */}
       {showModal && (
         <ProductModal
-          product={selectedProduct} 
+          lang={currentLang}
+          product={selectedProduct}
           newProduct={newProduct}
           setNewProduct={setNewProduct}
           handleAddProduct={handleAddProduct}
           setShowModal={setShowModal}
         />
       )}
-      
+
       {showDetailModal && (
-        <ProductDetailModal
-          product={selectedProduct}
-          onClose={() => setShowDetailModal(false)}
-        />
+        <ProductDetailModal product={selectedProduct} onClose={() => setShowDetailModal(false)} />
       )}
 
       <DeleteModal
+        lang={currentLang}
         show={showDeleteModal}
         product={selectedProduct}
         onCancel={() => setShowDeleteModal(false)}
@@ -187,6 +210,7 @@ const handleShowDetail = async (row) => {
       />
 
       <ImageUploadModal
+        lang={currentLang}
         show={showImageModal}
         product={selectedProduct}
         onClose={() => setShowImageModal(false)}
@@ -197,6 +221,7 @@ const handleShowDetail = async (row) => {
       />
 
       <BulkDeleteModal
+        lang={currentLang}
         show={showBulkDeleteModal}
         count={selectedRows.length}
         onCancel={() => setShowBulkDeleteModal(false)}

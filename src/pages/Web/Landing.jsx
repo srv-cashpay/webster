@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "./LandingPage.css";
 import text from "../../locales/text";
 
@@ -15,9 +15,12 @@ export default function LandingPage() {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const { lang } = useParams(); // ✅ ambil "en" atau "id" dari URL
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [language, setLanguage] = useState("en"); // ✅ definisi bahasa
+
+  // ✅ Tentukan bahasa dari URL, default ke "en"
+  const language = lang === "id" ? "id" : "en";
 
   const queryParams = new URLSearchParams(location.search);
   const ref = queryParams.get("ref");
@@ -58,19 +61,23 @@ export default function LandingPage() {
           <div className="language-toggle">
             <button
               className={language === "id" ? "active-lang" : ""}
-              onClick={() => setLanguage("id")}
+              onClick={() => navigate("/id")}
             >
               ID
             </button>
             <button
               className={language === "en" ? "active-lang" : ""}
-              onClick={() => setLanguage("en")}
+              onClick={() => navigate("/en")}
             >
               EN
             </button>
           </div>
 
-          <button className="btn-login" onClick={() => navigate("/auth?ref=encrypt")}>
+          {/* 🔐 Tombol Login / Try Free */}
+          <button
+            className="btn-login"
+            onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
+          >
             {t.tryFree}
           </button>
         </div>
@@ -177,7 +184,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="footer">
         <p>© {new Date().getFullYear()} CashPay. All rights reserved.</p>
-        <button onClick={() => navigate("/privacy")} className="privacy-link">
+        <button onClick={() => navigate(`/${language}/privacy`)} className="privacy-link">
           {t.privacy}
         </button>
       </footer>
