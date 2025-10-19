@@ -1,3 +1,5 @@
+// src/components/Sidebar.jsx
+import { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import {
   FaSearch,
@@ -17,17 +19,32 @@ import {
   FaTasks,
   FaFileAlt,
   FaPuzzlePiece,
+  FaQuestionCircle,
 } from "react-icons/fa";
+import { fetchMerchantData } from "./sidebarApi";
+
+// Mapping icon untuk data dari API
+const iconMap = {
+  Permission: <FaTasks />,
+  User: <FaUser />,
+  Role: <FaUsersCog />,
+  "Role User": <FaUsers />,
+  "Role User Permission": <FaPuzzlePiece />,
+  "Payment Method": <FaMoneyBillWave />,
+  "Content Setting": <FaCog />,
+  Printer: <FaFileAlt />,
+};
 
 const Sidebar = ({ collapsed }) => {
-  // 🟢 Ambil parameter bahasa dari URL (/id/... atau /en/...)
   const { lang } = useParams();
-  const currentLang = lang || "id"; // fallback ke 'id' kalau tidak ada param
+  const currentLang = lang || "id";
 
-  const linkClass = ({ isActive }) => (isActive ? "active" : "");
+  const [dynamicMenu, setDynamicMenu] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // 🔹 Semua path dikombinasikan dengan prefix bahasa
-  const menuItems = [
+  // Static menu
+  const staticMenuItems = [
     { label: "Search", to: `/${currentLang}/search`, icon: <FaSearch /> },
     { label: "User", to: `/${currentLang}/user`, icon: <FaUser /> },
     { label: "Orders", to: `/${currentLang}/orders`, icon: <FaShoppingCart /> },
@@ -46,6 +63,49 @@ const Sidebar = ({ collapsed }) => {
     { label: "Logs", to: `/${currentLang}/logs`, icon: <FaFileAlt /> },
     { label: "Integrations", to: `/${currentLang}/integrations`, icon: <FaPuzzlePiece /> },
   ];
+
+  useEffect(() => {
+    const loadDynamicMenu = async () => {
+      try {
+        const rows = await fetchMerchantData();
+        const formatted = rows.map((item) => ({
+          label: item.label,
+          to: `/${currentLang}${item.to}`,
+          icon: iconMap[item.label] || <FaQuestionCircle />,
+        }));
+        setDynamicMenu(formatted);
+      } catch (err) {
+        setError("Gagal memuat menu tambahan.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDynamicMenu();
+  }, [currentLang]);
+
+  const linkClass = ({ isActive }) => (isActive ? "active" : "");
+
+  const renderMenu = (items) =>
+    items.map((item) => (
+      <li key={item.to} style={{ marginBottom: "10px" }}>
+        <NavLink
+          to={item.to}
+          className={linkClass}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            color: "#333",
+            textDecoration: "none",
+            padding: "6px",
+          }}
+        >
+          <span style={{ fontSize: "12px" }}>{item.icon}</span>
+          {!collapsed && <span>{item.label}</span>}
+        </NavLink>
+      </li>
+    ));
 
   return (
     <div
@@ -73,25 +133,22 @@ const Sidebar = ({ collapsed }) => {
           transition: "font-size 0.3s ease",
         }}
       >
-        {menuItems.map((item) => (
-          <li key={item.to} style={{ marginBottom: "10px" }}>
-            <NavLink
-              to={item.to}
-              className={linkClass}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                color: "#333",
-                textDecoration: "none",
-                padding: "6px",
-              }}
-            >
-              <span style={{ fontSize: "12px" }}>{item.icon}</span>
-              {!collapsed && <span>{item.label}</span>}
-            </NavLink>
-          </li>
-        ))}
+        {/* Static menu */}
+        {renderMenu(staticMenuItems)}
+
+        {/* Divider jika ada dynamic menu */}
+        {!loading && dynamicMenu.length > 0 && !collapsed && (
+          <li style={{ margin: "10px 0", borderTop: "1px solid #ddd" }}></li>
+        )}
+
+        {/* Dynamic menu */}
+        {loading && (
+          <li style={{ fontSize: "12px", padding: "6px" }}>Memuat menu tambahan...</li>
+        )}
+        {error && (
+          <li style={{ fontSize: "12px", color: "red", padding: "6px" }}>{error}</li>
+        )}
+        {!loading && !error && renderMenu(dynamicMenu)}
       </ul>
     </div>
   );

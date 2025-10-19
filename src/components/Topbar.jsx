@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUserCog, FaShoppingBag } from "react-icons/fa"; // settings & order icon
+import { FaUserCog, FaShoppingBag } from "react-icons/fa";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -37,6 +37,7 @@ const Topbar = ({ onToggleSidebar }) => {
           zIndex: 1000,
         }}
       >
+        {/* Kiri: Toggle + Tombol Play Store */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <button
             onClick={onToggleSidebar}
@@ -45,12 +46,38 @@ const Topbar = ({ onToggleSidebar }) => {
           >
             <HiMenuAlt2 color="#000" />
           </button>
-
-          <div style={{ fontSize: "18px", fontWeight: "bold" }}>Cashier Dashboard</div>
+          <h6>Download Now</h6>
+          {/* 🔹 Tombol Play Store (lebih kecil) */}
+          <button
+            onClick={() =>
+              window.open(
+                "https://play.google.com/store/apps/details?id=com.app.cashpay",
+                "_blank"
+              )
+            }
+            style={{
+              background: "none",
+              border: "none",
+              padding: "0",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+            }}
+            title="Get on Google Play"
+          >
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+              alt="Get it on Google Play"
+              style={{
+                height: "30px", // 🔹 lebih kecil
+                objectFit: "contain",
+              }}
+            />
+          </button>
         </div>
 
+        {/* Kanan: Icon Order dan Settings */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          {/* Icon Pesanan Masuk */}
           <div
             style={{
               display: "flex",
@@ -70,7 +97,6 @@ const Topbar = ({ onToggleSidebar }) => {
             <FaShoppingBag size={16} />
           </div>
 
-          {/* Icon Settings */}
           <div
             onClick={() => setShowModal(true)}
             style={{

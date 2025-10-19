@@ -15,7 +15,7 @@ const DataTable = ({
   editableData,
   setEditableData,
   setShowDeleteModal,
-  setSelectedProduct,
+  setSelectedPermission,
   setShowImageModal,
   onDetail
 }) => {
@@ -23,10 +23,10 @@ const DataTable = ({
     if (!search.trim()) return true;
     const term = search.toLowerCase();
     if (searchCategory === "name")
-      return row.product_name.toLowerCase().includes(term);
+      return row.label.toLowerCase().includes(term);
     if (searchCategory === "id") return row.id.toLowerCase().includes(term);
     return (
-      row.product_name.toLowerCase().includes(term) ||
+      row.label.toLowerCase().includes(term) ||
       row.id.toLowerCase().includes(term)
     );
   });
@@ -52,12 +52,12 @@ const DataTable = ({
   };
 
   const handleDeleteClick = (row) => {
-    setSelectedProduct(row);
+    setSelectedPermission(row);
     setShowDeleteModal(true);
   };
 
   const handleImageUpload = async (file) => {
-    setSelectedProduct(file);
+    setSelectedPermission(file);
     setShowImageModal(true);
   };
 
@@ -72,13 +72,9 @@ const DataTable = ({
               <input type="checkbox" checked={isAllSelected} onChange={handleSelectAll} />
             </th>
             <th style={thStyle}>No</th>
-            <th style={thStyle}>Image</th>
             <th style={thStyle}>ID</th>
             <th style={thStyle}>Name</th>
             <th style={thStyle}>Date</th>
-            <th style={thStyle}>Stock</th>
-            <th style={thStyle}>Price</th>
-            <th style={thStyle}>Status</th>
             <th style={thStyle}>Actions</th>
           </tr>
         </thead>
@@ -97,25 +93,14 @@ const DataTable = ({
                     />
                   </td>
                   <td style={tdCenter}>{(currentPage - 1) * limit + index + 1}</td>
-                  <td style={tdCenter}>
-                    <img
-                      src={
-                        row.image?.file_path
-                          ? `https://cashpay.my.id/api/merchant/${row.image.file_path}`
-                          : "https://via.placeholder.com/40"
-                      }
-                      alt={row.product_name}
-                      style={{ width: "40px", height: "40px", borderRadius: "4px" }}
-                    />
-                  </td>
                   <td style={tdText}>{row.id}</td>
                  <td style={tdText}>
                     {isEditable ? (
                       <input
                         type="text"
-                        value={editableData[row.id]?.product_name || row.product_name}
+                        value={editableData[row.id]?.label || row.label}
                         onChange={(e) =>
-                          handleBulkEditChange(row.id, "product_name", e.target.value)
+                          handleBulkEditChange(row.id, "label", e.target.value)
                         }
                         style={inputEdit}
                       />
@@ -124,52 +109,11 @@ const DataTable = ({
                         style={{ color: "blue", cursor: "pointer" }}
                         onClick={() => onDetail(row)}
                       >
-                        {row.product_name}
+                        {row.label}
                       </span>
                     )}
                   </td>
-                  <td style={tdCenter}>{row.created_at}</td>
-                  <td style={tdCenter}>
-                    {isEditable ? (
-                      <input
-                        type="number"
-                        value={editableData[row.id]?.stock ?? row.stock}
-                        onChange={(e) =>
-                          handleBulkEditChange(row.id, "stock", e.target.value)
-                        }
-                        style={inputEdit}
-                      />
-                    ) : (
-                      row.stock
-                    )}
-                  </td>
-                  <td style={tdCenter}>
-                    {isEditable ? (
-                      <input
-                        type="number"
-                        value={editableData[row.id]?.price ?? row.price}
-                        onChange={(e) =>
-                          handleBulkEditChange(row.id, "price", e.target.value)
-                        }
-                        style={inputEdit}
-                      />
-                    ) : (
-                      `Rp ${parseInt(row.price).toLocaleString("id-ID")}`
-                    )}
-                  </td>
-                  <td style={tdCenter}>
-                    <span
-                      style={{
-                        backgroundColor: row.status === 1 ? "#d4edda" : "#f8d7da",
-                        color: row.status === 1 ? "#155724" : "#721c24",
-                        padding: "3px 8px",
-                        borderRadius: "10px",
-                        fontSize: "12px",
-                      }}
-                    >
-                      {row.status === 1 ? "Active" : "Inactive"}
-                    </span>
-                  </td>
+                  <td style={tdCenter}>{row.to}</td>
                   <td style={tdCenter}>
                     {!isBulkEditMode && (
                       <>

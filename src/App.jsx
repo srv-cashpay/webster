@@ -9,7 +9,6 @@ import { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import Dashboard from "./pages/Dashboard";
-import User from "./pages/User";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import Forgot from "./pages/Auth/Forgot/ForgotPassword";
@@ -17,6 +16,10 @@ import VerifyOtp from "./pages/Auth/Forgot/VerifyReset";
 import ResetPassword from "./pages/Auth/Forgot/ResetPassword";
 import Search from "./pages/Search";
 import Product from "./pages/Product/List";
+
+import Permission from "./pages/Permission/List";
+import UserList from "./pages/User/List";
+
 import Pos from "./pages/Pos/Pos";
 import LandingPage from "./pages/Web/Landing";
 import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
@@ -57,10 +60,11 @@ function ProtectedLayout({
       >
         <Routes>
           <Route path="/:lang/harbour" element={<Dashboard />} />
-          <Route path="/:lang/user" element={<User />} />
           <Route path="/:lang/setting" element={<Setting />} />
           <Route path="/:lang/search" element={<Search />} />
           <Route path="/:lang/product/list" element={<Product />} />
+          <Route path="/:lang/permission/list" element={<Permission />} />
+          <Route path="/:lang/user/list" element={<UserList />} />
           <Route path="/:lang/pos" element={<Pos />} />
           <Route path="/" element={<Navigate to="/id/harbour" replace />} />
         </Routes>

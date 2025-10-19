@@ -1,13 +1,21 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import signupLocales from "../../locales/signupLocales";
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // 🔹 Deteksi bahasa dari URL
+  const currentLang = location.pathname.startsWith("/id") ? "id" : "en";
+  const [language, setLanguage] = useState(currentLang);
+  const t = signupLocales[language];
+
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const elementStyle = {
     width: "320px",
@@ -35,27 +43,26 @@ const Signup = () => {
 
   const handleContinue = (e) => {
     e.preventDefault();
-
     if (!fullName.trim()) {
-      toast.warn("Full name is required");
+      toast.warn(language === "id" ? "Nama lengkap wajib diisi" : "Full name is required");
       return;
     }
 
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(fullName.trim())) {
-      toast.error("Full name can only contain letters and spaces");
+      toast.error(language === "id" ? "Nama hanya boleh berisi huruf dan spasi" : "Full name can only contain letters and spaces");
       return;
     }
 
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      navigate("/signup/form", { state: { fullName } });
+      navigate(`/${language}/signup/form`, { state: { fullName } });
     }, 600);
   };
 
   const handleGoogleSignup = () => {
-    toast.info("Google Sign Up clicked!");
+    toast.info(language === "id" ? "Daftar dengan Google diklik!" : "Google Sign Up clicked!");
   };
 
   return (
@@ -73,19 +80,13 @@ const Signup = () => {
     >
       <ToastContainer theme="colored" position="top-right" />
 
-      <h2 style={{ color: "#333", fontWeight: "bold", marginBottom: "5px" }}>
-        Create your account
-      </h2>
-      <h4 style={{ marginBottom: "30px", color: "#333", fontWeight: "normal" }}>
-        Join the future of digital payments
-      </h4>
+      <h2 style={{ color: "#333", fontWeight: "bold", marginBottom: "5px" }}>{t.title}</h2>
+      <h4 style={{ marginBottom: "30px", color: "#333", fontWeight: "normal" }}>{t.subtitle}</h4>
 
-      <form
-        style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-      >
+      <form style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <input
           type="text"
-          placeholder="Full Name"
+          placeholder={t.fullNamePlaceholder}
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           style={{
@@ -93,23 +94,19 @@ const Signup = () => {
             backgroundColor: "white",
             color: "#555",
           }}
-          onFocus={(e) => (e.target.style.borderColor = "#52796f")}
-          onBlur={(e) => (e.target.style.borderColor = "#ccc")}
         />
 
         <button
           type="submit"
+          onClick={handleContinue}
+          disabled={loading}
           style={{
             ...buttonStyle,
             opacity: loading ? 0.6 : 1,
             cursor: loading ? "not-allowed" : "pointer",
           }}
-          disabled={loading}
-          onClick={handleContinue}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#405d50")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#52796f")}
         >
-          {loading ? "Processing..." : "Continue"}
+          {loading ? t.processing : t.continue}
         </button>
 
         <div
@@ -121,7 +118,7 @@ const Signup = () => {
           }}
         >
           <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
-          <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>OR</span>
+          <span style={{ margin: "0 10px", color: "#999", fontSize: "14px" }}>{t.or}</span>
           <hr style={{ flex: 1, border: "none", height: "1px", backgroundColor: "#ccc" }} />
         </div>
 
@@ -136,34 +133,23 @@ const Signup = () => {
             backgroundColor: "white",
             color: "#555",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "white")}
         >
           <FcGoogle style={{ width: "20px", height: "20px", marginRight: "10px" }} />
-          Sign up with Google
+          {t.google}
         </button>
 
-        {/* 🔹 Tambahan: Already have account? */}
-        <p
-          style={{
-            marginTop: "15px",
-            color: "#333",
-            fontSize: "14px",
-          }}
-        >
-          Already have an account?{" "}
+        <p style={{ marginTop: "15px", color: "#333", fontSize: "14px" }}>
+          {t.haveAccount}{" "}
           <span
-            onClick={() => navigate("/login?ref=auth")}
+            onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
             style={{
               color: "#2a9d8f",
               fontWeight: "bold",
               cursor: "pointer",
               textDecoration: "underline",
             }}
-            onMouseEnter={(e) => (e.target.style.color = "#1f776f")}
-            onMouseLeave={(e) => (e.target.style.color = "#2a9d8f")}
           >
-            Login
+            {t.login}
           </span>
         </p>
       </form>

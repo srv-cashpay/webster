@@ -8,38 +8,71 @@ export default function SignupForm() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // 🌐 Deteksi bahasa dari URL
+  const currentLang = location.pathname.startsWith("/id") ? "id" : "en";
+
   const fullName = location.state?.fullName || "";
   const [email, setEmail] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const validateEmail = (email) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  // 🌐 Lokalisasi teks
+  const t = {
+    en: {
+      title: "Complete your account",
+      emailPlaceholder: "Email address",
+      whatsappPlaceholder: "WhatsApp number (e.g. +628123456789)",
+      passwordPlaceholder: "Create password",
+      signupButton: "Sign Up",
+      creating: "Creating Account...",
+      required: "All fields are required",
+      invalidEmail: "Invalid email format",
+      invalidPhone: "Invalid WhatsApp number",
+      shortPassword: "Password must be at least 8 characters",
+      success: "Signup successful! Please verify OTP.",
+      failed: "Signup failed",
+    },
+    id: {
+      title: "Lengkapi akun kamu",
+      emailPlaceholder: "Alamat Email",
+      whatsappPlaceholder: "Nomor WhatsApp (misal: +628123456789)",
+      passwordPlaceholder: "Buat kata sandi",
+      signupButton: "Daftar",
+      creating: "Membuat Akun...",
+      required: "Semua kolom wajib diisi",
+      invalidEmail: "Format email tidak valid",
+      invalidPhone: "Nomor WhatsApp tidak valid",
+      shortPassword: "Kata sandi minimal 8 karakter",
+      success: "Pendaftaran berhasil! Silakan verifikasi OTP.",
+      failed: "Pendaftaran gagal",
+    },
+  }[currentLang];
 
-  const validateWhatsapp = (num) =>
-    /^\+?[0-9]{10,15}$/.test(num);
+  // 🔍 Validasi
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validateWhatsapp = (num) => /^\+?[0-9]{10,15}$/.test(num);
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
     if (!fullName || !email || !whatsapp || !password) {
-      toast.warn("All fields are required");
+      toast.warn(t.required);
       return;
     }
 
     if (!validateEmail(email)) {
-      toast.error("Invalid email format");
+      toast.error(t.invalidEmail);
       return;
     }
 
     if (!validateWhatsapp(whatsapp)) {
-      toast.error("Invalid WhatsApp number");
+      toast.error(t.invalidPhone);
       return;
     }
 
     if (password.length < 8) {
-      toast.error("Password must be at least 8 characters");
+      toast.error(t.shortPassword);
       return;
     }
 
@@ -62,20 +95,43 @@ export default function SignupForm() {
       );
 
       if (res.data.status) {
-        toast.success("Signup successful! Please verify OTP.");
-        // Tunggu sebentar agar toast terlihat, lalu arahkan ke OTP
+        toast.success(t.success);
         setTimeout(
-          () => navigate("/signup/otp", { state: { email, whatsapp } }),
+          () => navigate(`/${currentLang}/signup/otp`, { state: { email, whatsapp } }),
           2000
         );
       } else {
-        toast.error(res.data.meta?.message || "Signup failed");
+        toast.error(res.data.meta?.message || t.failed);
       }
     } catch (err) {
       toast.error(err.response?.data?.meta?.message || err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  // 🎨 Style umum
+  const inputStyle = {
+    width: "100%",
+    padding: "14px",
+    borderRadius: "30px",
+    border: "1px solid #ccc",
+    marginBottom: "15px",
+    textAlign: "center",
+    backgroundColor: "#fff",
+    color: "#000",
+  };
+
+  const buttonStyle = {
+    width: "100%",
+    padding: "14px",
+    borderRadius: "30px",
+    border: "none",
+    backgroundColor: "#52796f",
+    color: "white",
+    fontWeight: "bold",
+    cursor: loading ? "not-allowed" : "pointer",
+    opacity: loading ? 0.6 : 1,
   };
 
   return (
@@ -93,9 +149,10 @@ export default function SignupForm() {
     >
       <ToastContainer theme="colored" />
 
-      <h2 style={{ color: "#333", fontWeight: "bold" }}>
-        Complete your account
+      <h2 style={{ color: "#333", fontWeight: "bold", marginBottom: "20px" }}>
+        {t.title}
       </h2>
+
       <form
         onSubmit={handleSignup}
         style={{
@@ -107,72 +164,33 @@ export default function SignupForm() {
       >
         <input
           type="email"
-          placeholder="Email address"
+          placeholder={t.emailPlaceholder}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{
-            width: "100%",
-            padding: "14px",
-            borderRadius: "30px",
-            border: "1px solid #ccc",
-            marginBottom: "15px",
-            textAlign: "center",
-            backgroundColor: "#fff",   // 🟢 kolom putih
-            color: "#000",
-          }}
+          style={inputStyle}
         />
+
         <input
           type="text"
-          placeholder="WhatsApp number (e.g. +628123456789)"
+          placeholder={t.whatsappPlaceholder}
           value={whatsapp}
           onChange={(e) => setWhatsapp(e.target.value)}
           required
-          style={{
-            width: "100%",
-            padding: "14px",
-            borderRadius: "30px",
-            border: "1px solid #ccc",
-            marginBottom: "15px",
-            textAlign: "center",
-            backgroundColor: "#fff",   // 🟢 kolom putih
-            color: "#000",
-          }}
+          style={inputStyle}
         />
+
         <input
           type="password"
-          placeholder="Create password"
+          placeholder={t.passwordPlaceholder}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          style={{
-            width: "100%",
-            padding: "14px",
-            borderRadius: "30px",
-            border: "1px solid #ccc",
-            marginBottom: "25px",
-            textAlign: "center",
-            backgroundColor: "#fff",   // 🟢 kolom putih
-            color: "#000",
-            }}
+          style={{ ...inputStyle, marginBottom: "25px" }}
         />
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            width: "100%",
-            padding: "14px",
-            borderRadius: "30px",
-            border: "none",
-            backgroundColor: "#52796f",
-            color: "white",
-            fontWeight: "bold",
-            cursor: loading ? "not-allowed" : "pointer",
-            opacity: loading ? 0.6 : 1,
-          }}
-        >
-          {loading ? "Creating Account..." : "Sign Up"}
+        <button type="submit" disabled={loading} style={buttonStyle}>
+          {loading ? t.creating : t.signupButton}
         </button>
       </form>
     </div>

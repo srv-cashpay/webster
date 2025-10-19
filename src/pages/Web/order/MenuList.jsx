@@ -31,7 +31,7 @@ const MenuList = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          `https://cashpay.my.id/menu?merchant_id=${merchantId}`
+          `https://cashpay.my.id/api/product/menu?merchant_id=${merchantId}`
         );
 
         if (res.data?.success) {
@@ -41,7 +41,7 @@ const MenuList = () => {
             name: row.product_name,
             price: row.price,
             image: row.image
-              ? `https://cashpay.my.id/${row.image.file_path}`
+              ? `https://cashpay.my.id/api/merchant/${row.image.file_path}`
               : "https://via.placeholder.com/300x200?text=No+Image",
           }));
           setFoods(data);

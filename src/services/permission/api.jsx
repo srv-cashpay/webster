@@ -79,7 +79,7 @@ axiosInstance.interceptors.response.use(
 // 📘 API FUNCTION EXPORTS
 export const fetchMerkData = async () => {
   try {
-    const response = await axiosInstance.get("/merchant/product/merk");
+    const response = await axiosInstance.get("/merchant/permission/merk");
     return response.data;
   } catch (error) {
     console.error("Error fetching Merk data:", error);
@@ -89,7 +89,7 @@ export const fetchMerkData = async () => {
 
 export const fetchCategoryData = async () => {
   try {
-    const response = await axiosInstance.get("/merchant/product/category");
+    const response = await axiosInstance.get("/merchant/permission/category");
     return response.data;
   } catch (error) {
     console.error("Error fetching Category data:", error);
@@ -97,72 +97,72 @@ export const fetchCategoryData = async () => {
   }
 };
 
-export const fetchProducts = async (paginationData) => {
+export const fetchPermissions = async (paginationData) => {
   try {
-    const response = await axiosInstance.get("/merchant/product/pagination", {
+    const response = await axiosInstance.get("/merchant/permission/pagination", {
       params: paginationData,
     });
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching permissions:", error);
     throw error;
   }
 };
 
-export const createProduct = async (product) => {
+export const createPermission = async (permission) => {
   try {
-    const response = await axiosInstance.post("/merchant/product/create", product);
+    const response = await axiosInstance.post("/merchant/permission/create", permission);
     return response.data;
   } catch (error) {
-    console.error("Error creating product:", error);
+    console.error("Error creating permission:", error);
     throw error;
   }
 };
 
-export const deleteProduct = async (id) => {
+export const deletePermission = async (id) => {
   try {
-    await axiosInstance.delete(`/merchant/product/${id}`);
+    await axiosInstance.delete(`/merchant/permission/${id}`);
   } catch (error) {
-    console.error("Failed to delete product:", error);
+    console.error("Failed to delete permission:", error);
     throw error;
   }
 };
 
-export const bulkDeleteProducts = async (selectedProductIds) => {
+export const bulkDeletePermissions = async (selectedPermissionIds) => {
   try {
-    await axiosInstance.delete("/merchant/product/bulk-delete", {
-      data: { id: selectedProductIds },
+    await axiosInstance.delete("/merchant/permission/bulk-delete", {
+      data: { id: selectedPermissionIds },
     });
   } catch (error) {
-    console.error("Failed to delete selected products:", error);
+    console.error("Failed to delete selected permissions:", error);
     throw error;
   }
 };
 
-export const updateExistingProduct = async (product) => {
+export const updateExistingPermission = async (permission) => {
   try {
-    const response = await axiosInstance.put(`/merchant/product/update/${product.id}`, {
-      product_name: product.product_name,
-      stock: product.stock,
-      minimal_stock: product.minimal_stock,
-      price: product.price,
-      status: product.status,
-      merk: product.merk,
+    const response = await axiosInstance.put(`/merchant/permission/update/${permission.id}`, {
+      permission_name: permission.permission_name,
+      stock: permission.stock,
+      minimal_stock: permission.minimal_stock,
+      price: permission.price,
+      status: permission.status,
+      merk: permission.merk,
     });
     return response.data;
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error("Error updating permission:", error);
     throw error;
   }
 };
 
-// 📦 Get Product by ID
-export const fetchProductById = async (id) => {
+// 📦 Get Permission by ID
+export const fetchPermissionById = async (id) => {
   try {
-    const response = await axiosInstance.get(`/merchant/product/${id}`);
-    return response.data.data; // Mengembalikan object product
+    const response = await axiosInstance.get(`/merchant/permission/${id}`);
+    return response.data.data; // Mengembalikan object permission
   } catch (error) {
-    console.error(`Error fetching product with ID ${id}:`, error);
+    console.error(`Error fetching permission with ID ${id}:`, error);
     throw error;
   }
 };
@@ -172,7 +172,7 @@ export const uploadImage = async (id, file) => {
     formData.append("image", file);
 
     const response = await axiosInstance.put(
-      `/merchant/product/upload/${id}`,
+      `/merchant/permission/upload/${id}`,
       formData,
       {
         headers: {

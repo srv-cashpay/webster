@@ -76,10 +76,22 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const fetchUserData = async (pagination = { limit: 10, page: 0 }) => {
+    try {
+        const response = await axiosInstance.get('/merchant/user/pagination', {
+            params: pagination,
+        });
+        return response.data.rows; // Asumsikan data ada di `rows`
+    } catch (error) {
+        console.error('Error fetching User data:', error);
+        throw error;
+    }
+};
+
 // 📘 API FUNCTION EXPORTS
 export const fetchMerkData = async () => {
   try {
-    const response = await axiosInstance.get("/merchant/product/merk");
+    const response = await axiosInstance.get("/merchant/user/merk");
     return response.data;
   } catch (error) {
     console.error("Error fetching Merk data:", error);
@@ -89,7 +101,7 @@ export const fetchMerkData = async () => {
 
 export const fetchCategoryData = async () => {
   try {
-    const response = await axiosInstance.get("/merchant/product/category");
+    const response = await axiosInstance.get("/merchant/user/category");
     return response.data;
   } catch (error) {
     console.error("Error fetching Category data:", error);
@@ -97,72 +109,83 @@ export const fetchCategoryData = async () => {
   }
 };
 
-export const fetchProducts = async (paginationData) => {
-  try {
-    const response = await axiosInstance.get("/merchant/product/pagination", {
-      params: paginationData,
-    });
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    throw error;
-  }
+export const fetchUsers = async (paginationData) => {
+    try {
+        const response = await axiosInstance.get('/merchant/user/pagination', {
+            params: paginationData,
+        });
+
+        // Pastikan response sukses dan data tersedia
+        if (response.data.success && response.data.data) {
+            return {
+                users: response.data.data.data, // array data user
+                totalRows: response.data.data.total_rows,
+                totalPages: response.data.data.total_page,
+                currentPage: response.data.data.page,
+            };
+        } else {
+            throw new Error('Invalid API response structure');
+        }
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
 };
 
-export const createProduct = async (product) => {
+export const createUser = async (user) => {
   try {
-    const response = await axiosInstance.post("/merchant/product/create", product);
+    const response = await axiosInstance.post("/merchant/user/create", user);
     return response.data;
   } catch (error) {
-    console.error("Error creating product:", error);
+    console.error("Error creating user:", error);
     throw error;
   }
 };
 
-export const deleteProduct = async (id) => {
+export const deleteUser = async (id) => {
   try {
-    await axiosInstance.delete(`/merchant/product/${id}`);
+    await axiosInstance.delete(`/merchant/user/${id}`);
   } catch (error) {
-    console.error("Failed to delete product:", error);
+    console.error("Failed to delete user:", error);
     throw error;
   }
 };
 
-export const bulkDeleteProducts = async (selectedProductIds) => {
+export const bulkDeleteUsers = async (selectedUserIds) => {
   try {
-    await axiosInstance.delete("/merchant/product/bulk-delete", {
-      data: { id: selectedProductIds },
+    await axiosInstance.delete("/merchant/user/bulk-delete", {
+      data: { id: selectedUserIds },
     });
   } catch (error) {
-    console.error("Failed to delete selected products:", error);
+    console.error("Failed to delete selected users:", error);
     throw error;
   }
 };
 
-export const updateExistingProduct = async (product) => {
+export const updateExistingUser = async (user) => {
   try {
-    const response = await axiosInstance.put(`/merchant/product/update/${product.id}`, {
-      product_name: product.product_name,
-      stock: product.stock,
-      minimal_stock: product.minimal_stock,
-      price: product.price,
-      status: product.status,
-      merk: product.merk,
+    const response = await axiosInstance.put(`/merchant/user/update/${user.id}`, {
+      user_name: user.user_name,
+      stock: user.stock,
+      minimal_stock: user.minimal_stock,
+      price: user.price,
+      status: user.status,
+      merk: user.merk,
     });
     return response.data;
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error("Error updating user:", error);
     throw error;
   }
 };
 
-// 📦 Get Product by ID
-export const fetchProductById = async (id) => {
+// 📦 Get User by ID
+export const fetchUserById = async (id) => {
   try {
-    const response = await axiosInstance.get(`/merchant/product/${id}`);
-    return response.data.data; // Mengembalikan object product
+    const response = await axiosInstance.get(`/merchant/user/${id}`);
+    return response.data.data; // Mengembalikan object user
   } catch (error) {
-    console.error(`Error fetching product with ID ${id}:`, error);
+    console.error(`Error fetching user with ID ${id}:`, error);
     throw error;
   }
 };
@@ -172,7 +195,7 @@ export const uploadImage = async (id, file) => {
     formData.append("image", file);
 
     const response = await axiosInstance.put(
-      `/merchant/product/upload/${id}`,
+      `/merchant/user/upload/${id}`,
       formData,
       {
         headers: {
@@ -189,3 +212,5 @@ export const uploadImage = async (id, file) => {
 };
 
 export default axiosInstance;
+
+
