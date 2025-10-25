@@ -20,10 +20,14 @@ import {
   FaFileAlt,
   FaPuzzlePiece,
   FaQuestionCircle,
+  FaTags,        // Category
+  FaTrademark,   // Merk
+  FaPercent,     // Discount
+  FaBalanceScale, // Tax
+  FaCalendarCheck, // Reservation
 } from "react-icons/fa";
 import { fetchMerchantData } from "./sidebarApi";
 
-// Mapping icon untuk data dari API
 const iconMap = {
   Permission: <FaTasks />,
   User: <FaUser />,
@@ -43,12 +47,19 @@ const Sidebar = ({ collapsed }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Static menu
+  // ✅ Static menu (dengan Category, Merk, Discount, Tax, Reservation)
   const staticMenuItems = [
     { label: "Search", to: `/${currentLang}/search`, icon: <FaSearch /> },
     { label: "User", to: `/${currentLang}/user`, icon: <FaUser /> },
-    { label: "Orders", to: `/${currentLang}/orders`, icon: <FaShoppingCart /> },
     { label: "Products", to: `/${currentLang}/product/list`, icon: <FaBoxOpen /> },
+
+    // 🔹 Tambahan baru
+    { label: "Category", to: `/${currentLang}/category/list`, icon: <FaTags /> },
+    { label: "Merk", to: `/${currentLang}/merk`, icon: <FaTrademark /> },
+    { label: "Discount", to: `/${currentLang}/discount`, icon: <FaPercent /> },
+    { label: "Tax", to: `/${currentLang}/tax`, icon: <FaBalanceScale /> },
+    { label: "Reservation", to: `/${currentLang}/reservation`, icon: <FaCalendarCheck /> },
+
     { label: "POS", to: `/${currentLang}/pos`, icon: <FaCashRegister /> },
     { label: "Customers", to: `/${currentLang}/customers`, icon: <FaUsers /> },
     { label: "Reports", to: `/${currentLang}/reports`, icon: <FaChartLine /> },
@@ -56,12 +67,7 @@ const Sidebar = ({ collapsed }) => {
     { label: "Invoices", to: `/${currentLang}/invoices`, icon: <FaFileInvoice /> },
     { label: "Messages", to: `/${currentLang}/messages`, icon: <FaEnvelope /> },
     { label: "Support", to: `/${currentLang}/support`, icon: <FaLifeRing /> },
-    { label: "Settings", to: `/${currentLang}/settings`, icon: <FaCog /> },
-    { label: "Notifications", to: `/${currentLang}/notifications`, icon: <FaBell /> },
     { label: "Users", to: `/${currentLang}/users`, icon: <FaUsersCog /> },
-    { label: "Activities", to: `/${currentLang}/activities`, icon: <FaTasks /> },
-    { label: "Logs", to: `/${currentLang}/logs`, icon: <FaFileAlt /> },
-    { label: "Integrations", to: `/${currentLang}/integrations`, icon: <FaPuzzlePiece /> },
   ];
 
   useEffect(() => {
@@ -133,15 +139,12 @@ const Sidebar = ({ collapsed }) => {
           transition: "font-size 0.3s ease",
         }}
       >
-        {/* Static menu */}
         {renderMenu(staticMenuItems)}
 
-        {/* Divider jika ada dynamic menu */}
         {!loading && dynamicMenu.length > 0 && !collapsed && (
           <li style={{ margin: "10px 0", borderTop: "1px solid #ddd" }}></li>
         )}
 
-        {/* Dynamic menu */}
         {loading && (
           <li style={{ fontSize: "12px", padding: "6px" }}>Memuat menu tambahan...</li>
         )}

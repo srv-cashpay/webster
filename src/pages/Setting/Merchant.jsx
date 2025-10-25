@@ -19,8 +19,8 @@ const Merchant = () => {
   const [isChanged, setIsChanged] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const API_URL = "https://cashpay.my.id/api/merchant/get";
-  const REFRESH_URL = "https://cashpay.my.id/api/auth/refresh"; // ubah sesuai endpoint refresh token kamu
+  const API_URL = "https://cashpay.my.id:2388/api/merchant/get";
+  const REFRESH_URL = "https://cashpay.my.id:2356/api/auth/refresh"; // ubah sesuai endpoint refresh token kamu
 
   // 🔹 Ambil token dari cookie
   const getAccessToken = () => Cookies.get("token");
@@ -96,7 +96,7 @@ const Merchant = () => {
     try {
       setLoading(true);
       const res = await axios.put(
-        "https://cashpay.my.id/api/merchant/update",
+        "https://cashpay.my.id:2388/api/merchant/update",
         data,
         {
           headers: {

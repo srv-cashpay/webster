@@ -122,7 +122,7 @@ const POS = () => {
                 filteredProducts.map((product) => (
                   <div key={product.id} className="product-card">
                     <img
-                      src={`https://cashpay.my.id/api/merchant/${product.image?.file_path}`}
+                      src={`https://cashpay.my.id:2388/api/merchant/${product.image?.file_path}`}
                       alt={product.product_name}
                       className="product-image"
                     />

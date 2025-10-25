@@ -28,7 +28,7 @@ const ResetPassword = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://cashpay.my.id/api/auth/resetpassword?token=${token}`,
+        `https://cashpay.my.id:2356/api/auth/resetpassword?token=${token}`,
         { new_password: password },
         { headers: { "X-Api-Key": "3f=Pr#g1@RU-nw=30" } }
       );

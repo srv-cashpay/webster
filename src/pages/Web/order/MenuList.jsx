@@ -41,7 +41,7 @@ const MenuList = () => {
             name: row.product_name,
             price: row.price,
             image: row.image
-              ? `https://cashpay.my.id/api/merchant/${row.image.file_path}`
+              ? `https://cashpay.my.id:2388/api/merchant/${row.image.file_path}`
               : "https://via.placeholder.com/300x200?text=No+Image",
           }));
           setFoods(data);

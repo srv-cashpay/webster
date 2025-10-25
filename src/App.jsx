@@ -16,9 +16,14 @@ import VerifyOtp from "./pages/Auth/Forgot/VerifyReset";
 import ResetPassword from "./pages/Auth/Forgot/ResetPassword";
 import Search from "./pages/Search";
 import Product from "./pages/Product/List";
+import Category from "./pages/Category/List";
 
+import RoleUserPermission from "./pages/RoleUserPermission/List";
+import RoleUser from "./pages/RoleUser/List";
+import Role from "./pages/Role/List";
 import Permission from "./pages/Permission/List";
 import UserList from "./pages/User/List";
+import Cms from "./pages/Web/Cms";
 
 import Pos from "./pages/Pos/Pos";
 import LandingPage from "./pages/Web/Landing";
@@ -27,8 +32,11 @@ import SignupForm from "./pages/Auth/SignupForm";
 import OtpForm from "./pages/Auth/OtpForm";
 import MenuList from "./pages/Web/order/MenuList";
 import Setting from "./pages/Setting/Setting";
+import Reservation from "./pages/Reservation/TableReservation";
+import OrderWeb from "./pages/OrderWeb/List";
 import Cookies from "js-cookie";
 import "./App.css";
+import RoleUserPermissionDetailModal from "./pages/RoleUserPermission/RoleUserPermissionDetailModal";
 
 function ProtectedLayout({
   onLogout,
@@ -63,8 +71,15 @@ function ProtectedLayout({
           <Route path="/:lang/setting" element={<Setting />} />
           <Route path="/:lang/search" element={<Search />} />
           <Route path="/:lang/product/list" element={<Product />} />
+          <Route path="/:lang/category/list" element={<Category />} />
           <Route path="/:lang/permission/list" element={<Permission />} />
+          <Route path="/:lang/role/list" element={<Role />} />
+          <Route path="/:lang/role_user/list" element={<RoleUser />} />
+          <Route path="/:lang/role_user_permission/list" element={<RoleUserPermission />} />
           <Route path="/:lang/user/list" element={<UserList />} />
+          <Route path="/:lang/content_setting" element={<Cms />} />
+          <Route path="/:lang/reservation" element={<Reservation />} />
+          <Route path="/:lang/order-web" element={<OrderWeb />} />
           <Route path="/:lang/pos" element={<Pos />} />
           <Route path="/" element={<Navigate to="/id/harbour" replace />} />
         </Routes>

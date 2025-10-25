@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 // 🔧 Membuat instance Axios
 const axiosInstance = axios.create({
-  baseURL: "https://cashpay.my.id/api",
+  baseURL: "https://cashpay.my.id:2388/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,7 +21,7 @@ const refreshAuthToken = async () => {
 
   try {
     const response = await axios.post(
-      "https://cashpay.my.id/api/auth/refresh",
+      "https://cashpay.my.id:2356/api/auth/refresh",
       { refresh_token: refreshToken },
       {
         headers: {
@@ -83,6 +83,88 @@ export const fetchMerkData = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching Merk data:", error);
+    throw error;
+  }
+};
+
+// 📘 API FUNCTION EXPORTS
+export const fetchTemplate = async () => {
+  try {
+    const response = await axiosInstance.get("/merchant/template", {
+      responseType: "blob", // penting untuk menerima file binary
+    });
+
+    // 🔹 Ambil nama file dari header Content-Disposition
+    const contentDisposition = response.headers["content-disposition"];
+    let fileName = "template.xlsx";
+
+    if (contentDisposition) {
+      const match = contentDisposition.match(/filename="?([^"]+)"?/);
+      if (match && match[1]) {
+        fileName = decodeURIComponent(match[1]); // handle nama file dengan spasi atau karakter khusus
+      }
+    }
+
+    // 🔹 Buat URL blob & trigger download otomatis di browser
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+
+    // 🔹 Bersihkan DOM dan URL blob
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+    console.error("❌ Error saat download template:", error);
+    alert("Gagal mengunduh template. Silakan coba lagi!");
+  }
+};
+
+// 📤 Upload Template Excel
+export const uploadTemplate = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file); // 🟢 key harus "file" sesuai backend
+
+    const response = await axiosInstance.post("/merchant/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data; // misal: { message: "Upload sukses", data: {...} }
+  } catch (error) {
+    console.error("❌ Error uploading template:", error);
+    throw error;
+  }
+};
+
+export const exportProductsToExcel = async (from, to) => {
+  try {
+    const response = await axiosInstance.post(
+      "/merchant/export/excel",
+      { from, to },
+      { responseType: "blob" }
+    );
+
+    const blob = new Blob([response.data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "products_export.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error exporting Excel:", error);
     throw error;
   }
 };

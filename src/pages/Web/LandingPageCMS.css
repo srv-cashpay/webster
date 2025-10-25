@@ -1,0 +1,144 @@
+/* === Layout Container === */
+.cms-container {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  font-family: "Inter", sans-serif;
+  color: #333;
+}
+
+/* === Section === */
+.cms-section {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.cms-section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2b6cb0;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* === Input & Textarea === */
+.cms-input,
+.cms-textarea,
+.cms-file {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+.cms-input:focus,
+.cms-textarea:focus {
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+}
+
+.cms-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* === Feature Cards === */
+.cms-feature-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+  transition: transform 0.15s ease;
+}
+
+.cms-feature-card:hover {
+  transform: translateY(-3px);
+}
+
+/* === Image Preview === */
+.cms-preview {
+  margin-top: 10px;
+  border-radius: 10px;
+  width: 160px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+}
+
+/* === Buttons === */
+.cms-btn-add,
+.cms-btn-save,
+.cms-btn-delete {
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 10px 16px;
+  transition: background 0.25s ease, transform 0.15s ease;
+  font-weight: 500;
+}
+
+/* Tambah fitur */
+.cms-btn-add {
+  background-color: #38a169;
+  color: #fff;
+  margin-top: 8px;
+}
+
+.cms-btn-add:hover {
+  background-color: #2f855a;
+  transform: scale(1.03);
+}
+
+/* Hapus fitur */
+.cms-btn-delete {
+  background-color: #e53e3e;
+  color: #fff;
+  margin-top: 6px;
+}
+
+.cms-btn-delete:hover {
+  background-color: #c53030;
+  transform: scale(1.03);
+}
+
+/* Simpan semua */
+.cms-btn-save {
+  width: 100%;
+  background-color: #3182ce;
+  color: #fff;
+  font-size: 1rem;
+  padding: 12px;
+  margin-top: 20px;
+}
+
+.cms-btn-save:hover {
+  background-color: #2b6cb0;
+  transform: scale(1.02);
+}
+
+/* === Responsiveness === */
+@media (max-width: 600px) {
+  .cms-container {
+    padding: 20px;
+  }
+
+  .cms-section-title {
+    font-size: 1.1rem;
+  }
+
+  .cms-btn-save {
+    font-size: 0.95rem;
+  }
+}
