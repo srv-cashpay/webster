@@ -5,20 +5,19 @@ import { useParams } from "react-router-dom"; // ✅ ambil param dari URL
 import Headbar from "./Headbar";
 import DataTable from "./DataTable";
 import Pagination from "./Pagination";
-import ProductModal from "./ProductModal";
+import TaxModal from "./TaxModal";
 import DeleteModal from "./DeleteModal";
 import BulkDeleteModal from "./BulkDeleteModal";
 import ImageUploadModal from "./ImageUploadModal";
-import ProductDetailModal from "./ProductDetailModal";
+import TaxDetailModal from "./TaxDetailModal";
 
 // 🔹 API services
 import {
-  fetchProducts,
-  createProduct,
-  bulkDeleteProducts,
-  fetchProductById,
-  bulkEditProducts,
-} from "../../services/product/api";
+  fetchTaxs,
+  createTax,
+  bulkDeleteTaxs,
+  fetchTaxById,
+} from "../../services/tax/api";
 
 const List = () => {
   // 🟢 Ambil parameter bahasa dari URL (misal: /id/dashboard atau /en/dashboard)
@@ -31,27 +30,26 @@ const List = () => {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [searchCategory, setSearchCategory] = useState("all");
+  const [searchTax, setSearchTax] = useState("all");
   const [totalRows, setTotalRows] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedTax, setSelectedTax] = useState(null);
   const [isBulkEditMode, setIsBulkEditMode] = useState(false);
   const [editableData, setEditableData] = useState({});
-  const [newProduct, setNewProduct] = useState({
-    product_name: "",
+  const [newTax, setNewTax] = useState({
+    tax: "",
     price: "",
-    stock: "",
   });
 
-  // 🧭 Load data produk
-  const loadProducts = useCallback(async () => {
+  // 🧭 Load data tax
+  const loadTaxs = useCallback(async () => {
     try {
       const paginationData = { page: currentPage, limit, search };
-      const response = await fetchProducts(paginationData);
+      const response = await fetchTaxs(paginationData);
       if (response && response.rows) {
         setData(response.rows);
         setTotalRows(response.total_rows || 0);
@@ -60,44 +58,44 @@ const List = () => {
         setTotalRows(0);
       }
     } catch (error) {
-      console.error("Gagal mengambil data produk:", error);
+      console.error("Gagal mengambil data tax:", error);
       setData([]);
       setTotalRows(0);
     }
   }, [currentPage, limit, search]);
 
   useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+    loadTaxs();
+  }, [loadTaxs]);
 
-  // ➕ Tambah produk baru
-  const handleAddProduct = () => {
-    if (!newProduct.product_name || !newProduct.price) {
+  // ➕ Tambah tax baru
+  const handleAddTax = () => {
+    if (!newTax.tax || !newTax.price) {
       alert(currentLang === "id" ? "Harap isi semua field" : "Please fill in all fields");
       return;
     }
 
     const newItem = {
       id: "P" + (data.length + 1),
-      product_name: newProduct.product_name,
-      price: parseInt(newProduct.price),
-      stock: newProduct.stock || 0,
+      tax: newTax.tax,
+      price: parseInt(newTax.price),
+      stock: newTax.stock || 0,
       created_at: new Date().toISOString().split("T")[0],
       status: 1,
       image: null,
     };
 
     setData([newItem, ...data]);
-    setNewProduct({ product_name: "", price: "", stock: "" });
+    setNewTax({ tax: "", price: "", stock: "" });
     setShowModal(false);
   };
 
-  // 🗑️ Hapus banyak produk sekaligus
+  // 🗑️ Hapus banyak tax sekaligus
   const confirmBulkDelete = async () => {
     try {
       if (selectedRows.length === 0) return;
-      await bulkDeleteProducts(selectedRows);
-      await loadProducts();
+      await bulkDeleteTaxs(selectedRows);
+      await loadTaxs();
       setSelectedRows([]);
       setShowBulkDeleteModal(false);
     } catch (error) {
@@ -106,19 +104,19 @@ const List = () => {
     }
   };
 
-  // 🔍 Lihat detail produk
+  // 🔍 Lihat detail tax
   const handleShowDetail = async (row) => {
     try {
-      const product = await fetchProductById(row.id);
-      if (product) {
-        setSelectedProduct(product);
+      const tax = await fetchTaxById(row.id);
+      if (tax) {
+        setSelectedTax(tax);
         setShowDetailModal(true);
       } else {
-        alert(currentLang === "id" ? "Gagal mengambil detail produk!" : "Failed to fetch product details!");
+        alert(currentLang === "id" ? "Gagal mengambil detail tax!" : "Failed to fetch tax details!");
       }
     } catch (error) {
       console.error(error);
-      alert(currentLang === "id" ? "Terjadi kesalahan saat mengambil data produk." : "An error occurred while fetching product data.");
+      alert(currentLang === "id" ? "Terjadi kesalahan saat mengambil data tax." : "An error occurred while fetching tax data.");
     }
   };
 
@@ -137,8 +135,8 @@ const List = () => {
           lang={currentLang}
           search={search}
           setSearch={setSearch}
-          searchCategory={searchCategory}
-          setSearchCategory={setSearchCategory}
+          searchTax={searchTax}
+          setSearchTax={setSearchTax}
           limit={limit}
           setLimit={setLimit}
           selectedRows={selectedRows}
@@ -148,84 +146,25 @@ const List = () => {
           onAddNew={() => setShowModal(true)}
           isBulkEditMode={isBulkEditMode}
           setIsBulkEditMode={setIsBulkEditMode}
-          handleSaveBulkEdit={async () => {
-           try {
-  // 🔹 Filter hanya yang dipilih & diedit
-  const editedItems = Object.keys(editableData)
-    .filter((id) => selectedRows.includes(id))
-    .map((id) => ({
-      id,
-      ...editableData[id],
-      sku:
-        editableData[id].sku !== undefined
-          ? Number(editableData[id].sku)
-          : undefined,
-      stock:
-        editableData[id].stock !== undefined
-          ? Number(editableData[id].stock)
-          : undefined,
-      price:
-        editableData[id].price !== undefined
-          ? Number(editableData[id].price)
-          : undefined,
-    }))
-    .map((item) => {
-      // remove undefined props so backend tidak menerima empty fields
-      const cleaned = { id: item.id };
-
-      if (item.sku !== undefined) cleaned.sku = item.sku;
-      if (item.stock !== undefined) cleaned.stock = item.stock;
-      if (item.price !== undefined) cleaned.price = item.price;
-
-      // add other fields if present in editableData
-      Object.keys(editableData[item.id]).forEach((field) => {
-        if (field !== "stock" && field !== "price" && field !== "sku") {
-          cleaned[field] = editableData[item.id][field];
-        }
-      });
-
-      return cleaned;
-    });
-
-  if (editedItems.length === 0) {
-    alert("Tidak ada perubahan yang disimpan.");
-    setIsBulkEditMode(false);
-    return;
-  }
-
-  // 🔹 Kirim ke backend
-  await bulkEditProducts(editedItems);
-
-  // 🔹 Update data lokal
-  const newData = data.map((row) => {
-    const edited = editedItems.find((e) => e.id === row.id);
-    return edited ? { ...row, ...edited } : row;
-  });
-  setData(newData);
-
-  // 🔹 Reset state
-  setEditableData({});
-  setSelectedRows([]);
-  setIsBulkEditMode(false);
-
-  alert("Perubahan berhasil disimpan!");
-} catch (error) {
-  console.error("Gagal menyimpan perubahan:", error);
-  alert("Gagal menyimpan perubahan produk!");
-}
-
+          handleSaveBulkEdit={() => {
+            const updatedData = data.map((row) =>
+              editableData[row.id] ? { ...row, ...editableData[row.id] } : row
+            );
+            setData(updatedData);
+            setEditableData({});
+            setIsBulkEditMode(false);
           }}
           onBulkDelete={() => setShowBulkDeleteModal(true)}
         />
       </div>
 
-      {/* 📋 Tabel Produk */}
+      {/* 📋 Tabel tax */}
       <DataTable
         lang={currentLang}
         data={data}
         setData={setData}
         search={search}
-        searchCategory={searchCategory}
+        searchTax={searchTax}
         limit={limit}
         currentPage={currentPage}
         selectedRows={selectedRows}
@@ -235,7 +174,7 @@ const List = () => {
         setEditableData={setEditableData}
         setShowDeleteModal={setShowDeleteModal}
         setShowImageModal={setShowImageModal}
-        setSelectedProduct={setSelectedProduct}
+        setSelectedTax={setSelectedTax}
         onDetail={handleShowDetail}
       />
 
@@ -244,44 +183,39 @@ const List = () => {
 
       {/* 💬 Modals */}
       {showModal && (
-        <ProductModal
+        <TaxModal
           lang={currentLang}
-          product={selectedProduct}
-          newProduct={newProduct}
-          setNewProduct={setNewProduct}
-          handleAddProduct={handleAddProduct}
+          tax={selectedTax}
+          newTax={newTax}
+          setNewTax={setNewTax}
+          handleAddTax={handleAddTax}
           setShowModal={setShowModal}
-          onSuccess={() => loadProducts()}
         />
       )}
 
       {showDetailModal && (
-        <ProductDetailModal product={selectedProduct} 
-        onClose={() => setShowDetailModal(false)} 
-        onSuccess={() => loadProducts()
-        }
-        />
+        <TaxDetailModal tax={selectedTax} onClose={() => setShowDetailModal(false)} />
       )}
 
       <DeleteModal
         lang={currentLang}
         show={showDeleteModal}
-        product={selectedProduct}
+        tax={selectedTax}
         onCancel={() => setShowDeleteModal(false)}
         onDeleted={() => {
           setShowDeleteModal(false);
-          loadProducts();
+          loadTaxs();
         }}
       />
 
       <ImageUploadModal
         lang={currentLang}
         show={showImageModal}
-        product={selectedProduct}
+        tax={selectedTax}
         onClose={() => setShowImageModal(false)}
         onDeleted={() => {
           setShowImageModal(false);
-          loadProducts();
+          loadTaxs();
         }}
       />
 

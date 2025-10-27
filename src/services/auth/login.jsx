@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const API_KEY = "3f=Pr#g1@RU-nw=30";
 const AUTH_BASE_URL = "https://cashpay.my.id:2356/api/auth";
-const WEB_BASE_URL = "https://cashpay.my.id/api/web";
+const WEB_BASE_URL = "https://cashpay.my.id:2356/api/web";
 
 /**
  * 🔹 Login Manual (email / WhatsApp)

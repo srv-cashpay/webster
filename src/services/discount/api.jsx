@@ -77,12 +77,12 @@ axiosInstance.interceptors.response.use(
 );
 
 // 📘 API FUNCTION EXPORTS
-export const fetchMerkData = async () => {
+export const fetchDiscountData = async () => {
   try {
-    const response = await axiosInstance.get("/merchant/product/merk");
+    const response = await axiosInstance.get("/merchant/discount/discount");
     return response.data;
   } catch (error) {
-    console.error("Error fetching Merk data:", error);
+    console.error("Error fetching Discount data:", error);
     throw error;
   }
 };
@@ -142,7 +142,7 @@ export const uploadTemplate = async (file) => {
   }
 };
 
-export const exportProductsToExcel = async (from, to) => {
+export const exportDiscountsToExcel = async (from, to) => {
   try {
     const response = await axiosInstance.post(
       "/merchant/export/excel",
@@ -157,7 +157,7 @@ export const exportProductsToExcel = async (from, to) => {
 
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "products_export.xlsx");
+    link.setAttribute("download", "discounts_export.xlsx");
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -169,120 +169,93 @@ export const exportProductsToExcel = async (from, to) => {
   }
 };
 
-export const fetchCategoryData = async () => {
+export const fetchDiscounts = async (paginationData) => {
   try {
-    const response = await axiosInstance.get("/merchant/product/category");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching Category data:", error);
-    throw error;
-  }
-};
-
-export const fetchProducts = async (paginationData) => {
-  try {
-    const response = await axiosInstance.get("/merchant/product/pagination", {
+    const response = await axiosInstance.get("/merchant/discount/pagination", {
       params: paginationData,
     });
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching discounts:", error);
     throw error;
   }
 };
 
-export const createProduct = async (product) => {
+export const createDiscount = async (discount) => {
   try {
-    const response = await axiosInstance.post("/merchant/product/create", product);
+    const response = await axiosInstance.post("/merchant/discount/create", discount);
     return response.data;
   } catch (error) {
-    console.error("Error creating product:", error);
+    console.error("Error creating discount:", error);
     throw error;
   }
 };
 
-export const deleteProduct = async (id) => {
+export const deleteDiscount = async (id) => {
   try {
-    await axiosInstance.delete(`/merchant/product/${id}`);
+    await axiosInstance.delete(`/merchant/discount/${id}`);
   } catch (error) {
-    console.error("Failed to delete product:", error);
+    console.error("Failed to delete discount:", error);
     throw error;
   }
 };
 
-export const bulkDeleteProducts = async (selectedProductIds) => {
+export const bulkDeleteDiscounts = async (selectedDiscountIds) => {
   try {
-    await axiosInstance.delete("/merchant/product/bulk-delete", {
-      data: { id: selectedProductIds },
+    await axiosInstance.delete("/merchant/discount/bulk-delete", {
+      data: { id: selectedDiscountIds },
     });
   } catch (error) {
-    console.error("Failed to delete selected products:", error);
+    console.error("Failed to delete selected discounts:", error);
     throw error;
   }
 };
 
-// 🧩 Bulk Edit Products
-export const bulkEditProducts = async (items) => {
+export const updateExistingDiscount = async (discount) => {
   try {
-    const response = await axiosInstance.put("/merchant/product/bulk-edit", {
-      items,
+    const response = await axiosInstance.put(`/merchant/discount/update/${discount.id}`, {
+      discount_name: discount.discount_name,
+      stock: discount.stock,
+      minimal_stock: discount.minimal_stock,
+      price: discount.price,
+      status: discount.status,
+      discount: discount.discount,
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Gagal melakukan bulk edit:", error);
+    console.error("Error updating discount:", error);
     throw error;
   }
 };
 
-export const updateExistingProduct = async (id, product) => {
+// 📦 Get Discount by ID
+export const fetchDiscountById = async (id) => {
   try {
-    const response = await axiosInstance.put(`/merchant/product/update/${id}`, product);
-    return response.data;
+    const response = await axiosInstance.get(`/merchant/discount/${id}`);
+    return response.data.data; // Mengembalikan object discount
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error(`Error fetching discount with ID ${id}:`, error);
     throw error;
   }
 };
-
-// 📦 Get Product by ID
-export const fetchProductById = async (id) => {
+export const uploadImage = async (id, file) => {
   try {
-    const response = await axiosInstance.get(`/merchant/product/${id}`);
-    return response.data.data; // Mengembalikan object product
-  } catch (error) {
-    console.error(`Error fetching product with ID ${id}:`, error);
-    throw error;
-  }
-};
-export const uploadImage = async (productId, file, onProgress) => {
-  // ⬇️ Pastikan ID string (bukan objek)
-  const id = typeof productId === "object" ? productId.id : productId;
+    const formData = new FormData();
+    formData.append("image", file);
 
-  const formData = new FormData();
-  formData.append("image", file); // ⬅️ harus sama dengan field di backend
-
-  try {
     const response = await axiosInstance.put(
-      `/merchant/product/upload/${id}`,
+      `/merchant/discount/upload/${id}`,
       formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: (progressEvent) => {
-          if (onProgress) {
-            const progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            onProgress(progress);
-          }
         },
       }
     );
 
     return response.data;
   } catch (error) {
-    console.error("Upload failed:", error);
+    console.error("Error uploading image:", error);
     throw error;
   }
 };

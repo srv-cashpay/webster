@@ -6,7 +6,7 @@ const DataTable = ({
   data,
   setData,
   search,
-  searchCategory,
+  searchTax,
   limit,
   currentPage,
   selectedRows,
@@ -15,17 +15,17 @@ const DataTable = ({
   editableData,
   setEditableData,
   setShowDeleteModal,
-  setSelectedCategory,
+  setSelectedTax,
   onDetail
 }) => {
   const filteredData = data.filter((row) => {
     if (!search.trim()) return true;
     const term = search.toLowerCase();
-    if (searchCategory === "name")
-      return row.category_name.toLowerCase().includes(term);
-    if (searchCategory === "id") return row.id.toLowerCase().includes(term);
+    if (searchTax === "name")
+      return row.tax.toLowerCase().includes(term);
+    if (searchTax === "id") return row.id.toLowerCase().includes(term);
     return (
-      row.category_name.toLowerCase().includes(term) ||
+      row.tax.toLowerCase().includes(term) ||
       row.id.toLowerCase().includes(term)
     );
   });
@@ -51,7 +51,7 @@ const DataTable = ({
   };
 
   const handleDeleteClick = (row) => {
-    setSelectedCategory(row);
+    setSelectedTax(row);
     setShowDeleteModal(true);
   };
 
@@ -67,6 +67,7 @@ const DataTable = ({
             </th>
             <th style={thStyle}>No</th>
             <th style={thStyle}>Name</th>
+            <th style={thStyle}>Percent</th>
             <th style={thStyle}>Status</th>
             <th style={thStyle}>Actions</th>
           </tr>
@@ -90,9 +91,9 @@ const DataTable = ({
                     {isEditable ? (
                       <input
                         type="text"
-                        value={editableData[row.id]?.category_name || row.category_name}
+                        value={editableData[row.id]?.tax || row.tax}
                         onChange={(e) =>
-                          handleBulkEditChange(row.id, "category_name", e.target.value)
+                          handleBulkEditChange(row.id, "tax", e.target.value)
                         }
                         style={inputEdit}
                       />
@@ -101,10 +102,11 @@ const DataTable = ({
                         style={{ color: "blue", cursor: "pointer" }}
                         onClick={() => onDetail(row)}
                       >
-                        {row.category_name}
+                        {row.tax}
                       </span>
                     )}
                   </td>
+                  <td style={tdCenter}>{row.tax_percentage}</td>
                   <td style={tdCenter}>
                     <span
                       style={{

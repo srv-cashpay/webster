@@ -6,7 +6,7 @@ const DataTable = ({
   data,
   setData,
   search,
-  searchCategory,
+  searchDiscount,
   limit,
   currentPage,
   selectedRows,
@@ -15,17 +15,17 @@ const DataTable = ({
   editableData,
   setEditableData,
   setShowDeleteModal,
-  setSelectedCategory,
+  setSelectedDiscount,
   onDetail
 }) => {
   const filteredData = data.filter((row) => {
     if (!search.trim()) return true;
     const term = search.toLowerCase();
-    if (searchCategory === "name")
-      return row.category_name.toLowerCase().includes(term);
-    if (searchCategory === "id") return row.id.toLowerCase().includes(term);
+    if (searchDiscount === "name")
+      return row.discount_name.toLowerCase().includes(term);
+    if (searchDiscount === "id") return row.id.toLowerCase().includes(term);
     return (
-      row.category_name.toLowerCase().includes(term) ||
+      row.discount_name.toLowerCase().includes(term) ||
       row.id.toLowerCase().includes(term)
     );
   });
@@ -51,7 +51,7 @@ const DataTable = ({
   };
 
   const handleDeleteClick = (row) => {
-    setSelectedCategory(row);
+    setSelectedDiscount(row);
     setShowDeleteModal(true);
   };
 
@@ -90,9 +90,9 @@ const DataTable = ({
                     {isEditable ? (
                       <input
                         type="text"
-                        value={editableData[row.id]?.category_name || row.category_name}
+                        value={editableData[row.id]?.discount_name || row.discount_name}
                         onChange={(e) =>
-                          handleBulkEditChange(row.id, "category_name", e.target.value)
+                          handleBulkEditChange(row.id, "discount_name", e.target.value)
                         }
                         style={inputEdit}
                       />
@@ -101,7 +101,7 @@ const DataTable = ({
                         style={{ color: "blue", cursor: "pointer" }}
                         onClick={() => onDetail(row)}
                       >
-                        {row.category_name}
+                        {row.discount_name}
                       </span>
                     )}
                   </td>

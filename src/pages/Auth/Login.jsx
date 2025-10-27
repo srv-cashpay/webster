@@ -114,7 +114,7 @@ const Login = ({ onLogin }) => {
           ) {
             window.location.href = "/input-whatsapp-google";
           } else {
-            window.location.href = "/harbour";
+            window.location.href = "/en/harbour";
           }
         } else {
           toast.error(t.googleLoginFailed);

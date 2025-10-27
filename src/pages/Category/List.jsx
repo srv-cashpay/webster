@@ -43,7 +43,6 @@ const List = () => {
   const [newCategory, setNewCategory] = useState({
     category_name: "",
     price: "",
-    stock: "",
   });
 
   // 🧭 Load data produk

@@ -55,9 +55,9 @@ const Sidebar = ({ collapsed }) => {
 
     // 🔹 Tambahan baru
     { label: "Category", to: `/${currentLang}/category/list`, icon: <FaTags /> },
-    { label: "Merk", to: `/${currentLang}/merk`, icon: <FaTrademark /> },
-    { label: "Discount", to: `/${currentLang}/discount`, icon: <FaPercent /> },
-    { label: "Tax", to: `/${currentLang}/tax`, icon: <FaBalanceScale /> },
+    { label: "Merk", to: `/${currentLang}/merk/list`, icon: <FaTrademark /> },
+    { label: "Discount", to: `/${currentLang}/discount/list`, icon: <FaPercent /> },
+    { label: "Tax", to: `/${currentLang}/tax/list`, icon: <FaBalanceScale /> },
     { label: "Reservation", to: `/${currentLang}/reservation`, icon: <FaCalendarCheck /> },
 
     { label: "POS", to: `/${currentLang}/pos`, icon: <FaCashRegister /> },

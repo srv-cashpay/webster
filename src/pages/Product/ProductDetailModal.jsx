@@ -39,11 +39,11 @@ const ProductDetailModal = ({ product, onClose, onSuccess }) => {
       const payload = {
         id: updatedProduct.id,
         barcode: updatedProduct.barcode,
-        sku: updatedProduct.sku,
+        sku: parseInt(updatedProduct.sku) || 0,
         product_name: updatedProduct.product_name,
         price: parseInt(updatedProduct.price) || 0,
         stock: parseInt(updatedProduct.stock) || 0,
-        min_stock: parseInt(updatedProduct.min_stock) || 0,
+        minimal_stock: parseInt(updatedProduct.minimal_stock) || 0,
         description: updatedProduct.description,
         status: updatedProduct.status === "active" ? 1 : 2,
         merk_id: updatedProduct.merk_id || null,
@@ -51,12 +51,12 @@ const ProductDetailModal = ({ product, onClose, onSuccess }) => {
       };
 
       await updateExistingProduct(updatedProduct.id, payload);
-      toast.success("✅ Produk berhasil diperbarui!");
+      toast.success("Produk berhasil diperbarui!");
       onClose(false);
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error("Gagal memperbarui produk:", error);
-      toast.error("❌ Gagal memperbarui produk!");
+      toast.error("Gagal memperbarui produk!");
     }
   };
 
@@ -86,7 +86,7 @@ const ProductDetailModal = ({ product, onClose, onSuccess }) => {
 
             <label style={labelStyle}>SKU / Kode Produk</label>
             <input
-              type="text"
+              type="number"
               value={updatedProduct.sku || ""}
               onChange={(e) =>
                 setUpdatedProduct({ ...updatedProduct, sku: e.target.value })
@@ -191,11 +191,11 @@ const ProductDetailModal = ({ product, onClose, onSuccess }) => {
                 <label style={labelStyle}>Minimal Stok</label>
                 <input
                   type="number"
-                  value={updatedProduct.min_stock || ""}
+                  value={updatedProduct.minimal_stock || ""}
                   onChange={(e) =>
                     setUpdatedProduct({
                       ...updatedProduct,
-                      min_stock: e.target.value,
+                      minimal_stock: e.target.value,
                     })
                   }
                   style={inputSmall}
@@ -248,6 +248,44 @@ const ProductDetailModal = ({ product, onClose, onSuccess }) => {
                 Inactive
               </label>
             </div>
+            {/* 🔹 Created At (read-only) */}
+          <div style={rowGroup3}>
+            <div style={{ flex: 1 }}>
+              <label style={labelStyle}>Dibuat Pada</label>
+              <input
+                type="text"
+                value={
+                  updatedProduct.created_at
+                    ? new Date(updatedProduct.created_at).toLocaleString("id-ID")
+                    : "-"
+                }
+                readOnly
+                style={{
+                  ...inputSmall,
+                  backgroundColor: "#f9f9f9",
+                  color: "#555",
+                  cursor: "not-allowed",
+                  maxWidth: "200px",
+                }}
+              />
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <label style={labelStyle}>Dibuat Oleh</label>
+              <input
+                type="text"
+                value={updatedProduct.created_by || "-"}
+                readOnly
+                style={{
+                  ...inputSmall,
+                  backgroundColor: "#f9f9f9",
+                  color: "#555",
+                  cursor: "not-allowed",
+                  maxWidth: "200px",
+                }}
+              />
+            </div>
+          </div>
           </div>
 
           {/* Tombol */}
@@ -293,8 +331,8 @@ const modalBox = {
 };
 
 const modalTitle = {
-  textAlign: "center",
-  marginBottom: "15px",
+  textAlign: "left",
+  marginBottom: "10px",
   color: "#222",
   fontSize: "18px",
   fontWeight: "600",

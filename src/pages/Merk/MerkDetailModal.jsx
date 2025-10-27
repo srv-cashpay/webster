@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from "react";
 import {
-  fetchCategoryData,
-  updateExistingCategory
-} from "../../services/category/api";
+  fetchMerkData,
+  updateExistingMerk
+} from "../../services/merk/api";
 import { toast } from "react-toastify";
 
-const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
-  const [updatedCategory, setUpdatedCategory] = useState({ ...category });
+const MerkDetailModal = ({ merk, onClose, onSuccess }) => {
+  const [updatedMerk, setUpdatedMerk] = useState({ ...merk });
 
   useEffect(() => {
-    setUpdatedCategory({ ...category });
-  }, [category]);
+    setUpdatedMerk({ ...merk });
+  }, [merk]);
 
-  const handleUpdateCategory = async () => {
-    if (!updatedCategory.category_name) {
+  const handleUpdateMerk = async () => {
+    if (!updatedMerk.merk_name) {
       toast.warning("Harap isi semua field wajib");
       return;
     }
 
     try {
       const payload = {
-        id: updatedCategory.id,
-        description: updatedCategory.description,
-        status: updatedCategory.status === "active" ? 1 : 2,
+        id: updatedMerk.id,
+        description: updatedMerk.description,
+        status: updatedMerk.status === "active" ? 1 : 2,
       };
 
-      await updateExistingCategory(updatedCategory.id, payload);
+      await updateExistingMerk(updatedMerk.id, payload);
       toast.success("success!");
       onClose(false);
       if (onSuccess) onSuccess();
@@ -38,25 +38,25 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
   return (
     <div style={modalOverlay}>
       <div style={modalBox}>
-        <h2 style={modalTitle}>✏️ Edit Category</h2>
+        <h2 style={modalTitle}>✏️ Edit Merk</h2>
 
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleUpdateCategory();
+            handleUpdateMerk();
           }}
           style={formGrid}
         >
           {/* Kolom Kiri */}
           <div style={column}>
-            <label style={labelStyle}>Nama Category</label>
+            <label style={labelStyle}>Nama Merk</label>
             <input
               type="text"
-              value={updatedCategory.category_name || ""}
+              value={updatedMerk.merk_name || ""}
               onChange={(e) =>
-                setUpdatedCategory({
-                  ...updatedCategory,
-                  category_name: e.target.value,
+                setUpdatedMerk({
+                  ...updatedMerk,
+                  merk_name: e.target.value,
                 })
               }
               style={inputStyle}
@@ -69,9 +69,9 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
                   type="radio"
                   name="status"
                   value="active"
-                  checked={updatedCategory.status === "active" || updatedCategory.status === 1}
+                  checked={updatedMerk.status === "active" || updatedMerk.status === 1}
                   onChange={(e) =>
-                    setUpdatedCategory({ ...updatedCategory, status: e.target.value })
+                    setUpdatedMerk({ ...updatedMerk, status: e.target.value })
                   }
                   style={radioBtn}
                 />
@@ -82,9 +82,9 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
                   type="radio"
                   name="status"
                   value="inactive"
-                  checked={updatedCategory.status === "inactive" || updatedCategory.status === 2}
+                  checked={updatedMerk.status === "inactive" || updatedMerk.status === 2}
                   onChange={(e) =>
-                    setUpdatedCategory({ ...updatedCategory, status: e.target.value })
+                    setUpdatedMerk({ ...updatedMerk, status: e.target.value })
                   }
                   style={radioBtn}
                 />
@@ -97,10 +97,10 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
           <div style={column}>
             <label style={labelStyle}>Deskripsi</label>
             <textarea
-              value={updatedCategory.description || ""}
+              value={updatedMerk.description || ""}
               onChange={(e) =>
-                setUpdatedCategory({
-                  ...updatedCategory,
+                setUpdatedMerk({
+                  ...updatedMerk,
                   description: e.target.value,
                 })
               }
@@ -127,7 +127,7 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
   );
 };
 
-/* 🎨 Styles sama persis dengan CategoryModal */
+/* 🎨 Styles sama persis dengan MerkModal */
 const modalOverlay = {
   position: "fixed",
   inset: 0,
@@ -261,4 +261,4 @@ const saveBtn = {
   fontWeight: "600",
 };
 
-export default CategoryDetailModal;
+export default MerkDetailModal;

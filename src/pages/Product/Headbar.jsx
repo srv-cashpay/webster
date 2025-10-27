@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ImportModal from "./ImportModal";
 import ExportModal from "./ExportModal";
+import { fetchCategoryData} from "../../services/product/api"; // ✅ tambahkan ini
 
 const Headbar = ({
   search,
@@ -24,6 +25,20 @@ const Headbar = ({
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false); // ✅ modal export
+  const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const res = await fetchCategoryData();
+        setCategories(res || []);
+      } catch (err) {
+        console.error("Gagal memuat kategori:", err);
+      }
+    };
+    loadCategories();
+  }, []);
+
 
   const handleBulkEditClick = () => {
     if (isBulkEditMode) {
@@ -102,17 +117,18 @@ const Headbar = ({
         </div>
 
         {/* 🔹 Filter Kategori */}
-        <select
+       <select
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
           style={selectStyle}
         >
           <option value="all">Kategori</option>
-          <option value="name">Name</option>
-          <option value="email">Email</option>
-          <option value="role">Role</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.category_name}
+            </option>
+          ))}
         </select>
-
         {/* 🔹 Search Input */}
         <input
           type="text"

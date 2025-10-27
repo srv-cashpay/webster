@@ -79,7 +79,7 @@ axiosInstance.interceptors.response.use(
 // 📘 API FUNCTION EXPORTS
 export const fetchMerkData = async () => {
   try {
-    const response = await axiosInstance.get("/merchant/product/merk");
+    const response = await axiosInstance.get("/merchant/tax/merk");
     return response.data;
   } catch (error) {
     console.error("Error fetching Merk data:", error);
@@ -142,7 +142,7 @@ export const uploadTemplate = async (file) => {
   }
 };
 
-export const exportProductsToExcel = async (from, to) => {
+export const exportTaxsToExcel = async (from, to) => {
   try {
     const response = await axiosInstance.post(
       "/merchant/export/excel",
@@ -157,7 +157,7 @@ export const exportProductsToExcel = async (from, to) => {
 
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "products_export.xlsx");
+    link.setAttribute("download", "taxs_export.xlsx");
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -169,120 +169,103 @@ export const exportProductsToExcel = async (from, to) => {
   }
 };
 
-export const fetchCategoryData = async () => {
+export const fetchTaxData = async () => {
   try {
-    const response = await axiosInstance.get("/merchant/product/category");
+    const response = await axiosInstance.get("/merchant/tax/tax");
     return response.data;
   } catch (error) {
-    console.error("Error fetching Category data:", error);
+    console.error("Error fetching Tax data:", error);
     throw error;
   }
 };
 
-export const fetchProducts = async (paginationData) => {
+export const fetchTaxs = async (paginationData) => {
   try {
-    const response = await axiosInstance.get("/merchant/product/pagination", {
+    const response = await axiosInstance.get("/merchant/tax/pagination", {
       params: paginationData,
     });
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching taxs:", error);
     throw error;
   }
 };
 
-export const createProduct = async (product) => {
+export const createTax = async (tax) => {
   try {
-    const response = await axiosInstance.post("/merchant/product/create", product);
+    const response = await axiosInstance.post("/merchant/tax/create", tax);
     return response.data;
   } catch (error) {
-    console.error("Error creating product:", error);
+    console.error("Error creating tax:", error);
     throw error;
   }
 };
 
-export const deleteProduct = async (id) => {
+export const deleteTax = async (id) => {
   try {
-    await axiosInstance.delete(`/merchant/product/${id}`);
+    await axiosInstance.delete(`/merchant/tax/${id}`);
   } catch (error) {
-    console.error("Failed to delete product:", error);
+    console.error("Failed to delete tax:", error);
     throw error;
   }
 };
 
-export const bulkDeleteProducts = async (selectedProductIds) => {
+export const bulkDeleteTaxs = async (selectedTaxIds) => {
   try {
-    await axiosInstance.delete("/merchant/product/bulk-delete", {
-      data: { id: selectedProductIds },
+    await axiosInstance.delete("/merchant/tax/bulk-delete", {
+      data: { id: selectedTaxIds },
     });
   } catch (error) {
-    console.error("Failed to delete selected products:", error);
+    console.error("Failed to delete selected taxs:", error);
     throw error;
   }
 };
 
-// 🧩 Bulk Edit Products
-export const bulkEditProducts = async (items) => {
+export const updateExistingTax = async (tax) => {
   try {
-    const response = await axiosInstance.put("/merchant/product/bulk-edit", {
-      items,
+    const response = await axiosInstance.put(`/merchant/tax/update/${tax.id}`, {
+      tax: tax.tax,
+      stock: tax.stock,
+      minimal_stock: tax.minimal_stock,
+      price: tax.price,
+      status: tax.status,
+      merk: tax.merk,
     });
     return response.data;
   } catch (error) {
-    console.error("❌ Gagal melakukan bulk edit:", error);
+    console.error("Error updating tax:", error);
     throw error;
   }
 };
 
-export const updateExistingProduct = async (id, product) => {
+// 📦 Get Tax by ID
+export const fetchTaxById = async (id) => {
   try {
-    const response = await axiosInstance.put(`/merchant/product/update/${id}`, product);
-    return response.data;
+    const response = await axiosInstance.get(`/merchant/tax/${id}`);
+    return response.data.data; // Mengembalikan object tax
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error(`Error fetching tax with ID ${id}:`, error);
     throw error;
   }
 };
-
-// 📦 Get Product by ID
-export const fetchProductById = async (id) => {
+export const uploadImage = async (id, file) => {
   try {
-    const response = await axiosInstance.get(`/merchant/product/${id}`);
-    return response.data.data; // Mengembalikan object product
-  } catch (error) {
-    console.error(`Error fetching product with ID ${id}:`, error);
-    throw error;
-  }
-};
-export const uploadImage = async (productId, file, onProgress) => {
-  // ⬇️ Pastikan ID string (bukan objek)
-  const id = typeof productId === "object" ? productId.id : productId;
+    const formData = new FormData();
+    formData.append("image", file);
 
-  const formData = new FormData();
-  formData.append("image", file); // ⬅️ harus sama dengan field di backend
-
-  try {
     const response = await axiosInstance.put(
-      `/merchant/product/upload/${id}`,
+      `/merchant/tax/upload/${id}`,
       formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: (progressEvent) => {
-          if (onProgress) {
-            const progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            onProgress(progress);
-          }
         },
       }
     );
 
     return response.data;
   } catch (error) {
-    console.error("Upload failed:", error);
+    console.error("Error uploading image:", error);
     throw error;
   }
 };

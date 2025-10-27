@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from "react";
 import {
-  fetchCategoryData,
-  updateExistingCategory
-} from "../../services/category/api";
+  fetchTaxData,
+  updateExistingTax
+} from "../../services/tax/api";
 import { toast } from "react-toastify";
 
-const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
-  const [updatedCategory, setUpdatedCategory] = useState({ ...category });
+const TaxDetailModal = ({ tax, onClose, onSuccess }) => {
+  const [updatedTax, setUpdatedTax] = useState({ ...tax });
 
   useEffect(() => {
-    setUpdatedCategory({ ...category });
-  }, [category]);
+    setUpdatedTax({ ...tax });
+  }, [tax]);
 
-  const handleUpdateCategory = async () => {
-    if (!updatedCategory.category_name) {
+  const handleUpdateTax = async () => {
+    if (!updatedTax.tax) {
       toast.warning("Harap isi semua field wajib");
       return;
     }
 
     try {
       const payload = {
-        id: updatedCategory.id,
-        description: updatedCategory.description,
-        status: updatedCategory.status === "active" ? 1 : 2,
+        id: updatedTax.id,
+        description: updatedTax.description,
+        status: updatedTax.status === "active" ? 1 : 2,
       };
 
-      await updateExistingCategory(updatedCategory.id, payload);
+      await updateExistingTax(updatedTax.id, payload);
       toast.success("success!");
       onClose(false);
       if (onSuccess) onSuccess();
@@ -38,25 +38,38 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
   return (
     <div style={modalOverlay}>
       <div style={modalBox}>
-        <h2 style={modalTitle}>✏️ Edit Category</h2>
+        <h2 style={modalTitle}>✏️ Edit Tax</h2>
 
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleUpdateCategory();
+            handleUpdateTax();
           }}
           style={formGrid}
         >
           {/* Kolom Kiri */}
           <div style={column}>
-            <label style={labelStyle}>Nama Category</label>
+            <label style={labelStyle}>Nama Tax</label>
             <input
               type="text"
-              value={updatedCategory.category_name || ""}
+              value={updatedTax.tax || ""}
               onChange={(e) =>
-                setUpdatedCategory({
-                  ...updatedCategory,
-                  category_name: e.target.value,
+                setUpdatedTax({
+                  ...updatedTax,
+                  tax: e.target.value,
+                })
+              }
+              style={inputStyle}
+              required
+            />
+             <label style={labelStyle}>Tax percentage</label>
+            <input
+              type="number"
+              value={updatedTax.tax_percentage}
+              onChange={(e) =>
+                setUpdatedTax({
+                  ...updatedTax,
+                  tax_percentage: e.target.value,
                 })
               }
               style={inputStyle}
@@ -69,9 +82,9 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
                   type="radio"
                   name="status"
                   value="active"
-                  checked={updatedCategory.status === "active" || updatedCategory.status === 1}
+                  checked={updatedTax.status === "active" || updatedTax.status === 1}
                   onChange={(e) =>
-                    setUpdatedCategory({ ...updatedCategory, status: e.target.value })
+                    setUpdatedTax({ ...updatedTax, status: e.target.value })
                   }
                   style={radioBtn}
                 />
@@ -82,9 +95,9 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
                   type="radio"
                   name="status"
                   value="inactive"
-                  checked={updatedCategory.status === "inactive" || updatedCategory.status === 2}
+                  checked={updatedTax.status === "inactive" || updatedTax.status === 2}
                   onChange={(e) =>
-                    setUpdatedCategory({ ...updatedCategory, status: e.target.value })
+                    setUpdatedTax({ ...updatedTax, status: e.target.value })
                   }
                   style={radioBtn}
                 />
@@ -97,10 +110,10 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
           <div style={column}>
             <label style={labelStyle}>Deskripsi</label>
             <textarea
-              value={updatedCategory.description || ""}
+              value={updatedTax.description || ""}
               onChange={(e) =>
-                setUpdatedCategory({
-                  ...updatedCategory,
+                setUpdatedTax({
+                  ...updatedTax,
                   description: e.target.value,
                 })
               }
@@ -127,7 +140,7 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
   );
 };
 
-/* 🎨 Styles sama persis dengan CategoryModal */
+/* 🎨 Styles sama persis dengan TaxModal */
 const modalOverlay = {
   position: "fixed",
   inset: 0,
@@ -261,4 +274,4 @@ const saveBtn = {
   fontWeight: "600",
 };
 
-export default CategoryDetailModal;
+export default TaxDetailModal;

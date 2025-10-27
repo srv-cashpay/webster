@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from "react";
 import {
-  fetchCategoryData,
-  updateExistingCategory
-} from "../../services/category/api";
+  fetchDiscountData,
+  updateExistingDiscount
+} from "../../services/discount/api";
 import { toast } from "react-toastify";
 
-const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
-  const [updatedCategory, setUpdatedCategory] = useState({ ...category });
+const DiscountDetailModal = ({ discount, onClose, onSuccess }) => {
+  const [updatedDiscount, setUpdatedDiscount] = useState({ ...discount });
 
   useEffect(() => {
-    setUpdatedCategory({ ...category });
-  }, [category]);
+    setUpdatedDiscount({ ...discount });
+  }, [discount]);
 
-  const handleUpdateCategory = async () => {
-    if (!updatedCategory.category_name) {
+  const handleUpdateDiscount = async () => {
+    if (!updatedDiscount.discount_name) {
       toast.warning("Harap isi semua field wajib");
       return;
     }
 
     try {
       const payload = {
-        id: updatedCategory.id,
-        description: updatedCategory.description,
-        status: updatedCategory.status === "active" ? 1 : 2,
+        id: updatedDiscount.id,
+        description: updatedDiscount.description,
+        status: updatedDiscount.status === "active" ? 1 : 2,
       };
 
-      await updateExistingCategory(updatedCategory.id, payload);
+      await updateExistingDiscount(updatedDiscount.id, payload);
       toast.success("success!");
       onClose(false);
       if (onSuccess) onSuccess();
@@ -38,25 +38,25 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
   return (
     <div style={modalOverlay}>
       <div style={modalBox}>
-        <h2 style={modalTitle}>✏️ Edit Category</h2>
+        <h2 style={modalTitle}>✏️ Edit Discount</h2>
 
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleUpdateCategory();
+            handleUpdateDiscount();
           }}
           style={formGrid}
         >
           {/* Kolom Kiri */}
           <div style={column}>
-            <label style={labelStyle}>Nama Category</label>
+            <label style={labelStyle}>Nama Discount</label>
             <input
               type="text"
-              value={updatedCategory.category_name || ""}
+              value={updatedDiscount.discount_name || ""}
               onChange={(e) =>
-                setUpdatedCategory({
-                  ...updatedCategory,
-                  category_name: e.target.value,
+                setUpdatedDiscount({
+                  ...updatedDiscount,
+                  discount_name: e.target.value,
                 })
               }
               style={inputStyle}
@@ -69,9 +69,9 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
                   type="radio"
                   name="status"
                   value="active"
-                  checked={updatedCategory.status === "active" || updatedCategory.status === 1}
+                  checked={updatedDiscount.status === "active" || updatedDiscount.status === 1}
                   onChange={(e) =>
-                    setUpdatedCategory({ ...updatedCategory, status: e.target.value })
+                    setUpdatedDiscount({ ...updatedDiscount, status: e.target.value })
                   }
                   style={radioBtn}
                 />
@@ -82,9 +82,9 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
                   type="radio"
                   name="status"
                   value="inactive"
-                  checked={updatedCategory.status === "inactive" || updatedCategory.status === 2}
+                  checked={updatedDiscount.status === "inactive" || updatedDiscount.status === 2}
                   onChange={(e) =>
-                    setUpdatedCategory({ ...updatedCategory, status: e.target.value })
+                    setUpdatedDiscount({ ...updatedDiscount, status: e.target.value })
                   }
                   style={radioBtn}
                 />
@@ -97,10 +97,10 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
           <div style={column}>
             <label style={labelStyle}>Deskripsi</label>
             <textarea
-              value={updatedCategory.description || ""}
+              value={updatedDiscount.description || ""}
               onChange={(e) =>
-                setUpdatedCategory({
-                  ...updatedCategory,
+                setUpdatedDiscount({
+                  ...updatedDiscount,
                   description: e.target.value,
                 })
               }
@@ -127,7 +127,7 @@ const CategoryDetailModal = ({ category, onClose, onSuccess }) => {
   );
 };
 
-/* 🎨 Styles sama persis dengan CategoryModal */
+/* 🎨 Styles sama persis dengan DiscountModal */
 const modalOverlay = {
   position: "fixed",
   inset: 0,
@@ -261,4 +261,4 @@ const saveBtn = {
   fontWeight: "600",
 };
 
-export default CategoryDetailModal;
+export default DiscountDetailModal;

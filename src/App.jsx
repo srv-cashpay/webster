@@ -17,6 +17,9 @@ import ResetPassword from "./pages/Auth/Forgot/ResetPassword";
 import Search from "./pages/Search";
 import Product from "./pages/Product/List";
 import Category from "./pages/Category/List";
+import Merk from "./pages/Merk/List";
+import Discount from "./pages/Discount/List";
+import Tax from "./pages/Tax/List";
 
 import RoleUserPermission from "./pages/RoleUserPermission/List";
 import RoleUser from "./pages/RoleUser/List";
@@ -72,6 +75,9 @@ function ProtectedLayout({
           <Route path="/:lang/search" element={<Search />} />
           <Route path="/:lang/product/list" element={<Product />} />
           <Route path="/:lang/category/list" element={<Category />} />
+          <Route path="/:lang/merk/list" element={<Merk />} />
+          <Route path="/:lang/discount/list" element={<Discount />} />
+          <Route path="/:lang/tax/list" element={<Tax />} />
           <Route path="/:lang/permission/list" element={<Permission />} />
           <Route path="/:lang/role/list" element={<Role />} />
           <Route path="/:lang/role_user/list" element={<RoleUser />} />

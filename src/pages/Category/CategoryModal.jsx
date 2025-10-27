@@ -1,77 +1,44 @@
 import React, { useEffect, useState } from "react";
 import {
-  fetchMerkData,
-  fetchCategoryData,
   createCategory,
 } from "../../services/category/api";
 import { toast } from "react-toastify";
 
 const CategoryModal = ({ setShowModal, onSuccess }) => {
   const [newCategory, setNewCategory] = useState({
-    barcode: "",
-    sku: "",
     category_name: "",
-    price: "",
-    stock: "",
-    min_stock: "",
-    description: "",
     status: "active",
-    merk_id: "",
-    category_id: "",
   });
 
-  const [merkList, setMerkList] = useState([]);
-  const [categoryList, setCategoryList] = useState([]);
-
-  useEffect(() => {
-    const loadDropdownData = async () => {
-      try {
-        const merkRes = await fetchMerkData();
-        const categoryRes = await fetchCategoryData();
-        setMerkList(merkRes?.data || merkRes || []);
-        setCategoryList(categoryRes?.data || categoryRes || []);
-      } catch (error) {
-        console.error("Gagal memuat data dropdown:", error);
-      }
-    };
-    loadDropdownData();
-  }, []);
 
   const handleAddCategory = async () => {
-    if (!newCategory.category_name || !newCategory.price) {
+    if (!newCategory.category_name) {
       toast.warning("Harap isi semua field wajib");
       return;
     }
 
     try {
       const payload = {
-        barcode: newCategory.barcode,
-        sku: newCategory.sku,
         category_name: newCategory.category_name,
-        price: parseInt(newCategory.price) || 0,
-        stock: parseInt(newCategory.stock) || 0,
-        min_stock: parseInt(newCategory.min_stock) || 0,
         description: newCategory.description,
         status: newCategory.status === "active" ? 1 : 2,
-        merk_id: newCategory.merk_id || null,
-        category_id: newCategory.category_id || null,
 
       };
 
       await createCategory(payload);
-      toast.success("✅ Produk berhasil ditambahkan!");
+      toast.success("success!");
       setShowModal(false);
       if (onSuccess) onSuccess();
     } catch (error) {
-      console.error("Gagal menambahkan produk:", error);
-      toast.error("❌ Gagal menambahkan produk!");
+      console.error("failed:", error);
+      toast.error("failed!");
     }
   };
 
   return (
     <div style={modalOverlay}>
       <div style={modalBox}>
-        <h2 style={modalTitle}>🛍️ Tambah Produk Baru</h2>
+        <h2 style={modalTitle}>🛍️ Tambah Category</h2>
 
         <form
           onSubmit={(e) => {
@@ -82,29 +49,7 @@ const CategoryModal = ({ setShowModal, onSuccess }) => {
         >
           {/* Kolom Kiri */}
           <div style={column}>
-            <label style={labelStyle}>Barcode</label>
-            <input
-              type="text"
-              placeholder="Contoh: 8991234567890"
-              value={newCategory.barcode}
-              onChange={(e) =>
-                setNewCategory({ ...newCategory, barcode: e.target.value })
-              }
-              style={inputStyle}
-            />
-
-            <label style={labelStyle}>SKU / Kode Produk</label>
-            <input
-              type="text"
-              placeholder="SKU12345"
-              value={newCategory.sku}
-              onChange={(e) =>
-                setNewCategory({ ...newCategory, sku: e.target.value })
-              }
-              style={inputStyle}
-            />
-
-            <label style={labelStyle}>Nama Produk</label>
+            <label style={labelStyle}>Nama Category</label>
             <input
               type="text"
               placeholder="Contoh: Kaos Polos Premium"
@@ -114,108 +59,8 @@ const CategoryModal = ({ setShowModal, onSuccess }) => {
               }
               style={inputStyle}
               required
-            />
-
-            {/* Merek & Kategori */}
-           <div style={rowGroup}>
-              <div style={{ flex: 1 }}>
-                <label style={labelStyle}>Merek</label>
-                <select
-                  value={newCategory.merk_id}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, merk_id: e.target.value })
-                  }
-                  style={inputSmall}
-                  required
-                >
-                  <option value="">Pilih Merek</option>
-                  {merkList.map((merk) => (
-                    <option key={merk.id} value={merk.id}>
-                      {merk.merk_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <label style={labelStyle}>Kategori</label>
-                <select
-                  value={newCategory.category_id}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, category_id: e.target.value })
-                  }
-                  style={inputSmall}
-                  required
-                >
-                  <option value="">Pilih Kategori</option>
-                  {categoryList.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.category_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Harga, Stok, Minimal Stok (3 sejajar) */}
-            <div style={rowGroup3}>
-              <div style={{ flex: 1 }}>
-                <label style={labelStyle}>Harga (Rp)</label>
-                <input
-                  type="number"
-                  placeholder="150000"
-                  value={newCategory.price}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, price: e.target.value })
-                  }
-                  style={inputSmall}
-                  required
-                />
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <label style={labelStyle}>Stok</label>
-                <input
-                  type="number"
-                  placeholder="50"
-                  value={newCategory.stock}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, stock: e.target.value })
-                  }
-                  style={inputSmall}
-                  required
-                />
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <label style={labelStyle}>Minimal Stok</label>
-                <input
-                  type="number"
-                  placeholder="5"
-                  value={newCategory.min_stock}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, min_stock: e.target.value })
-                  }
-                  style={inputSmall}
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Kolom Kanan */}
-          <div style={column}>
-            <label style={labelStyle}>Deskripsi</label>
-            <textarea
-              placeholder="Tuliskan deskripsi produk..."
-              value={newCategory.description}
-              onChange={(e) =>
-                setNewCategory({ ...newCategory, description: e.target.value })
-              }
-              style={textareaStyle}
-            />
-
-            <label style={labelStyle}>Status Produk</label>
+            />         
+            <label style={labelStyle}>Status</label>
             <div style={optionGroup}>
               <label style={optionLabel}>
                 <input
@@ -244,6 +89,19 @@ const CategoryModal = ({ setShowModal, onSuccess }) => {
                 Inactive
               </label>
             </div>
+          </div>
+
+          {/* Kolom Kanan */}
+          <div style={column}>
+            <label style={labelStyle}>Deskripsi</label>
+            <textarea
+              placeholder="Tuliskan deskripsi kategori..."
+              value={newCategory.description}
+              onChange={(e) =>
+                setNewCategory({ ...newCategory, description: e.target.value })
+              }
+              style={textareaStyle}
+            />
           </div>
 
           {/* Tombol */}

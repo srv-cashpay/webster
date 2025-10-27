@@ -73,11 +73,12 @@ const DataTable = ({
             </th>
             <th style={thStyle}>No</th>
             <th style={thStyle}>Image</th>
-            <th style={thStyle}>ID</th>
+            <th style={thStyle}>Sku</th>
             <th style={thStyle}>Name</th>
-            <th style={thStyle}>Date</th>
+            <th style={thStyle}>Category</th>
             <th style={thStyle}>Stock</th>
             <th style={thStyle}>Price</th>
+            <th style={thStyle}>Date</th>
             <th style={thStyle}>Status</th>
             <th style={thStyle}>Actions</th>
           </tr>
@@ -108,7 +109,20 @@ const DataTable = ({
                       style={{ width: "40px", height: "40px", borderRadius: "4px" }}
                     />
                   </td>
-                  <td style={tdText}>{row.id}</td>
+                  <td style={tdCenter}>
+                    {isEditable ? (
+                      <input
+                        type="text"
+                        value={editableData[row.id]?.sku ?? row.sku}
+                        onChange={(e) =>
+                          handleBulkEditChange(row.id, "sku", e.target.value)
+                        }
+                        style={inputEdit}
+                      />
+                    ) : (
+                      row.sku
+                    )}
+                  </td>
                  <td style={tdText}>
                     {isEditable ? (
                       <input
@@ -128,7 +142,7 @@ const DataTable = ({
                       </span>
                     )}
                   </td>
-                  <td style={tdCenter}>{row.created_at}</td>
+                  <td style={tdCenter}>{row.category.category_name}</td>
                   <td style={tdCenter}>
                     {isEditable ? (
                       <input
@@ -157,6 +171,7 @@ const DataTable = ({
                       `Rp ${parseInt(row.price).toLocaleString("id-ID")}`
                     )}
                   </td>
+                  <td style={tdCenter}>{row.created_at}</td>
                   <td style={tdCenter}>
                     <span
                       style={{

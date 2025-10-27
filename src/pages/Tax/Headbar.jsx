@@ -5,8 +5,8 @@ import ExportModal from "./ExportModal";
 const Headbar = ({
   search,
   setSearch,
-  searchCategory,
-  setSearchCategory,
+  searchTax,
+  setSearchTax,
   limit,
   setLimit,
   selectedRows,
@@ -103,8 +103,8 @@ const Headbar = ({
 
         {/* 🔹 Filter Kategori */}
         {/* <select
-          value={searchCategory}
-          onChange={(e) => setSearchCategory(e.target.value)}
+          value={searchTax}
+          onChange={(e) => setSearchTax(e.target.value)}
           style={selectStyle}
         >
           <option value="all">Kategori</option>

@@ -5,20 +5,19 @@ import { useParams } from "react-router-dom"; // ✅ ambil param dari URL
 import Headbar from "./Headbar";
 import DataTable from "./DataTable";
 import Pagination from "./Pagination";
-import ProductModal from "./ProductModal";
+import DiscountModal from "./DiscountModal";
 import DeleteModal from "./DeleteModal";
 import BulkDeleteModal from "./BulkDeleteModal";
 import ImageUploadModal from "./ImageUploadModal";
-import ProductDetailModal from "./ProductDetailModal";
+import DiscountDetailModal from "./DiscountDetailModal";
 
 // 🔹 API services
 import {
-  fetchProducts,
-  createProduct,
-  bulkDeleteProducts,
-  fetchProductById,
-  bulkEditProducts,
-} from "../../services/product/api";
+  fetchDiscounts,
+  createDiscount,
+  bulkDeleteDiscounts,
+  fetchDiscountById,
+} from "../../services/discount/api";
 
 const List = () => {
   // 🟢 Ambil parameter bahasa dari URL (misal: /id/dashboard atau /en/dashboard)
@@ -31,27 +30,26 @@ const List = () => {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [searchCategory, setSearchCategory] = useState("all");
+  const [searchDiscount, setSearchDiscount] = useState("all");
   const [totalRows, setTotalRows] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedDiscount, setSelectedDiscount] = useState(null);
   const [isBulkEditMode, setIsBulkEditMode] = useState(false);
   const [editableData, setEditableData] = useState({});
-  const [newProduct, setNewProduct] = useState({
-    product_name: "",
+  const [newDiscount, setNewDiscount] = useState({
+    discount_name: "",
     price: "",
-    stock: "",
   });
 
   // 🧭 Load data produk
-  const loadProducts = useCallback(async () => {
+  const loadDiscounts = useCallback(async () => {
     try {
       const paginationData = { page: currentPage, limit, search };
-      const response = await fetchProducts(paginationData);
+      const response = await fetchDiscounts(paginationData);
       if (response && response.rows) {
         setData(response.rows);
         setTotalRows(response.total_rows || 0);
@@ -67,28 +65,28 @@ const List = () => {
   }, [currentPage, limit, search]);
 
   useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+    loadDiscounts();
+  }, [loadDiscounts]);
 
   // ➕ Tambah produk baru
-  const handleAddProduct = () => {
-    if (!newProduct.product_name || !newProduct.price) {
+  const handleAddDiscount = () => {
+    if (!newDiscount.discount_name || !newDiscount.price) {
       alert(currentLang === "id" ? "Harap isi semua field" : "Please fill in all fields");
       return;
     }
 
     const newItem = {
       id: "P" + (data.length + 1),
-      product_name: newProduct.product_name,
-      price: parseInt(newProduct.price),
-      stock: newProduct.stock || 0,
+      discount_name: newDiscount.discount_name,
+      price: parseInt(newDiscount.price),
+      stock: newDiscount.stock || 0,
       created_at: new Date().toISOString().split("T")[0],
       status: 1,
       image: null,
     };
 
     setData([newItem, ...data]);
-    setNewProduct({ product_name: "", price: "", stock: "" });
+    setNewDiscount({ discount_name: "", price: "", stock: "" });
     setShowModal(false);
   };
 
@@ -96,8 +94,8 @@ const List = () => {
   const confirmBulkDelete = async () => {
     try {
       if (selectedRows.length === 0) return;
-      await bulkDeleteProducts(selectedRows);
-      await loadProducts();
+      await bulkDeleteDiscounts(selectedRows);
+      await loadDiscounts();
       setSelectedRows([]);
       setShowBulkDeleteModal(false);
     } catch (error) {
@@ -109,16 +107,16 @@ const List = () => {
   // 🔍 Lihat detail produk
   const handleShowDetail = async (row) => {
     try {
-      const product = await fetchProductById(row.id);
-      if (product) {
-        setSelectedProduct(product);
+      const discount = await fetchDiscountById(row.id);
+      if (discount) {
+        setSelectedDiscount(discount);
         setShowDetailModal(true);
       } else {
-        alert(currentLang === "id" ? "Gagal mengambil detail produk!" : "Failed to fetch product details!");
+        alert(currentLang === "id" ? "Gagal mengambil detail produk!" : "Failed to fetch discount details!");
       }
     } catch (error) {
       console.error(error);
-      alert(currentLang === "id" ? "Terjadi kesalahan saat mengambil data produk." : "An error occurred while fetching product data.");
+      alert(currentLang === "id" ? "Terjadi kesalahan saat mengambil data produk." : "An error occurred while fetching discount data.");
     }
   };
 
@@ -137,8 +135,8 @@ const List = () => {
           lang={currentLang}
           search={search}
           setSearch={setSearch}
-          searchCategory={searchCategory}
-          setSearchCategory={setSearchCategory}
+          searchDiscount={searchDiscount}
+          setSearchDiscount={setSearchDiscount}
           limit={limit}
           setLimit={setLimit}
           selectedRows={selectedRows}
@@ -148,72 +146,13 @@ const List = () => {
           onAddNew={() => setShowModal(true)}
           isBulkEditMode={isBulkEditMode}
           setIsBulkEditMode={setIsBulkEditMode}
-          handleSaveBulkEdit={async () => {
-           try {
-  // 🔹 Filter hanya yang dipilih & diedit
-  const editedItems = Object.keys(editableData)
-    .filter((id) => selectedRows.includes(id))
-    .map((id) => ({
-      id,
-      ...editableData[id],
-      sku:
-        editableData[id].sku !== undefined
-          ? Number(editableData[id].sku)
-          : undefined,
-      stock:
-        editableData[id].stock !== undefined
-          ? Number(editableData[id].stock)
-          : undefined,
-      price:
-        editableData[id].price !== undefined
-          ? Number(editableData[id].price)
-          : undefined,
-    }))
-    .map((item) => {
-      // remove undefined props so backend tidak menerima empty fields
-      const cleaned = { id: item.id };
-
-      if (item.sku !== undefined) cleaned.sku = item.sku;
-      if (item.stock !== undefined) cleaned.stock = item.stock;
-      if (item.price !== undefined) cleaned.price = item.price;
-
-      // add other fields if present in editableData
-      Object.keys(editableData[item.id]).forEach((field) => {
-        if (field !== "stock" && field !== "price" && field !== "sku") {
-          cleaned[field] = editableData[item.id][field];
-        }
-      });
-
-      return cleaned;
-    });
-
-  if (editedItems.length === 0) {
-    alert("Tidak ada perubahan yang disimpan.");
-    setIsBulkEditMode(false);
-    return;
-  }
-
-  // 🔹 Kirim ke backend
-  await bulkEditProducts(editedItems);
-
-  // 🔹 Update data lokal
-  const newData = data.map((row) => {
-    const edited = editedItems.find((e) => e.id === row.id);
-    return edited ? { ...row, ...edited } : row;
-  });
-  setData(newData);
-
-  // 🔹 Reset state
-  setEditableData({});
-  setSelectedRows([]);
-  setIsBulkEditMode(false);
-
-  alert("Perubahan berhasil disimpan!");
-} catch (error) {
-  console.error("Gagal menyimpan perubahan:", error);
-  alert("Gagal menyimpan perubahan produk!");
-}
-
+          handleSaveBulkEdit={() => {
+            const updatedData = data.map((row) =>
+              editableData[row.id] ? { ...row, ...editableData[row.id] } : row
+            );
+            setData(updatedData);
+            setEditableData({});
+            setIsBulkEditMode(false);
           }}
           onBulkDelete={() => setShowBulkDeleteModal(true)}
         />
@@ -225,7 +164,7 @@ const List = () => {
         data={data}
         setData={setData}
         search={search}
-        searchCategory={searchCategory}
+        searchDiscount={searchDiscount}
         limit={limit}
         currentPage={currentPage}
         selectedRows={selectedRows}
@@ -235,7 +174,7 @@ const List = () => {
         setEditableData={setEditableData}
         setShowDeleteModal={setShowDeleteModal}
         setShowImageModal={setShowImageModal}
-        setSelectedProduct={setSelectedProduct}
+        setSelectedDiscount={setSelectedDiscount}
         onDetail={handleShowDetail}
       />
 
@@ -244,44 +183,39 @@ const List = () => {
 
       {/* 💬 Modals */}
       {showModal && (
-        <ProductModal
+        <DiscountModal
           lang={currentLang}
-          product={selectedProduct}
-          newProduct={newProduct}
-          setNewProduct={setNewProduct}
-          handleAddProduct={handleAddProduct}
+          discount={selectedDiscount}
+          newDiscount={newDiscount}
+          setNewDiscount={setNewDiscount}
+          handleAddDiscount={handleAddDiscount}
           setShowModal={setShowModal}
-          onSuccess={() => loadProducts()}
         />
       )}
 
       {showDetailModal && (
-        <ProductDetailModal product={selectedProduct} 
-        onClose={() => setShowDetailModal(false)} 
-        onSuccess={() => loadProducts()
-        }
-        />
+        <DiscountDetailModal discount={selectedDiscount} onClose={() => setShowDetailModal(false)} />
       )}
 
       <DeleteModal
         lang={currentLang}
         show={showDeleteModal}
-        product={selectedProduct}
+        discount={selectedDiscount}
         onCancel={() => setShowDeleteModal(false)}
         onDeleted={() => {
           setShowDeleteModal(false);
-          loadProducts();
+          loadDiscounts();
         }}
       />
 
       <ImageUploadModal
         lang={currentLang}
         show={showImageModal}
-        product={selectedProduct}
+        discount={selectedDiscount}
         onClose={() => setShowImageModal(false)}
         onDeleted={() => {
           setShowImageModal(false);
-          loadProducts();
+          loadDiscounts();
         }}
       />
 

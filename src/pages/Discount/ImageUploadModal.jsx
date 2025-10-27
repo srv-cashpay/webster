@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { uploadImage } from "../../services/product/api";
-import { toast } from "react-toastify";
+import { uploadImage } from "../../services/discount/api";
 
-const ImageUploadModal = ({ show, onClose, product, onSuccess }) => {
+const ImageUploadModal = ({ show, onClose, discountId, onSuccess }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [progress, setProgress] = useState(0);
 
@@ -20,7 +19,7 @@ const ImageUploadModal = ({ show, onClose, product, onSuccess }) => {
 
     try {
       // Panggil API upload
-      await uploadImage(product.id, selectedFile, setProgress);
+      await uploadImage(discountId, selectedFile, setProgress);
       alert("Upload berhasil!");
       setSelectedFile(null);
       setProgress(0);
@@ -29,7 +28,8 @@ const ImageUploadModal = ({ show, onClose, product, onSuccess }) => {
       // callback kalau ingin refresh data di parent
       if (onSuccess) onSuccess();
     } catch (error) {
-      toast.error(error.response.data.message);
+      alert("Upload gagal!");
+      console.error(error);
     }
   };
 
