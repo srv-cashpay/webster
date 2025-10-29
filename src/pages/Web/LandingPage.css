@@ -408,6 +408,46 @@ body {
   background: #005fcc;
 }
 
+.btn-windows {
+  background: #000;
+  color: white;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  padding: 0; /* biar tinggi ikut gambar */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+  height: 60px; /* ⬅️ samakan tinggi dengan tombol Play Store */
+  overflow: hidden;
+}
+
+.btn-windows:hover {
+  transform: scale(1.05);
+  background: #005a9e;
+}
+
+/* isi dalam tombol */
+.btn-windows-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 18px;
+}
+
+.btn-windows-content img {
+  width: 28px;
+  height: 28px;
+}
+
+.btn-windows-content span {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+
 /* ======================================================
    📬 CONTACT
 ====================================================== */

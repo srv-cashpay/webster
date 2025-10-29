@@ -15,11 +15,10 @@ export default function LandingPage() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { lang } = useParams(); // ✅ ambil "en" atau "id" dari URL
+  const { lang } = useParams();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // ✅ Tentukan bahasa dari URL, default ke "en"
   const language = lang === "id" ? "id" : "en";
 
   const queryParams = new URLSearchParams(location.search);
@@ -36,7 +35,6 @@ export default function LandingPage() {
     setMenuOpen(false);
   };
 
-  // ✅ semua teks bilingual
   const t = text[language];
 
   return (
@@ -57,7 +55,6 @@ export default function LandingPage() {
             <button onClick={() => scrollToSection(aboutRef)}>{t.about}</button>
           </div>
 
-          {/* 🔤 Tombol Bahasa */}
           <div className="language-toggle">
             <button
               className={language === "id" ? "active-lang" : ""}
@@ -73,7 +70,6 @@ export default function LandingPage() {
             </button>
           </div>
 
-          {/* 🔐 Tombol Login / Try Free */}
           <button
             className="btn-login"
             onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
@@ -83,22 +79,15 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section ref={heroRef} className="hero">
         <div className="hero-text">
           <h1>{t.heroTitle}</h1>
           <p>{t.heroDesc}</p>
 
           <div className="hero-buttons">
-            <button
-              className="btn-appstore"
-              onClick={() => window.open("https://apps.apple.com/app/idXXXXXXXXX", "_blank")}
-            >
-              <img
-                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
-                alt="App Store"
-              />
-            </button>
+            {/* 🔹 Ganti App Store menjadi Download Windows */}
+
 
             <button
               className="btn-playstore"
@@ -114,6 +103,19 @@ export default function LandingPage() {
                 alt="Play Store"
               />
             </button>
+<button
+  className="btn-windows"
+  onClick={() => navigate(`/${language}/download`)}
+>
+  <div className="btn-windows-content">
+    <img
+      src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg"
+      alt="Windows Logo"
+    />
+    <span>Download for Windows</span>
+  </div>
+</button>
+
           </div>
         </div>
 

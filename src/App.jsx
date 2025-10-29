@@ -31,6 +31,7 @@ import Cms from "./pages/Web/Cms";
 import Pos from "./pages/Pos/Pos";
 import LandingPage from "./pages/Web/Landing";
 import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
+import Download from "./pages/Web/Download";
 import SignupForm from "./pages/Auth/SignupForm";
 import OtpForm from "./pages/Auth/OtpForm";
 import MenuList from "./pages/Web/order/MenuList";
@@ -148,6 +149,7 @@ function App() {
       {/* 🌍 Public Routes */}
       <Route path="/:lang" element={<LandingPage />} />
       <Route path="/:lang/privacy" element={<PrivacyPolicy />} />
+      <Route path="/:lang/download" element={<Download />} />
       <Route path="/:lang/signup/form" element={<SignupForm />} />
       <Route path="/:lang/signup/otp" element={<OtpForm />} />
       <Route path="/:lang/forgot-password" element={<Forgot />} />

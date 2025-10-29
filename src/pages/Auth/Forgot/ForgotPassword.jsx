@@ -3,11 +3,17 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import forgotLocales from "../../../locales/forgotLocales.js";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Deteksi bahasa dari URL
+  const currentLang = location.pathname.startsWith("/id") ? "id" : "en";
+  const [language] = useState(currentLang);
+  const t = forgotLocales[language]; // ✅ perbaikan di sini
 
   const elementStyle = {
     width: "320px",
@@ -22,7 +28,7 @@ const ForgotPassword = () => {
     boxSizing: "border-box",
     textAlign: "left",
     backgroundColor: "white",
-    color: "black"
+    color: "black",
   };
 
   const buttonStyle = {
@@ -35,14 +41,14 @@ const ForgotPassword = () => {
     transition: "0.3s",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center", // 👈 tulisan jadi tepat di tengah
+    justifyContent: "center",
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email.trim()) {
-      toast.warn("Email cannot be empty");
+      toast.warn(t.toast.emptyEmail);
       return;
     }
 
@@ -58,15 +64,15 @@ const ForgotPassword = () => {
         const token = response.data.data?.token;
 
         if (token) {
-          toast.success("OTP sent successfully!", { autoClose: 1500 });
+          toast.success(t.toast.success, { autoClose: 1500 });
           setTimeout(() => {
             navigate(`/verify-reset?token_verfied=${token}`);
           }, 2000);
         } else {
-          toast.error("Missing token from server response");
+          toast.error(t.toast.missingToken);
         }
       } else {
-        toast.error(response.data.message || "Request failed");
+        toast.error(response.data.message || t.toast.failed);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
@@ -91,10 +97,10 @@ const ForgotPassword = () => {
       <ToastContainer position="top-right" hideProgressBar theme="colored" />
 
       <h2 style={{ color: "#333", fontWeight: "bold", marginBottom: "10px" }}>
-        Forgot your password?
+        {t.title}
       </h2>
       <p style={{ color: "#555", marginBottom: "25px", fontSize: "15px" }}>
-        Enter your email and we’ll send a reset code.
+        {t.subtitle}
       </p>
 
       <form
@@ -107,7 +113,7 @@ const ForgotPassword = () => {
       >
         <input
           type="email"
-          placeholder="Enter your registered email"
+          placeholder={t.placeholder}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={elementStyle}
@@ -124,13 +130,13 @@ const ForgotPassword = () => {
           }}
           disabled={loading || !email.trim()}
         >
-          {loading ? "Sending..." : "Send Reset Code"}
+          {loading ? t.sending : t.sendButton}
         </button>
       </form>
 
       <p style={{ marginTop: "20px", color: "#333", fontSize: "14px" }}>
         <span
-          onClick={() => navigate("/login?ref=auth")}
+          onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
           style={{
             color: "#2a9d8f",
             fontWeight: "bold",
@@ -138,7 +144,7 @@ const ForgotPassword = () => {
             textDecoration: "underline",
           }}
         >
-          Back to login
+          {t.backToLogin}
         </span>
       </p>
     </div>
