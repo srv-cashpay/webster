@@ -31,7 +31,7 @@ const MenuList = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          `https://cashpay.my.id/api/product/menu?merchant_id=${merchantId}`
+          `https://cashpay.my.id:2360/api/product/menu?merchant_id=${merchantId}`
         );
 
         if (res.data?.success) {
@@ -112,7 +112,7 @@ const MenuList = () => {
 
     try {
       const response = await axios.post(
-        `https://cashpay.my.id/menu/order?merchant_id=${merchantId}`,
+        `https://cashpay.my.id:2388/api/merchant/menu/order?merchant_id=${merchantId}`,
         orderPayload
       );
 
