@@ -20,6 +20,7 @@ import Category from "./pages/Category/List";
 import Merk from "./pages/Merk/List";
 import Discount from "./pages/Discount/List";
 import Tax from "./pages/Tax/List";
+import Users from "./pages/UserMerchant/List";
 
 import RoleUserPermission from "./pages/RoleUserPermission/List";
 import RoleUser from "./pages/RoleUser/List";
@@ -74,6 +75,7 @@ function ProtectedLayout({
           <Route path="/:lang/harbour" element={<Dashboard />} />
           <Route path="/:lang/setting" element={<Setting />} />
           <Route path="/:lang/search" element={<Search />} />
+          <Route path="/:lang/user-merchant/list" element={<Users />} />
           <Route path="/:lang/product/list" element={<Product />} />
           <Route path="/:lang/category/list" element={<Category />} />
           <Route path="/:lang/merk/list" element={<Merk />} />

@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { FaThLarge, FaList, FaExpand, FaCompress } from "react-icons/fa";
+import { FaThLarge, FaList, FaExpand, FaCompress, FaCog } from "react-icons/fa";
 
-const Headbar = ({search, setSearch, barcode, setBarcode, searchCategory, setSearchCategory, limit, setLimit,
-  selectedRows, setData, data, setSelectedRows, onAddNew, viewMode, setViewMode }) => {
+const Headbar = ({
+  search,
+  setSearch,
+  barcode,
+  setBarcode,
+  searchCategory,
+  setSearchCategory,
+  limit,
+  setLimit,
+  onAddNew,
+  onAddMember,
+  onViewProducts,
+  viewMode,
+  setViewMode,
+}) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  // 🔹 Deteksi perubahan fullscreen (ESC, klik luar, dll)
+  // 🔹 Deteksi perubahan fullscreen
   useEffect(() => {
     const handleChange = () => setIsFullScreen(!!document.fullscreenElement);
     document.addEventListener("fullscreenchange", handleChange);
@@ -48,37 +61,25 @@ const Headbar = ({search, setSearch, barcode, setBarcode, searchCategory, setSea
     >
       {/* 🔹 Tombol kiri */}
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+        {/* 🔧 Ganti + New dengan ikon gear */}
         <button onClick={onAddNew} style={btnStyle}>
-          + New
+          <FaCog />
         </button>
 
+        {/* ✅ Tombol Tambah Member */}
         <button
-          onClick={() => {
-            if (selectedRows.length === 0) {
-              alert("Tidak ada data yang dipilih!");
-              return;
-            }
-            if (window.confirm(`Delete ${selectedRows.length} selected data?`)) {
-              setData(data.filter((d) => !selectedRows.includes(d.id)));
-              setSelectedRows([]);
-            }
-          }}
-          disabled={selectedRows.length === 0}
-          style={{
-            ...btnStyle,
-            backgroundColor: selectedRows.length === 0 ? "#f9f9f9" : "#fff",
-            color: selectedRows.length === 0 ? "#aaa" : "#000",
-            cursor: selectedRows.length === 0 ? "not-allowed" : "pointer",
-          }}
+          onClick={onAddMember}
+          style={{ ...btnStyle, backgroundColor: "#4CAF50", color: "#fff" }}
         >
-          Bulk Delete
+          + Member
         </button>
 
-        <button style={btnStyle} onClick={() => alert("Import Data")}>
-          Import
-        </button>
-        <button style={btnStyle} onClick={() => alert("Export Data")}>
-          Export
+        {/* ✅ Tombol Lihat Barang */}
+        <button
+          onClick={onViewProducts || (() => alert("warehouse"))}
+          style={{ ...btnStyle, backgroundColor: "#2196F3", color: "#fff" }}
+        >
+          warehouse
         </button>
       </div>
 
@@ -89,14 +90,6 @@ const Headbar = ({search, setSearch, barcode, setBarcode, searchCategory, setSea
           <option value="grid">🟦 Grid View</option>
           <option value="list">📋 List View</option>
         </select>
-
-        {/* 🔹 Toggle View Mode */}
-        <button
-          onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
-          style={btnStyle}
-        >
-          {viewMode === "grid" ? <FaList /> : <FaThLarge />}
-        </button>
       </div>
 
       {/* 🔹 Search utama + barcode + limit + fullscreen */}
@@ -140,6 +133,14 @@ const Headbar = ({search, setSearch, barcode, setBarcode, searchCategory, setSea
           <option value={20}>20 rows</option>
         </select>
 
+        {/* 🔹 Toggle View Mode */}
+        <button
+          onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+          style={btnStyle}
+        >
+          {viewMode === "grid" ? <FaList /> : <FaThLarge />}
+        </button>
+
         {/* 🔹 Tombol Fullscreen */}
         <button onClick={toggleFullScreen} style={btnStyle}>
           {isFullScreen ? <FaCompress /> : <FaExpand />}
@@ -157,9 +158,10 @@ const btnStyle = {
   color: "#000",
   border: "1px solid #d1d1d1",
   cursor: "pointer",
-  fontSize: "12px",
+  fontSize: "14px",
   display: "flex",
   alignItems: "center",
+  justifyContent: "center",
   gap: "5px",
 };
 

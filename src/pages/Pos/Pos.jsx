@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./Pos.css";
 import Headbar from "./Headbar";
 import { getProducts } from "../../services/pos/get_product";
+import PaymentModal from "./PaymentModal/PaymentModal";
+import MemberModal from "./MemberModal";
+import ProductViewModal from "./ProductModal/ProductModal";
 
 const POS = () => {
   const [cart, setCart] = useState([]);
@@ -11,6 +14,9 @@ const POS = () => {
   const [searchCategory, setSearchCategory] = useState("all");
   const [limit, setLimit] = useState(10);
   const [products, setProducts] = useState([]);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showMemberModal, setShowMemberModal] = useState(false);
+  const [showProductModal, setShowProductModal] = useState(false);
 
   // Ambil data produk dari API
   useEffect(() => {
@@ -41,6 +47,11 @@ const POS = () => {
         return name.includes(keyword) || id.includes(keyword) || price.includes(keyword);
     }
   });
+
+    const handleSaveMember = (memberData) => {
+    console.log("Member baru:", memberData);
+    // 🔹 Di sini kamu bisa panggil API atau simpan ke database
+  };
 
   // Tambah produk ke cart
   const addToCart = (product) => {
@@ -107,6 +118,8 @@ const POS = () => {
         setViewMode={setViewMode}
         barcode={barcode}
         setBarcode={setBarcode}
+        onAddMember={() => setShowMemberModal(true)}
+        onViewProducts={() => setShowProductModal(true)}
       />
 
       <div className="pos-content">
@@ -179,7 +192,6 @@ const POS = () => {
 <div className="cart">
   {viewMode === "grid" ? (
     <>
-      <h3>Keranjang</h3>
       <div className="cart-items">
         {cart.length === 0 ? (
           <p style={{ color: "#777" }}>Keranjang kosong</p>
@@ -211,7 +223,8 @@ const POS = () => {
         )}
       </div>
       <h3>Total: Rp {totalPrice.toLocaleString()}</h3>
-      <button disabled={cart.length === 0} style={{ marginTop: "10px" }}>
+      <button disabled={cart.length === 0} style={{ marginTop: "10px" }}
+                  onClick={() => setShowPaymentModal(true)}>
         Checkout
       </button>
     </>
@@ -222,8 +235,33 @@ const POS = () => {
     </>
   )}
 </div>
-
       </div>
+            {/* Modal Pembayaran */}
+            {showPaymentModal && (
+              <PaymentModal
+                total={totalPrice}
+                onClose={() => setShowPaymentModal(false)}
+                onSuccess={() => {
+                  alert("Pembayaran berhasil!");
+                  setCart([]);
+                  setShowPaymentModal(false);
+                }}
+              />
+            )}
+        <MemberModal
+        show={showMemberModal}
+        onClose={() => setShowMemberModal(false)}
+        onSave={handleSaveMember}
+      />
+      <ProductViewModal
+        show={showProductModal}
+        onClose={() => setShowProductModal(false)}
+        onSelect={(product) => {
+          addToCart(product); // 👈 tambahkan produk ke keranjang
+          setShowProductModal(false); // 👈 tutup modal otomatis
+        }}
+      />
+
     </div>
   );
 };

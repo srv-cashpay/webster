@@ -24,7 +24,8 @@ import {
   FaTrademark,   // Merk
   FaPercent,     // Discount
   FaBalanceScale, // Tax
-  FaCalendarCheck, // Reservation
+  FaCalendarCheck,
+  FaBarcode, // Reservation
 } from "react-icons/fa";
 import { fetchMerchantData } from "./sidebarApi";
 
@@ -50,7 +51,6 @@ const Sidebar = ({ collapsed }) => {
   // ✅ Static menu (dengan Category, Merk, Discount, Tax, Reservation)
   const staticMenuItems = [
     { label: "Search", to: `/${currentLang}/search`, icon: <FaSearch /> },
-    { label: "User", to: `/${currentLang}/user`, icon: <FaUser /> },
     { label: "Products", to: `/${currentLang}/product/list`, icon: <FaBoxOpen /> },
 
     // 🔹 Tambahan baru
@@ -59,6 +59,7 @@ const Sidebar = ({ collapsed }) => {
     { label: "Discount", to: `/${currentLang}/discount/list`, icon: <FaPercent /> },
     { label: "Tax", to: `/${currentLang}/tax/list`, icon: <FaBalanceScale /> },
     { label: "Reservation", to: `/${currentLang}/reservation`, icon: <FaCalendarCheck /> },
+    { label: "Qris", to: `/${currentLang}/qris`, icon: <FaBarcode /> },
 
     { label: "POS", to: `/${currentLang}/pos`, icon: <FaCashRegister /> },
     { label: "Customers", to: `/${currentLang}/customers`, icon: <FaUsers /> },
@@ -67,7 +68,7 @@ const Sidebar = ({ collapsed }) => {
     { label: "Invoices", to: `/${currentLang}/invoices`, icon: <FaFileInvoice /> },
     { label: "Messages", to: `/${currentLang}/messages`, icon: <FaEnvelope /> },
     { label: "Support", to: `/${currentLang}/support`, icon: <FaLifeRing /> },
-    { label: "Users", to: `/${currentLang}/users`, icon: <FaUsersCog /> },
+    { label: "Users", to: `/${currentLang}/user-merchant/list`, icon: <FaUsersCog /> },
   ];
 
   useEffect(() => {
