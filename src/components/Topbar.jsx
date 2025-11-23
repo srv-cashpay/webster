@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUserCog, FaShoppingBag } from "react-icons/fa";
+import { FaEnvelope, FaShoppingBag } from "react-icons/fa";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -116,9 +116,9 @@ const Topbar = ({ onToggleSidebar }) => {
               color: "#333",
               cursor: "pointer",
             }}
-            title="Settings"
+            title="Inbox"
           >
-            <FaUserCog size={16} />
+            <FaEnvelope size={16} />
           </div>
         </div>
       </div>

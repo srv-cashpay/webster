@@ -39,6 +39,11 @@ import MenuList from "./pages/Web/order/MenuList";
 import Setting from "./pages/Setting/Setting";
 import Reservation from "./pages/Reservation/TableReservation";
 import OrderWeb from "./pages/OrderWeb/List";
+import Subscribe from "./pages/Subscribe/SubscribeModal";
+import TopupML from "./pages/Web/topup/TopupML";
+import PPOB from "./pages/Web/PPOB";
+import SelectGame  from "./pages/Web/SelectGame";
+
 import Cookies from "js-cookie";
 import "./App.css";
 import RoleUserPermissionDetailModal from "./pages/RoleUserPermission/RoleUserPermissionDetailModal";
@@ -89,6 +94,8 @@ function ProtectedLayout({
           <Route path="/:lang/content_setting" element={<Cms />} />
           <Route path="/:lang/reservation" element={<Reservation />} />
           <Route path="/:lang/order-web" element={<OrderWeb />} />
+          <Route path="/:lang/subscribe/list" element={<Subscribe />} />
+          
           <Route path="/:lang/pos" element={<Pos />} />
           <Route path="/" element={<Navigate to="/id/harbour" replace />} />
         </Routes>
@@ -158,6 +165,9 @@ function App() {
       <Route path="/:lang/verify-reset" element={<VerifyOtp />} />
       <Route path="/:lang/reset-password" element={<ResetPassword />} />
       <Route path="/:lang/menu" element={<MenuList />} />
+      <Route path="/:lang/ppob" element={<PPOB />} />
+      <Route path="/:lang/ppob/games" element={<SelectGame />} />
+      <Route path="/:lang/topup/mobile-legend" element={<TopupML />} />
 
       {/* 🔐 Auth Routes */}
       <Route

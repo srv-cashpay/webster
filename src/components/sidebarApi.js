@@ -79,14 +79,18 @@ axiosInstance.interceptors.response.use(
 );
 
 // Fungsi untuk mengambil data merchant
-export const fetchMerchantData = async () => {
+export const fetchSider = async () => {
   try {
-    const response = await axiosInstance.get('/permission/pagination');
-    // Ambil hanya bagian rows dari response
-    return response.data?.data?.rows || [];
+    const response = await axiosInstance.get("/roleuser");
+
+    // API MENGIRIM roles DI LEVEL ROOT, BUKAN DALAM data
+    const roles = response.data?.roles || [];
+
+    if (roles.length === 0) return [];
+
+    return roles.flatMap(r => r.permissions || []);
   } catch (error) {
-    console.error('Error fetching merchant data:', error);
+    console.error("Error fetching menu:", error);
     throw error;
   }
 };
-    

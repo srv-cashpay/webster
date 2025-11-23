@@ -1,0 +1,11 @@
+/* dessau.css */
+@font-face {
+  font-family: 'Dessau-Medium';
+  src: url('./Dessau-Medium.ttf') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.font-dessau {
+  font-family: 'Dessau-Medium', sans-serif;
+}

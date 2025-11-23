@@ -1,0 +1,136 @@
+/* ====== GLOBAL FIX AGAR KONTEN TENGAH ====== */
+body {
+  margin: 0;
+  padding: 0;
+  background: #f3f4f6;
+  display: flex;
+  justify-content: center;
+}
+
+/* ====== WRAPPER HALAMAN ====== */
+.topup-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px 10px;
+  box-sizing: border-box;
+}
+
+/* ====== CONTAINER UTAMA ====== */
+.topup-container {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* ====== HEADER ====== */
+.mlbb-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 6px;
+  color: #0f172a;
+}
+
+.topup-container p {
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+/* ====== FORM INPUT ====== */
+.topup-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.topup-form input {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 15px;
+  background: #f8fafc;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.topup-form input:focus {
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.25);
+}
+
+/* ====== TITLE DIAMOND ====== */
+h2 {
+  font-size: 20px;
+  margin: 5px 0 15px;
+  color: #0f172a;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ====== GRID DIAMOND ====== */
+.diamond-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+/* ====== CARD DIAMOND ====== */
+.diamond-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.diamond-card:hover {
+  background: #e8f1ff;
+  border-color: #3b82f6;
+  transform: translateY(-4px);
+  box-shadow: 0 4px 14px rgba(59,130,246,0.2);
+}
+
+.diamond-card h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.diamond-card p {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+/* ====== TOMBOL KEMBALI ====== */
+.back-btn {
+  width: 100%;
+  margin-top: 28px;
+  padding: 14px;
+  border: none;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.back-btn:hover {
+  background: #1e293b;
+}

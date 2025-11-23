@@ -59,9 +59,9 @@ body {
   padding: 15px 40px;
   position: sticky;
   top: 0;
-  background: rgba(10, 20, 10, 0.85);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
-  box-shadow: 0 2px 10px rgba(0, 255, 100, 0.1);
+  /* box-shadow: 0 2px 10px rgba(0, 255, 100, 0.1); */
   z-index: 100;
   flex-wrap: wrap; /* biar rapi di mobile tanpa turun semua */
 }
@@ -69,7 +69,7 @@ body {
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #00ff80;
+  color: #000;
   cursor: pointer;
   transition: color 0.3s, text-shadow 0.3s;
 }
@@ -89,7 +89,7 @@ body {
 .nav-links button {
   background: none;
   border: none;
-  color: #d4d4d4;
+  color: #000;
   font-weight: 500;
   cursor: pointer;
   font-size: 1rem;
@@ -110,8 +110,8 @@ body {
 /* Tombol Login */
 .btn-login {
   background: transparent;
-  border: 2px solid #00ff80;
-  color: #00ff80;
+  border: 2px solid #000;
+  color: #000;
   padding: 10px 22px;
   border-radius: 8px;
   cursor: pointer;
@@ -134,7 +134,7 @@ body {
   justify-content: space-between;
   flex-wrap: wrap;
   padding: 80px 40px;
-  background: radial-gradient(circle at 30% 20%, #0a0f0a, #050505);
+  background: radial-gradient(circle at 30% 20%, #fff, #fff);
 }
 
 .hero-text {
@@ -145,17 +145,17 @@ body {
 .hero-text h1 {
   font-size: 2.8rem;
   font-weight: 800;
-  color: #f0fdf4;
+  color: #000;
 }
 
 .hero-text h1 span {
-  color: #00ff80;
+  color: #000;
   text-shadow: 0 0 15px rgba(0, 255, 128, 0.6);
 }
 
 .hero-text p {
   margin: 20px 0 30px;
-  color: #a0a0a0;
+  color: #000;
   font-size: 1.1rem;
   max-width: 500px;
 }
@@ -241,13 +241,13 @@ body {
 
 .section h2 {
   font-size: 2rem;
-  color: #00ff80;
-  text-shadow: 0 0 10px rgba(0, 255, 128, 0.6);
+  color: #000;
+  /* text-shadow: 0 0 10px rgba(0, 255, 128, 0.6); */
   margin-bottom: 25px;
 }
 
 .features {
-  background: #0a0f0a;
+  background: #fff;
 }
 
 .feature-grid {
@@ -258,7 +258,7 @@ body {
 }
 
 .feature-card {
-  background: #111;
+  background: #fff;
   border: 1px solid rgba(0, 255, 128, 0.1);
   border-radius: 12px;
   padding: 30px 20px;
@@ -272,11 +272,11 @@ body {
 }
 
 .feature-card h3 {
-  color: #00ff80;
+  color: #000;
 }
 
 .feature-card p {
-  color: #cbd5e1;
+  color: #000;
 }
 
 /* ======================================================
@@ -285,8 +285,8 @@ body {
 .about,
 .mission,
 .vision {
-  background: linear-gradient(to bottom, #050505, #0a0f0a);
-  color: #d1d5db;
+  background: linear-gradient(to bottom, #fff, #fff);
+  color: #fff;
 }
 
 .about-container,
@@ -318,7 +318,7 @@ body {
 .vision-text p {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #fff;
+  color: #000;
 }
 
 .about-text p {
@@ -339,8 +339,6 @@ body {
 .vision-image img {
   width: 400px;
   max-width: 100%;
-  border-radius: 20px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 /* 🔥 News Section */
 .section.news {
@@ -487,11 +485,11 @@ body {
 .footer {
   text-align: center;
   padding: 20px;
-  border-top: 1px solid #0f0;
-  background: #050505;
-  color: #00ff80;
+  border-top: 1px solid rgb(225, 225, 225);
+  background: #fff;
+  color: #000;
   font-weight: 500;
-  text-shadow: 0 0 5px rgba(0, 255, 128, 0.6);
+  text-shadow: 0 0 5px rgba(38, 38, 38, 0.6);
 }
 
 .privacy-link {
@@ -721,7 +719,7 @@ body {
 .language-toggle button {
   background: transparent;
   border: none;
-  color: #d4d4d4;
+  color: #000;
   font-size: 1rem;
   cursor: pointer;
   transition: 0.3s;

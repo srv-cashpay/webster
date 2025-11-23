@@ -1,0 +1,116 @@
+/* ========================================
+   FULL PAGE LAYOUT (WEB DESKTOP)
+======================================== */
+.ppob-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================
+   HEADER BAR (FULL WIDTH)
+======================================== */
+.ppob-header {
+  width: 100%;
+  padding: 20px 50px;
+  background: #0f172a;
+  color: white;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* ========================================
+   MAIN CONTENT (FULL WIDTH)
+======================================== */
+.ppob-container {
+  width: 100%;
+  padding: 50px;
+  box-sizing: border-box;
+}
+
+/* ========================================
+   TITLE + SUBTITLE
+======================================== */
+.ppob-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+.ppob-subtitle {
+  font-size: 18px;
+  color: #475569;
+  margin-bottom: 40px;
+}
+
+/* ========================================
+   GRID BESAR WEB (BENERAN LEBAR)
+======================================== */
+.ppob-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px;
+  width: 100%;
+}
+
+.ppob-card {
+  background: #f8fafc;
+  border: 1px solid #d6dee8;
+  padding: 35px 25px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-size: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.ppob-card:hover {
+  background: #e9f2ff;
+  border-color: #3b82f6;
+  transform: translateY(-4px);
+}
+
+.ppob-icon {
+  font-size: 46px;
+  margin-bottom: 12px;
+}
+
+/* ========================================
+   LIST GAME (WEB STYLE 3 COLUMN)
+======================================== */
+.ppob-list {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 25px;
+}
+
+.ppob-game-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #d6dee8;
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 18px;
+}
+
+.ppob-game-card:hover {
+  background: #e9f2ff;
+  border-color: #3b82f6;
+  transform: translateY(-5px);
+}
+
+.ppob-game-card img {
+  width: 70px;
+  height: 70px;
+  border-radius: 12px;
+  object-fit: cover;
+}

@@ -73,8 +73,9 @@ const DataTable = ({
             </th>
             <th style={thStyle}>No</th>
             <th style={thStyle}>ID</th>
-            <th style={thStyle}>User ID</th>
+            <th style={thStyle}>User</th>
             <th style={thStyle}>Role</th>
+            <th style={thStyle}>Permission</th>
             <th style={thStyle}>Actions</th>
           </tr>
         </thead>
@@ -114,6 +115,7 @@ const DataTable = ({
                     )}
                   </td>
                   <td style={tdCenter}>{row.role_id}</td>
+                  <td style={tdCenter}>{row.permission_id}</td>
                   <td style={tdCenter}>
                     {!isBulkEditMode && (
                       <>

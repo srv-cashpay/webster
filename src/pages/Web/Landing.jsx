@@ -26,7 +26,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (ref === "encrypt") {
-      console.log("✅ Parameter 'auth' terdeteksi!");
+      console.log("Parameter 'auth' terdeteksi!");
     }
   }, [ref]);
 
@@ -51,8 +51,17 @@ export default function LandingPage() {
 
         <div className={`nav-right ${menuOpen ? "active" : ""}`}>
           <div className="nav-links">
-            <button onClick={() => scrollToSection(featuresRef)}>{t.features}</button>
-            <button onClick={() => scrollToSection(aboutRef)}>{t.about}</button>
+            <button onClick={() => scrollToSection(featuresRef)}>
+              {t.features}
+            </button>
+            <button onClick={() => scrollToSection(aboutRef)}>
+              {t.about}
+            </button>
+
+            {/* 🔥 MENU TopUp */}
+            <button onClick={() => navigate(`/${language}/ppob`)}>
+              Top Up
+            </button>
           </div>
 
           <div className="language-toggle">
@@ -79,16 +88,13 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* HERO */}
       <section ref={heroRef} className="hero">
         <div className="hero-text">
           <h1>{t.heroTitle}</h1>
           <p>{t.heroDesc}</p>
 
           <div className="hero-buttons">
-            {/* 🔹 Ganti App Store menjadi Download Windows */}
-
-
             <button
               className="btn-playstore"
               onClick={() =>
@@ -103,26 +109,26 @@ export default function LandingPage() {
                 alt="Play Store"
               />
             </button>
-<button
-  className="btn-windows"
-  onClick={() => navigate(`/${language}/download`)}
->
-  <div className="btn-windows-content">
-    <img
-      src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg"
-      alt="Windows Logo"
-    />
-    <span>Download for Windows</span>
-  </div>
-</button>
 
+            <button
+              className="btn-windows"
+              onClick={() => navigate(`/${language}/download`)}
+            >
+              <div className="btn-windows-content">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg"
+                  alt="Windows Logo"
+                />
+                <span>Download for Windows</span>
+              </div>
+            </button>
           </div>
         </div>
 
         <img src={heroImage} alt="Hero" className="hero-image" />
       </section>
 
-      {/* Features */}
+      {/* FEATURES */}
       <section ref={featuresRef} className="section features">
         <h2>{t.ourFeatures}</h2>
         <div className="feature-grid">
@@ -141,7 +147,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* About */}
+      {/* ABOUT */}
       <section ref={aboutRef} className="section about">
         <div className="about-container">
           <div className="about-image">
@@ -155,7 +161,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Mission */}
+      {/* MISSION */}
       <section className="section mission">
         <div className="mission-container">
           <div className="mission-image">
@@ -169,7 +175,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Vision */}
+      {/* VISION */}
       <section className="section vision">
         <div className="vision-container">
           <div className="vision-text">
@@ -183,10 +189,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* FOOTER */}
       <footer className="footer">
         <p>© {new Date().getFullYear()} CashPay. All rights reserved.</p>
-        <button onClick={() => navigate(`/${language}/privacy`)} className="privacy-link">
+        <button
+          onClick={() => navigate(`/${language}/privacy`)}
+          className="privacy-link"
+        >
           {t.privacy}
         </button>
       </footer>
