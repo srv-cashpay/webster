@@ -2,8 +2,14 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./PPOB.css";
 
-// IMPORT ASSET GAMBAR SECARA BENAR
+// IMPORT ASSET GAMBAR HEADER
+import headerImage from "../../assets/head.png";
+
+// IMPORT GAME ICONS
 import mlIcon from "../../assets/OIP.jpg";
+import ff from "../../assets/ff.jpg";
+import pubg from "../../assets/pubg.jpg";
+import pb from "../../assets/pb.jpg";
 
 export default function SelectGame() {
   const navigate = useNavigate();
@@ -11,15 +17,35 @@ export default function SelectGame() {
 
   const games = [
     { id: 1, name: "Mobile Legends", icon: mlIcon, route: "mobile-legend" },
-    { id: 2, name: "Free Fire", icon: "ffIcon", route: "free-fire" },
-    { id: 3, name: "PUBG Mobile", icon: "pubgIcon", route: "pubg" }
+    { id: 2, name: "Free Fire", icon: ff, route: "free-fire" },
+    { id: 3, name: "PUBG Mobile", icon: pubg, route: "pubg" },
+    { id: 4, name: "Point Blank", icon: pb, route: "pb" }
+
   ];
 
   return (
     <div className="ppob-wrapper">
-      <div className="ppob-container">
 
-        <h1 className="ppob-title">Pilih Game</h1>
+      {/* 🔥 HEADER DENGAN GAMBAR */}
+            <div className="ppob-header-banner3">
+            <div className="banner-col">
+                <img src={mlIcon} alt="MLBB" />
+            </div>
+
+            <div className="banner-col">
+                <img src={ff} alt="Free Fire" />
+            </div>
+
+            <div className="banner-col">
+                <img src={pubg} alt="PUBG" />
+            </div>
+
+            <div className="banner-overlay"></div>
+
+            <h1 className="banner-title">Pilih Game</h1>
+            </div>
+
+      <div className="ppob-container">
 
         <div className="ppob-list">
           {games.map((g) => (

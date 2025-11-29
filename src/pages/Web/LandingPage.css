@@ -655,13 +655,13 @@ body {
 .menu-toggle {
   display: none;
   font-size: 1.8rem;
-  color: #00ff80;
+  color: #000;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .menu-toggle:hover {
-  color: #a7ffcb;
+  color: #000;
 }
 
 /* Responsive menu */

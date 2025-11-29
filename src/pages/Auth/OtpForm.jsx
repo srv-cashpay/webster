@@ -84,7 +84,7 @@ const OtpForm = () => {
   const handleResendOtp = async () => {
     setResending(true);
     try {
-      await axios.post("https://cashpay.my.id:2356/api/auth/resend-otp", {
+      await axios.post("https://cashpay.co.id:2356/api/auth/resend-otp", {
         email,
         whatsapp,
       });
