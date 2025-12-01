@@ -41,7 +41,7 @@ import Reservation from "./pages/Reservation/TableReservation";
 import OrderWeb from "./pages/OrderWeb/List";
 import Subscribe from "./pages/Subscribe/SubscribeModal";
 import TopupML from "./pages/Web/topup/TopupML";
-import PPOB from "./pages/Web/PPOB";
+import TopUp from "./pages/Web/TopUp";
 import SelectGame  from "./pages/Web/SelectGame";
 
 import Cookies from "js-cookie";
@@ -165,8 +165,8 @@ function App() {
       <Route path="/:lang/verify-reset" element={<VerifyOtp />} />
       <Route path="/:lang/reset-password" element={<ResetPassword />} />
       <Route path="/:lang/menu" element={<MenuList />} />
-      <Route path="/:lang/ppob" element={<PPOB />} />
-      <Route path="/:lang/ppob/games" element={<SelectGame />} />
+      <Route path="/:lang/topup" element={<TopUp />} />
+      <Route path="/:lang/topup/games" element={<SelectGame />} />
       <Route path="/:lang/topup/mobile-legend" element={<TopupML />} />
 
       {/* 🔐 Auth Routes */}

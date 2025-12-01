@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "./PPOB.css";
+import "./TopUp.css";
 
 // IMPORT ASSET GAMBAR HEADER
 import headerImage from "../../assets/head.png";
@@ -60,7 +60,7 @@ export default function SelectGame() {
           ))}
         </div>
 
-        <button className="back-btn" onClick={() => navigate(`/${lang}/ppob`)}>
+        <button className="back-btn" onClick={() => navigate(`/${lang}/topup`)}>
           Kembali
         </button>
 

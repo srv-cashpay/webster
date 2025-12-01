@@ -59,7 +59,7 @@ export default function LandingPage() {
             </button>
 
             {/* 🔥 MENU TopUp */}
-            <button onClick={() => navigate(`/${language}/ppob`)}>
+            <button onClick={() => navigate(`/${language}/topup`)}>
               Top Up
             </button>
           </div>

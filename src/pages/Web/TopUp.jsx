@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "./PPOB.css";
+import "./TopUp.css";
 
-export default function PPOB() {
+export default function TopUp() {
   const navigate = useNavigate();
   const { lang } = useParams();
 
@@ -15,7 +15,7 @@ export default function PPOB() {
     <div className="ppob-wrapper">
       <div className="ppob-container">
 
-        <h1 className="ppob-title">PPOB CashPay</h1>
+        <h1 className="ppob-title">TopUp CashPay</h1>
         <p className="ppob-subtitle">Pilih kategori untuk mulai transaksi</p>
 
         <div className="ppob-grid">
@@ -23,7 +23,7 @@ export default function PPOB() {
             <div
               key={cat.id}
               className="ppob-card"
-              onClick={() => cat.route && navigate(`/${lang}/ppob/${cat.route}`)}
+              onClick={() => cat.route && navigate(`/${lang}/topup/${cat.route}`)}
             >
               <div className="ppob-icon">{cat.icon}</div>
               <p>{cat.name}</p>
