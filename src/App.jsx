@@ -40,6 +40,7 @@ import Setting from "./pages/Setting/Setting";
 import Reservation from "./pages/Reservation/TableReservation";
 import OrderWeb from "./pages/OrderWeb/List";
 import Subscribe from "./pages/Subscribe/SubscribeModal";
+import Hardware from "./pages/Web/hardware/Hardware";
 import TopupML from "./pages/Web/topup/TopupML";
 import TopUp from "./pages/Web/TopUp";
 import SelectGame  from "./pages/Web/SelectGame";
@@ -166,6 +167,7 @@ function App() {
       <Route path="/:lang/reset-password" element={<ResetPassword />} />
       <Route path="/:lang/menu" element={<MenuList />} />
       <Route path="/:lang/topup" element={<TopUp />} />
+      <Route path="/:lang/hardware" element={<Hardware />} />
       <Route path="/:lang/topup/games" element={<SelectGame />} />
       <Route path="/:lang/topup/mobile-legend" element={<TopupML />} />
 

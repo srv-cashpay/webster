@@ -764,4 +764,111 @@ body {
   color: #00ff80;
 }
 
+/* Floating Button */
+.widget-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #2563eb;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 25px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  z-index: 999;
+  transition: 0.2s ease;
+}
 
+.widget-btn:hover {
+  background: #1d4ed8;
+  transform: scale(1.05);
+}
+
+/* Popup Overlay */
+.widget-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Widget Box */
+.widget-box {
+  background: white;
+  width: 360px;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Header */
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.widget-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.widget-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #555;
+}
+
+.widget-desc {
+  margin: 14px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Input */
+.widget-input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.widget-input:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+/* Submit Button */
+.widget-submit {
+  width: 100%;
+  padding: 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 16px;
+}
+
+.widget-submit:hover {
+  background: #1d4ed8;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "./LandingPage.css";
 import text from "../../locales/text";
+import ChatWidget from "./ChatWidget"; 
 
 import heroImage from "../../assets/head.png";
 import addImage from "../../assets/add.png";
@@ -12,7 +13,7 @@ export default function LandingPage() {
   const heroRef = useRef(null);
   const featuresRef = useRef(null);
   const aboutRef = useRef(null);
-
+  const [demoOpen, setDemoOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { lang } = useParams();
@@ -59,8 +60,8 @@ export default function LandingPage() {
             </button>
 
             {/* 🔥 MENU TopUp */}
-            <button onClick={() => navigate(`/${language}/topup`)}>
-              Hardware
+            <button onClick={() => navigate(`/${language}/hardware`)}>
+              {t.hardware}
             </button>
              <button onClick={() => navigate(`/${language}/topup`)}>
               Top Up
@@ -148,6 +149,20 @@ export default function LandingPage() {
             <p>{t.f3desc}</p>
           </div>
         </div>
+        <div className="feature-grid">
+          <div className="feature-card">
+            <h3>{t.f4}</h3>
+            <p>{t.f1desc}</p>
+          </div>
+          <div className="feature-card">
+            <h3>{t.f5}</h3>
+            <p>{t.f2desc}</p>
+          </div>
+          <div className="feature-card">
+            <h3>{t.f6}</h3>
+            <p>{t.f3desc}</p>
+          </div>
+        </div>
       </section>
 
       {/* ABOUT */}
@@ -202,6 +217,8 @@ export default function LandingPage() {
           {t.privacy}
         </button>
       </footer>
+
+      <ChatWidget />
     </div>
   );
 }
