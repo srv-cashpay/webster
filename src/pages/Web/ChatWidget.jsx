@@ -116,6 +116,7 @@ const inputStyle = {
   padding: "10px",
   borderRadius: "8px",
   border: "1px solid #ddd",
-  color: "#fff",
+  background: "#ffffff",   // ➜ background putih
+  color: "#000000",        // ➜ teks hitam agar terbaca
   fontSize: "14px",
 };
