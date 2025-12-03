@@ -222,9 +222,30 @@ export default function LandingPage() {
           </button>
 
         <div className="footer-social">
-          <FaInstagram size={26} className="footer-icon" />
-          <FaFacebook size={26} className="footer-icon" />
-          <FaYoutube size={26} className="footer-icon" />
+          <a
+          href="https://instagram.com/cashpay"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-icon"
+        >
+          <FaInstagram size={26} />
+        </a>
+        <a
+          href="https://www.facebook.com/share/1AqYgAzggh/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-icon"
+        >
+          <FaFacebook size={26} />
+        </a>
+        <a
+          href="https://www.youtube.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-icon"
+        >
+          <FaYoutube size={26} />
+        </a>
         </div>
       </footer>
 
