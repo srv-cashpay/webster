@@ -1,6 +1,6 @@
 // HardwareGrid.jsx
 import React from "react";
-import "./hardware.css";
+import "./hardwarepage.css";
 
 const hardware = [
   {
