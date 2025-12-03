@@ -482,26 +482,69 @@ body {
 /* ======================================================
    ⚡ FOOTER
 ====================================================== */
+/* ============================
+   ⚡ FOOTER (BARU & RAPI)
+============================ */
 .footer {
   text-align: center;
-  padding: 20px;
-  border-top: 1px solid rgb(225, 225, 225);
-  background: #fff;
+  padding: 25px 20px;
+  background: #ffffff;
   color: #000;
   font-weight: 500;
-  text-shadow: 0 0 5px rgba(38, 38, 38, 0.6);
+  border-top: 1px solid #e5e5e5;
 }
 
+/* baris pertama: copyright + privacy */
+.footer-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* tombol privacy jadi link elegan */
 .privacy-link {
-  display: block;
-  margin-top: 0.5rem;
-  color: #007bff;
-  text-decoration: none;
+  background: none;
+  border: none;
+  color: #2563eb;
+  cursor: pointer;
+  padding: 0;
   font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
 
 .privacy-link:hover {
+  color: #1d4ed8;
   text-decoration: underline;
+}
+
+/* icon baris kedua */
+.footer-social {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+}
+
+.footer-icon {
+  color: #000;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.footer-icon:hover {
+  opacity: 0.7;
+  transform: scale(1.1);
+}
+
+/* responsive */
+@media (max-width: 480px) {
+  .footer-top {
+    flex-direction: column;
+    gap: 6px;
+  }
 }
 
 /* ======================================================

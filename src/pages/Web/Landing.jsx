@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "./LandingPage.css";
 import text from "../../locales/text";
 import ChatWidget from "./ChatWidget"; 
+import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 
 import heroImage from "../../assets/head.png";
 import addImage from "../../assets/add.png";
@@ -209,13 +210,22 @@ export default function LandingPage() {
 
       {/* FOOTER */}
       <footer className="footer">
-        <p>© {new Date().getFullYear()} CashPay. All rights reserved.</p>
-        <button
-          onClick={() => navigate(`/${language}/privacy`)}
-          className="privacy-link"
-        >
-          {t.privacy}
-        </button>
+        <div className="footer-top">
+          <span>© {new Date().getFullYear()} CashPay. All rights reserved.</span>
+
+        </div>
+          <button
+            onClick={() => navigate(`/${language}/privacy`)}
+            className="privacy-link"
+          >
+            Privacy Policy
+          </button>
+
+        <div className="footer-social">
+          <FaInstagram size={26} className="footer-icon" />
+          <FaFacebook size={26} className="footer-icon" />
+          <FaYoutube size={26} className="footer-icon" />
+        </div>
       </footer>
 
       <ChatWidget />
