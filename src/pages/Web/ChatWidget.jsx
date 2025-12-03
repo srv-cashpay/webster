@@ -1,3 +1,4 @@
+import { color } from "framer-motion";
 import { useState } from "react";
 
 export default function ChatWidget() {
@@ -27,8 +28,8 @@ export default function ChatWidget() {
           bottom: "24px",
           right: "24px",
           zIndex: 999,
-          background: "#fff",
-          color: "#000",
+          background: "#000",
+          color: "#fff",
           border: "none",
           padding: "14px 20px",
           borderRadius: "50px",
@@ -68,12 +69,15 @@ export default function ChatWidget() {
                 textAlign: "center",
               }}
             >
-              Kami Akan Segera Menghubungi Anda
+              Permintaan terkirim
             </div>
           ) : (
             <>
               <h3 style={{ margin: "0 0 12px", fontSize: "18px", fontWeight: "700" }}>
                 Jadwalkan Demo
+              </h3>
+              <h3 style={{ margin: "0 0 12px", fontSize: "12px", fontWeight: "600" }}>
+                Kami Akan Segera Menghubungi anda
               </h3>
 
               <form
@@ -112,5 +116,6 @@ const inputStyle = {
   padding: "10px",
   borderRadius: "8px",
   border: "1px solid #ddd",
+  color: "#fff",
   fontSize: "14px",
 };
