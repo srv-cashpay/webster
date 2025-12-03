@@ -1,3 +1,11 @@
+/* ====== RESET ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
 /* ====== GLOBAL FIX AGAR KONTEN TENGAH ====== */
 body {
   margin: 0;
@@ -7,130 +15,169 @@ body {
   justify-content: center;
 }
 
-/* ====== WRAPPER HALAMAN ====== */
+
+/* ====== WRAPPER ====== */
 .topup-wrapper {
   width: 100%;
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 30px 10px;
-  box-sizing: border-box;
+  align-items: center;
+  padding: 20px;
 }
 
-/* ====== CONTAINER UTAMA ====== */
+/* ====== CARD UTAMA ====== */
 .topup-container {
   width: 100%;
   max-width: 480px;
   background: #ffffff;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  padding: 32px;
+  border-radius: 22px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+  animation: fadeIn 0.35s ease;
+  border: 1px solid #e5e7eb;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ====== HEADER ====== */
 .mlbb-header h1 {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 800;
   text-align: center;
-  margin-bottom: 6px;
   color: #0f172a;
+  letter-spacing: -0.5px;
 }
 
 .topup-container p {
   text-align: center;
-  font-size: 14px;
-  color: #64748b;
-  margin-bottom: 24px;
+  font-size: clamp(13px, 2.5vw, 15px);
+  color: #6b7280;
+  margin-top: 6px;
+  margin-bottom: 26px;
 }
 
 /* ====== FORM INPUT ====== */
 .topup-form {
   display: flex;
-  gap: 12px;
-  margin-bottom: 25px;
+  gap: 14px;
+  margin-bottom: 30px;
 }
 
 .topup-form input {
   flex: 1;
-  padding: 14px;
-  border: 1px solid #cbd5e1;
-  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
   font-size: 15px;
-  background: #f8fafc;
-  outline: none;
-  transition: 0.2s ease;
+  background: #f9fafb;
+  transition: 0.22s ease;
 }
 
 .topup-form input:focus {
-  border-color: #3b82f6;
+  border-color: #2563eb;
   background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(59,130,246,0.25);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.18);
 }
 
-/* ====== TITLE DIAMOND ====== */
+/* ====== TITLE ====== */
 h2 {
-  font-size: 20px;
-  margin: 5px 0 15px;
-  color: #0f172a;
+  font-size: clamp(18px, 3vw, 22px);
   text-align: center;
+  color: #111827;
+  margin-bottom: 18px;
   font-weight: 700;
 }
 
 /* ====== GRID DIAMOND ====== */
 .diamond-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
 }
 
 /* ====== CARD DIAMOND ====== */
 .diamond-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 18px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 20px 16px;
   text-align: center;
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
 .diamond-card:hover {
-  background: #e8f1ff;
+  background: #e8f0ff;
   border-color: #3b82f6;
-  transform: translateY(-4px);
-  box-shadow: 0 4px 14px rgba(59,130,246,0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(59,130,246,0.25);
 }
 
 .diamond-card h3 {
   margin: 0;
-  font-size: 17px;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: clamp(15px, 3vw, 18px);
+  font-weight: 700;
+  color: #1f2937;
 }
 
 .diamond-card p {
   margin-top: 6px;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: clamp(14px, 2.4vw, 16px);
+  font-weight: 700;
   color: #2563eb;
 }
 
 /* ====== TOMBOL KEMBALI ====== */
 .back-btn {
   width: 100%;
-  margin-top: 28px;
-  padding: 14px;
+  margin-top: 32px;
+  padding: 16px;
   border: none;
-  background: #0f172a;
-  color: #ffffff;
-  font-size: 16px;
-  border-radius: 12px;
+  border-radius: 14px;
+  background: #111827;
+  color: white;
+  font-size: clamp(15px, 3vw, 17px);
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
   transition: 0.25s;
 }
 
 .back-btn:hover {
-  background: #1e293b;
+  background: #1f2937;
+}
+
+/* ========== RESPONSIVE MOBILE & TABLET ========== */
+@media (max-width: 540px) {
+  .topup-container {
+    padding: 26px;
+    border-radius: 18px;
+  }
+  .topup-form {
+    flex-direction: column;
+  }
+  .diamond-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 380px) {
+  .diamond-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* ========== RESPONSIVE DESKTOP XL (LAYAR LEBAR) ========== */
+@media (min-width: 1024px) {
+  .topup-container {
+    max-width: 540px;
+    padding: 40px;
+    border-radius: 24px;
+  }
+  .diamond-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
