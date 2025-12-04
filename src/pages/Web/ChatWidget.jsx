@@ -4,20 +4,15 @@ import text from "../../locales/text";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [showChatRoom, setShowChatRoom] = useState(false);
 
-  const { lang } = useParams(); // ambil bahasa dari url
-  const language = lang === "id" ? "id" : "en"; 
+  const { lang } = useParams();
+  const language = lang === "id" ? "id" : "en";
   const t = text[language];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSent(true);
-
-    setTimeout(() => {
-      setOpen(false);
-      setSent(false);
-    }, 3000);
+    setShowChatRoom(true); // langsung ke chat room
   };
 
   return (
@@ -56,26 +51,47 @@ export default function ChatWidget() {
             zIndex: 1000,
           }}
         >
-          {sent ? (
-            <div
-              style={{
-                padding: "15px",
-                background: "#e0f2fe",
-                borderRadius: "12px",
-                color: "#075985",
-                fontWeight: "600",
-                textAlign: "center",
-              }}
-            >
-              {t.requestSend}
+          {showChatRoom ? (
+            // ============================
+            // === ROOM CHAT DI SINI ===
+            // ============================
+            <div style={{ height: "250px", display: "flex", flexDirection: "column" }}>
+              <h3 style={{ marginBottom: "10px", fontWeight: "700" }}>
+                Chat Room
+              </h3>
+
+              <div
+                style={{
+                  flex: 1,
+                  padding: "10px",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  overflowY: "auto",
+                  marginBottom: "10px",
+                }}
+              >
+                <p style={{ fontSize: "14px" }}>
+                  👋 Hi! {t.weWillContactYouSoon}
+                </p>
+              </div>
+
+              {/* <input
+                type="text"
+                placeholder="Type a message..."
+                style={{
+                  padding: "10px",
+                  borderRadius: "8px",
+                  border: "1px solid #ddd",
+                }}
+              /> */}
             </div>
           ) : (
             <>
               <h3 style={{ margin: "0 0 12px", fontSize: "18px", fontWeight: "700" }}>
-                  {t.scheduleDemo}
+                {t.scheduleDemo}
               </h3>
               <h3 style={{ margin: "0 0 12px", fontSize: "12px", fontWeight: "600" }}>
-                  {t.weWillContactYouSoon}
+                {t.weWillContactYouSoon}
               </h3>
 
               <form
@@ -101,6 +117,16 @@ export default function ChatWidget() {
                 >
                   {t.send}
                 </button>
+
+                <h3
+                  style={{
+                    margin: "0 0 12px",
+                    fontSize: "12px",
+                    fontWeight: "400",
+                  }}
+                >
+                  Powered by <span style={{ fontWeight: "700" }}>Scrumly</span>
+                </h3>
               </form>
             </>
           )}

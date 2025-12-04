@@ -6,6 +6,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { useGoogleLogin } from "@react-oauth/google";
 import loginLocales from "../../locales/loginLocales";
+import TurnstileComponent from "./TurnstileComponent";
+
 import {
   loginUser,
   loginWithGoogle,
@@ -23,6 +25,7 @@ const Login = ({ onLogin }) => {
   const currentLang = location.pathname.startsWith("/id") ? "id" : "en";
   const [language, setLanguage] = useState(currentLang);
   const t = loginLocales[language];
+const [cfToken, setCfToken] = useState("");
 
   const queryParams = new URLSearchParams(location.search);
   const ref = queryParams.get("ref");
@@ -68,6 +71,11 @@ const Login = ({ onLogin }) => {
   // -----------------------------
   const handleLogin = async (e) => {
     e.preventDefault();
+      if (!cfToken) {
+    toast.warn("Harap verifikasi Cloudflare sebelum login");
+    return;
+  }
+
     if (!password.trim()) {
       toast.warn(t.emptyPasswordWarning);
       return;
@@ -368,6 +376,10 @@ const Login = ({ onLogin }) => {
             </span>
           </div>
         )}
+        {/* Turnstile Verification */}
+      <div style={{ marginBottom: "20px" }}>
+        <TurnstileComponent onVerify={(token) => setCfToken(token)} />
+      </div>
 
         {/* 🔹 Forgot Password */}
         <p
