@@ -5,14 +5,52 @@ import text from "../../locales/text";
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [showChatRoom, setShowChatRoom] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiMessage, setApiMessage] = useState(null);
 
   const { lang } = useParams();
   const language = lang === "id" ? "id" : "en";
   const t = text[language];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowChatRoom(true); // langsung ke chat room
+    setLoading(true);
+    setApiMessage(null);
+
+    const formData = {
+      full_name: e.target.full_name.value,
+      email: e.target.email.value,
+      whatsapp: e.target.whatsapp.value,
+      business_name: e.target.business_name.value,
+    };
+
+    try {
+      const res = await fetch("https://cashpay.co.id:2369/api/widget/create/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.status) {
+        // sukses
+        setApiMessage(data.message || "Chat sent successfully!");
+      } else if (data.meta?.status === false) {
+        // gagal
+        setApiMessage(data.meta?.message || "Something went wrong");
+      } else {
+        setApiMessage("Unknown response from server");
+      }
+
+      setShowChatRoom(true);
+    } catch (err) {
+      console.error(err);
+      setApiMessage("Network error, try again!");
+      setShowChatRoom(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,14 +90,8 @@ export default function ChatWidget() {
           }}
         >
           {showChatRoom ? (
-            // ============================
-            // === ROOM CHAT DI SINI ===
-            // ============================
             <div style={{ height: "250px", display: "flex", flexDirection: "column" }}>
-              <h3 style={{ marginBottom: "10px", fontWeight: "700" }}>
-                Chat Room
-              </h3>
-
+              <h3 style={{ marginBottom: "10px", fontWeight: "700" }}>Chat Room</h3>
               <div
                 style={{
                   flex: 1,
@@ -70,20 +102,8 @@ export default function ChatWidget() {
                   marginBottom: "10px",
                 }}
               >
-                <p style={{ fontSize: "14px" }}>
-                  👋 Hi! {t.weWillContactYouSoon}
-                </p>
+                <p style={{ fontSize: "14px" }}>👋 {apiMessage || t.weWillContactYouSoon}</p>
               </div>
-
-              {/* <input
-                type="text"
-                placeholder="Type a message..."
-                style={{
-                  padding: "10px",
-                  borderRadius: "8px",
-                  border: "1px solid #ddd",
-                }}
-              /> */}
             </div>
           ) : (
             <>
@@ -98,10 +118,10 @@ export default function ChatWidget() {
                 onSubmit={handleSubmit}
                 style={{ display: "flex", flexDirection: "column", gap: "12px" }}
               >
-                <input type="text" placeholder={t.fullName} style={inputStyle} />
-                <input type="email" placeholder="Email" style={inputStyle} />
-                <input type="text" placeholder="WhatsApp" style={inputStyle} />
-                <input type="text" placeholder={t.businessName} style={inputStyle} />
+                <input name="full_name" type="text" placeholder={t.fullName} style={inputStyle} required />
+                <input name="email" type="email" placeholder="Email" style={inputStyle} required />
+                <input name="whatsapp" type="text" placeholder="WhatsApp" style={inputStyle} required />
+                <input name="business_name" type="text" placeholder={t.businessName} style={inputStyle} required />
 
                 <button
                   type="submit"
@@ -114,8 +134,9 @@ export default function ChatWidget() {
                     cursor: "pointer",
                     fontWeight: "600",
                   }}
+                  disabled={loading}
                 >
-                  {t.send}
+                  {loading ? "Sending..." : t.send}
                 </button>
 
                 <h3
