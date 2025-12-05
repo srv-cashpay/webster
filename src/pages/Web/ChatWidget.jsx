@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import text from "../../locales/text";
+import { FaComments } from "react-icons/fa";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -72,7 +73,8 @@ export default function ChatWidget() {
           fontWeight: "600",
         }}
       >
-        Schedule Demo
+        Hallo Admin
+          <FaComments size={16} color="#fff" />
       </button>
 
       {open && (

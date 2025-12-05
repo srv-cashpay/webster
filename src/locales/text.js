@@ -3,6 +3,7 @@ const text = {
     features: "Features",
     hardware: "Hardware",
     about: "About",
+    price: "Price",
     tryFree: "Try for Free 3 months",
     send: "Send",
     scheduleDemo:"schedule Demo",
@@ -55,6 +56,7 @@ const text = {
     requestSend:"Permintaan telah dikirim",
     businessName:"Nama Bisnis",
     send: "Kirim",
+    price: "Harga",
     heroTitle: "Bangun masa depanmu dengan Sistem Kasir Pintar",
     heroDesc:
       "Cerdas, Aman, dan Mudah. Satu sistem untuk menyederhanakan setiap transaksi.",
