@@ -118,10 +118,6 @@ body {
   transition: all 0.3s;
 }
 
-.btn-login:hover {
-  background: rgba(0, 255, 128, 0.1);
-  box-shadow: 0 0 10px rgba(0, 255, 128, 0.3);
-}
 
 /* ======================================================
    🦸 HERO SECTION

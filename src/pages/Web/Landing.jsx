@@ -22,7 +22,7 @@ export default function LandingPage() {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const language = lang === "id" ? "id" : "en";
+  const language = lang === "en" ? "en" : "id";
 
   const queryParams = new URLSearchParams(location.search);
   const ref = queryParams.get("ref");
