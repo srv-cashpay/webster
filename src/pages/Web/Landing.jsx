@@ -211,67 +211,67 @@ export default function LandingPage() {
         </div>
       </section>
       {/* PRICING */}
-<section ref={priceRef} className="section pricing">
-  <h2 className="pricing-title">{language === "id" ? "Harga Paket" : "Pricing Plans"}</h2>
+      <section ref={priceRef} className="section pricing">
+        <h2 className="pricing-title">{language === "id" ? "Harga Paket" : "Pricing Plans"}</h2>
 
-  <div className="pricing-container">
+        <div className="pricing-container">
 
-    {/* Paket Basic */}
-    <div className="pricing-card">
-      <h3>Basic</h3>
-      <p className="price">Rp 0<span>/bulan</span></p>
-      <ul>
-        <li>• 1 Device</li>
-        <li>• Fitur Kasir Dasar</li>
-        <li>• Riwayat Transaksi</li>
-        <li>• Support Chat</li>
-      </ul>
-      <button
-        onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
-        className="pricing-btn"
-      >
-        {language === "id" ? "Mulai Gratis" : "Start Free"}
-      </button>
-    </div>
+          {/* Paket Basic */}
+          <div className="pricing-card">
+            <h3>Basic</h3>
+            <p className="price">Rp 0<span>/bulan</span></p>
+            <ul>
+              <li>• 1 Device</li>
+              <li>• Fitur Kasir Dasar</li>
+              <li>• Riwayat Transaksi</li>
+              <li>• Support Chat</li>
+            </ul>
+            <button
+              onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
+              className="pricing-btn"
+            >
+              {language === "id" ? "Mulai Gratis" : "Start Free"}
+            </button>
+          </div>
 
-    {/* Paket Pro */}
-    <div className="pricing-card highlight">
-      <h3>Pro</h3>
-      <p className="price">Rp 49.000<span>/bulan</span></p>
-      <ul>
-        <li>• Unlimited Device</li>
-        <li>• Semua Fitur Premium</li>
-        <li>• Laporan & Grafik</li>
-        <li>• Support Prioritas</li>
-      </ul>
-      <button
-        onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
-        className="pricing-btn"
-      >
-        {language === "id" ? "Pilih Pro" : "Choose Pro"}
-      </button>
-    </div>
+          {/* Paket Pro */}
+          <div className="pricing-card highlight">
+            <h3>Pro</h3>
+            <p className="price">Rp 49.000<span>/bulan</span></p>
+            <ul>
+              <li>• Unlimited Device</li>
+              <li>• Semua Fitur Premium</li>
+              <li>• Laporan & Grafik</li>
+              <li>• Support Prioritas</li>
+            </ul>
+            <button
+              onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
+              className="pricing-btn"
+            >
+              {language === "id" ? "Pilih Pro" : "Choose Pro"}
+            </button>
+          </div>
 
-    {/* Paket Enterprise */}
-    <div className="pricing-card">
-      <h3>Enterprise</h3>
-      <p className="price">Konsultasi Harga</p>
-      <ul>
-        <li>• Integrasi API</li>
-        <li>• Dukungan 24/7</li>
-        <li>• Training Tim</li>
-        <li>• SLA Khusus</li>
-      </ul>
-      <button
-        onClick={() => navigate(`/${language}/contact`)}
-        className="pricing-btn"
-      >
-        {language === "id" ? "Hubungi Kami" : "Contact Us"}
-      </button>
-    </div>
+          {/* Paket Enterprise */}
+          <div className="pricing-card">
+            <h3>Enterprise</h3>
+            <p className="price">Konsultasi Harga</p>
+            <ul>
+              <li>• Integrasi API</li>
+              <li>• Dukungan 24/7</li>
+              <li>• Training Tim</li>
+              <li>• SLA Khusus</li>
+            </ul>
+            <button
+              onClick={() => navigate(`/${language}/contact`)}
+              className="pricing-btn"
+            >
+              {language === "id" ? "Hubungi Kami" : "Contact Us"}
+            </button>
+          </div>
 
-  </div>
-</section>
+        </div>
+      </section>
 
       {/* FOOTER */}
       <footer className="footer">
