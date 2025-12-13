@@ -44,6 +44,9 @@ import Hardware from "./pages/Web/hardware/Hardware";
 import TopupML from "./pages/Web/topup/TopupML";
 import TopUp from "./pages/Web/TopUp";
 import SelectGame  from "./pages/Web/SelectGame";
+import PaymentPage from "./pages/Web/payment/PaymentGateway";
+
+
 
 import Cookies from "js-cookie";
 import "./App.css";
@@ -170,6 +173,7 @@ function App() {
       <Route path="/:lang/hardware" element={<Hardware />} />
       <Route path="/:lang/topup/games" element={<SelectGame />} />
       <Route path="/:lang/topup/mobile-legend" element={<TopupML />} />
+      <Route path="/payment/:ref" element={<PaymentPage />} />
 
       {/* 🔐 Auth Routes */}
       <Route

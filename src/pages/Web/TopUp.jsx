@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./TopUp.css";
 import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 import slider from "../../../src/assets/design.png";
+import ml from "../../../src/assets/OIP.jpg";
 
 export default function TopUp() {
   const navigate = useNavigate();
@@ -15,6 +16,10 @@ export default function TopUp() {
     { id: 3, name: "Game", icon: "🎮", route: "games" },
     { id: 4, name: "PLN", icon: "⚡", route: "pln" },
     { id: 5, name: "Voucher", icon: "🎟️", route: "voucher" },
+  ];
+  const best = [
+  
+    { id: 1, name: "Mobile Legend", icon: ml, route: "mobile-legend" },
   ];
   const slides = [slider];
 const [current, setCurrent] = React.useState(0);
@@ -63,19 +68,31 @@ const prev = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.leng
       ></div>
     ))}
   </div>
-
 </div>
 
         {/* ===================== CATEGORIES ========================= */}
-        <div className="ppob-grid">
-          {categories.map((cat) => (
+       <div className="ppob-grid">
+        {categories.map((cat) => (
+          <div
+            key={cat.id}
+            className="ppob-card"
+            onClick={() => navigate(`/${lang}/topup/${cat.route}`)}
+          >
+            <div className="ppob-icon">{cat.icon}</div>
+            <p>{cat.name}</p>
+          </div>
+        ))}
+      </div>
+      <p>Best Seller</p>
+        <div className="ppob-grid-game">
+          {best.map((item) => (
             <div
-              key={cat.id}
-              className="ppob-card"
-              onClick={() => navigate(`/${lang}/topup/${cat.route}`)}
+              key={item.id}
+              className="ppob-best-card"
+              onClick={() => navigate(`/${lang}/topup/${item.route}`)}
             >
-              <div className="ppob-icon">{cat.icon}</div>
-              <p>{cat.name}</p>
+              <img src={item.icon} alt={item.name} />
+              <p>{item.name}</p>
             </div>
           ))}
         </div>

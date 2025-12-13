@@ -1,8 +1,9 @@
-
-/* SUBTITLE VERSION BUTTON */
+/* ========================================
+   BUTTON
+======================================== */
 .btn {
   background: #ffffff;
-  color: #0f172a; /* hitam gelap */
+  color: #0f172a;
   padding: 12px 26px;
   border-radius: 10px;
   border: 1px solid #cbd5e1;
@@ -14,16 +15,11 @@
 }
 
 .btn:hover {
-  background: #f1f5f9; /* sedikit abu muda saat hover */
+  background: #f1f5f9;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-
-.back-icon:hover {
-  background: rgba(30, 41, 59, 0.95);
-  transform: translateY(-2px);
-}
 /* ========================================
    FULL PAGE LAYOUT
 ======================================== */
@@ -41,13 +37,12 @@
 .ppob-container {
   width: 100%;
   padding: 40px 50px;
+  padding-bottom: 20px;
   box-sizing: border-box;
-    padding-bottom: 20px;  /* memberi ruang aman agar footer tidak rapat */
-
 }
 
 /* ========================================
-   TITLE
+   TITLES
 ======================================== */
 .ppob-title {
   font-size: 34px;
@@ -63,13 +58,20 @@
   margin-right: 2px;
 }
 
+/* ========================================
+   BACK ICON
+======================================== */
+.back-icon:hover {
+  background: rgba(30, 41, 59, 0.95);
+  transform: translateY(-2px);
+}
+
 /* ==========================================================
-   SLIDER BANNER (OTOMATIS)
+   SLIDER BANNER
 ========================================================== */
-/* WRAPPER */
 .slider-wrapper {
   width: 100%;
-  height: 320px;
+  height: 340px;
   position: relative;
   overflow: hidden;
   border-radius: 18px;
@@ -77,14 +79,12 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-/* SLIDER (FLEX + SMOOTH TRANSITION) */
 .slider {
   display: flex;
   height: 100%;
   transition: transform 0.6s ease;
 }
 
-/* SETIAP SLIDE */
 .slide {
   min-width: 100%;
   height: 100%;
@@ -94,10 +94,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
-/* PANAH SLIDER */
 .slider-arrow {
   position: absolute;
   top: 50%;
@@ -126,7 +124,6 @@
   scale: 1.1;
 }
 
-/* DOTS */
 .slider-dots {
   position: absolute;
   bottom: 14px;
@@ -155,7 +152,6 @@
   .slider-wrapper { height: 210px; }
 }
 
-
 /* ========================================
    KATEGORI GRID
 ======================================== */
@@ -163,44 +159,9 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 25px;
-    margin-bottom: 60px;   /* bisa naikkan ke 80–100 kalau mau lebih jauh */
-
+  margin-bottom: 60px;
 }
 
-.ppob-card {
-  background: #f8fafc;
-  padding: 30px 20px;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  text-align: center;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  transition: .25s;
-}
-
-.ppob-card:hover {
-  background: #e8f0ff;
-  border-color: #3b82f6;
-  transform: translateY(-6px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-}
-
-.ppob-icon {
-  font-size: 44px;
-  margin-bottom: 14px;
-}
-
-.ppob-card p {
-  font-size: 19px;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-/* Responsive */
 @media (max-width: 1100px) {
   .ppob-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -213,12 +174,79 @@
   }
 }
 
-@media (max-width: 500px) {
-  .slider-wrapper {
-    height: 210px;
-  }
+/* ========================================
+   KATEGORI CARD
+======================================== */
+.ppob-card {
+  background: #f8fafc;
+  padding: 28px 20px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: .25s;
+}
 
-  .ppob-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.ppob-card:hover {
+  background: #e8f0ff;
+  border-color: #3b82f6;
+  transform: translateY(-6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.ppob-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.ppob-card p {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* ========================================
+   BEST SELLER
+======================================== */
+.ppob-best-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ppob-best-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.ppob-best-card p {
+  text-align: center;
+  padding: 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.ppob-best-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.14);
+}
+
+/* GRID BEST SELLER */
+.ppob-grid-game {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 14px;
 }

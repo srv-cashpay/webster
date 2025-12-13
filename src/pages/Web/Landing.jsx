@@ -70,6 +70,9 @@ export default function LandingPage() {
              <button onClick={() => navigate(`/${language}/topup`)}>
               Top Up
             </button>
+             <button onClick={() => navigate(`/${language}/topup`)}>
+              Blog
+            </button>
           </div>
 
           <div className="language-toggle">

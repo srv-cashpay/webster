@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "./TopUp.css";
+import "./SelectGame.css";
 
 // IMPORT ASSET GAMBAR HEADER
 import headerImage from "../../assets/head.png";
