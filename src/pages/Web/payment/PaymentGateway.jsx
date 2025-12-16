@@ -1,72 +1,95 @@
 import React, { useState } from "react";
 import "./PaymentGateway.css";
 
+import PaymentSummary from "../../../components/payment/PaymentSummary";
+import PaymentMethod from "../../../components/payment/PaymentMethod";
+import GopayPayment from "../../../components/payment/GopayPayment";
+import DanaPayment from "../../../components/payment/DanaPayment";
+import { chargeGopay, chargeDana } from "../../../services/paymentService";
+
 export default function PaymentGateway() {
   const [selectedMethod, setSelectedMethod] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [paymentData, setPaymentData] = useState(null);
 
-  const paymentMethods = [
-    { id: 1, name: "Dana", icon: "💙" },
-    { id: 2, name: "OVO", icon: "🟣" },
-    { id: 3, name: "Gopay", icon: "💠" },
-    { id: 4, name: "Bank Transfer", icon: "🏦" },
-    { id: 5, name: "ShopeePay", icon: "🟧" },
-  ];
+  const harga = 20000;
 
-  const handlePay = () => {
+  const handlePay = async () => {
     if (!selectedMethod) {
-      alert("Silakan pilih metode pembayaran terlebih dahulu!");
+      alert("Pilih metode pembayaran");
       return;
     }
 
-    alert("Pembayaran diproses via : " + selectedMethod);
+    try {
+      setLoading(true);
+      let data;
+
+      if (selectedMethod === "Gopay") {
+        data = await chargeGopay(harga);
+      } else if (selectedMethod === "Dana") {
+        data = await chargeDana(harga);
+      }
+
+      setPaymentData(data);
+    } catch {
+      alert("Gagal membuat transaksi");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="pay-wrapper">
-      <div className="pay-container">
+    <div className="checkout-wrapper">
+      <div className="checkout-layout">
 
-        <h1>Payment Gateway</h1>
-        <p className="subtitle">Pilih metode pembayaran untuk melanjutkan transaksi</p>
+        {/* LEFT - CONTENT */}
+        <div className="checkout-content">
+          <h1>Checkout</h1>
+        
 
-        {/* Summary */}
-        <div className="summary-box">
-          <h3>Ringkasan Pembayaran</h3>
-          <div className="summary-row">
-            <span>Produk</span>
-            <span>Mobile Legends 86 Diamonds</span>
-          </div>
-          <div className="summary-row">
-            <span>Harga</span>
-            <span>Rp 20.000</span>
-          </div>
-          <div className="summary-row total">
-            <span>Total</span>
-            <span>Rp 20.000</span>
+          <PaymentSummary harga={harga} />
+
+          <div className="info-box">
+            <h4>Informasi</h4>
+            <p>
+              Setelah pembayaran berhasil, pesanan akan diproses otomatis
+              tanpa perlu konfirmasi manual. Pastikan data transaksi kamu sudah benar sebelum membayar
+            </p>
           </div>
         </div>
 
-        {/* Payment Methods */}
-        <h2 className="method-title">Metode Pembayaran</h2>
+        {/* RIGHT - PAYMENT */}
+        <div className="pay-container">
+          <p className="subtitle">Pilih metode pembayaran</p>
 
-        <div className="method-grid">
-          {paymentMethods.map((item) => (
-            <div
-              key={item.id}
-              className={`method-card ${
-                selectedMethod === item.name ? "selected" : ""
-              }`}
-              onClick={() => setSelectedMethod(item.name)}
-            >
-              <div className="method-icon">{item.icon}</div>
-              <p>{item.name}</p>
-            </div>
-          ))}
+          {!paymentData && (
+            <>
+              <PaymentMethod
+                selectedMethod={selectedMethod}
+                setSelectedMethod={setSelectedMethod}
+              />
+
+              <button
+                className="pay-button"
+                onClick={handlePay}
+                disabled={loading}
+              >
+                {loading ? "Memproses..." : "Bayar Sekarang"}
+              </button>
+            </>
+          )}
+
+          {paymentData && selectedMethod === "Gopay" && (
+            <GopayPayment data={paymentData} />
+          )}
+
+          {paymentData && selectedMethod === "Dana" && (
+            <DanaPayment data={paymentData} />
+          )}
         </div>
 
-        <button className="pay-button" onClick={handlePay}>
-          Bayar Sekarang
-        </button>
       </div>
     </div>
   );
 }
+
