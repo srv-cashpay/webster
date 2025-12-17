@@ -6,7 +6,7 @@ import "./SelectGame.css";
 import headerImage from "../../assets/head.png";
 
 // IMPORT GAME ICONS
-import mlIcon from "../../assets/OIP.jpg";
+import mlIcon from "../../assets/ml.jpg";
 import ff from "../../assets/ff.jpg";
 import pubg from "../../assets/pubg.jpg";
 import pb from "../../assets/pb.jpg";

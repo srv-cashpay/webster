@@ -3,7 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./TopUp.css";
 import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 import slider from "../../../src/assets/design.png";
-import ml from "../../../src/assets/OIP.jpg";
+import ml from "../../../src/assets/ml.jpg";
+import xl from "../../../src/assets/xl.png";
+import pubg from "../../../src/assets/pubg.jpg";
+import pb from "../../../src/assets/pb.jpg";
 
 export default function TopUp() {
   const navigate = useNavigate();
@@ -17,9 +20,12 @@ export default function TopUp() {
     { id: 4, name: "PLN", icon: "⚡", route: "pln" },
     { id: 5, name: "Voucher", icon: "🎟️", route: "voucher" },
   ];
-  const best = [
-  
+  const best = [  
     { id: 1, name: "Mobile Legend", icon: ml, route: "mobile-legend" },
+    { id: 2, name: "XL Axiata ", icon: xl, route: "pulsa-xl" },
+    { id: 3, name: "XL Axiata ", icon: pubg, route: "pulsa-xl" },
+    { id: 4, name: "XL Axiata ", icon: pb, route: "pulsa-xl" },
+
   ];
   const slides = [slider];
 const [current, setCurrent] = React.useState(0);
