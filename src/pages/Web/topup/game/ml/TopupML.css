@@ -75,6 +75,7 @@ body {
   font-size: 15px;
   background: #f9fafb;
   transition: 0.22s ease;
+  color: #000;        /* teks yang diketik → HITAM */
 }
 
 .topup-form input:focus {

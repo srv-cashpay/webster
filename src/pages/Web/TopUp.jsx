@@ -22,9 +22,9 @@ export default function TopUp() {
   ];
   const best = [  
     { id: 1, name: "Mobile Legend", icon: ml, route: "mobile-legend" },
-    { id: 2, name: "XL Axiata ", icon: xl, route: "pulsa-xl" },
-    { id: 3, name: "XL Axiata ", icon: pubg, route: "pulsa-xl" },
-    { id: 4, name: "XL Axiata ", icon: pb, route: "pulsa-xl" },
+    { id: 2, name: "XL Axiata ", icon: xl, route: "pulsa-telkomsel" },
+    { id: 3, name: "Pubg ", icon: pubg, route: "pubg-mobile" },
+    { id: 4, name: "Point Blank ", icon: pb, route: "point-blank" },
 
   ];
   const slides = [slider];

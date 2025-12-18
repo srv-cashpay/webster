@@ -41,7 +41,10 @@ import Reservation from "./pages/Reservation/TableReservation";
 import OrderWeb from "./pages/OrderWeb/List";
 import Subscribe from "./pages/Subscribe/SubscribeModal";
 import Hardware from "./pages/Web/hardware/Hardware";
-import TopupML from "./pages/Web/topup/TopupML";
+import TopupML from "./pages/Web/topup/game/ml/TopupML";
+import Pubg from "./pages/Web/topup/game/pubg/Pubg";
+import Pointblank from "./pages/Web/topup/game/pointblank/Pointblank";
+import Telkomsel from "./pages/Web/topup/pulsa/telkomsel/Telkomsel";
 import TopUp from "./pages/Web/TopUp";
 import SelectGame  from "./pages/Web/SelectGame";
 import PaymentPage from "./pages/Web/payment/PaymentGateway";
@@ -173,6 +176,9 @@ function App() {
       <Route path="/:lang/hardware" element={<Hardware />} />
       <Route path="/:lang/topup/games" element={<SelectGame />} />
       <Route path="/:lang/topup/mobile-legend" element={<TopupML />} />
+      <Route path="/:lang/topup/pubg-mobile" element={<Pubg />} />
+      <Route path="/:lang/topup/point-blank" element={<Pointblank />} />
+      <Route path="/:lang/topup/pulsa-telkomsel" element={<Telkomsel />} />
       <Route path="/payment/:ref" element={<PaymentPage />} />
 
       {/* 🔐 Auth Routes */}

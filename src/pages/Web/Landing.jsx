@@ -136,7 +136,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <img src={heroImage} alt="Hero" className="hero-image" />
+        <img src={heroImage} alt="Hero" className="hero-image"  fetchpriority="high" />
       </section>
 
       {/* FEATURES */}

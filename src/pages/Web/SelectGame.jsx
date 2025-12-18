@@ -18,8 +18,8 @@ export default function SelectGame() {
   const games = [
     { id: 1, name: "Mobile Legends", icon: mlIcon, route: "mobile-legend" },
     { id: 2, name: "Free Fire", icon: ff, route: "free-fire" },
-    { id: 3, name: "PUBG Mobile", icon: pubg, route: "pubg" },
-    { id: 4, name: "Point Blank", icon: pb, route: "pb" }
+    { id: 3, name: "PUBG Mobile", icon: pubg, route: "pubg-mobile" },
+    { id: 4, name: "Point Blank", icon: pb, route: "point-blank" }
 
   ];
 

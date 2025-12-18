@@ -128,7 +128,7 @@ body {
   justify-content: space-between;
   flex-wrap: wrap;
   padding: 80px 40px;
-  background: radial-gradient(circle at 30% 20%, #fff, #fff);
+  background: #fff;
 }
 
 .hero-text {
@@ -193,7 +193,6 @@ body {
 .hero-image {
   width: 420px;
   max-width: 100%;
-  filter: drop-shadow(0 0 20px rgba(0, 255, 128, 0.3));
 }
 
 /* ======================================================

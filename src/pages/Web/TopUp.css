@@ -250,7 +250,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 18px;
   margin-top: 14px;
-  margin-bottom: 80px
+  margin-bottom: 80px;
 }
 
 @media (max-width: 768px) {
