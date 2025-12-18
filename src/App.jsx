@@ -104,7 +104,7 @@ function ProtectedLayout({
           <Route path="/:lang/subscribe/list" element={<Subscribe />} />
           
           <Route path="/:lang/pos" element={<Pos />} />
-          <Route path="/" element={<Navigate to="/id/harbour" replace />} />
+          <Route path="/" element={<Navigate to="/harbour" replace />} />
         </Routes>
       </div>
     </div>
@@ -157,7 +157,7 @@ function App() {
             <Navigate to={`/${currentLang}/harbour`} replace />
           ) : (
             // jika belum login, arahkan ke landing page
-            <Navigate to="/id" replace />
+            <Navigate to="/" replace /> // /id
           )
         }
       />
@@ -222,7 +222,7 @@ function App() {
           path="*"
           element={
             location.pathname === "/" ? (
-              <Navigate to="/id" replace />
+              <Navigate to="/" replace />
             ) : (
               <Navigate to={`/${currentLang}/auth?ref=encrypt`} replace />
             )
