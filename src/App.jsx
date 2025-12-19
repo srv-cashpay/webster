@@ -48,6 +48,8 @@ import Telkomsel from "./pages/Web/topup/pulsa/telkomsel/Telkomsel";
 import TopUp from "./pages/Web/TopUp";
 import SelectGame  from "./pages/Web/SelectGame";
 import PaymentPage from "./pages/Web/payment/PaymentGateway";
+import BlogList from "./pages/Web/blog/BlogList";
+import BlogDetail from "./pages/Web/blog/BlogDetail";
 
 
 
@@ -179,6 +181,9 @@ function App() {
       <Route path="/:lang/topup/pubg-mobile" element={<Pubg />} />
       <Route path="/:lang/topup/point-blank" element={<Pointblank />} />
       <Route path="/:lang/topup/pulsa-telkomsel" element={<Telkomsel />} />
+      <Route path="/:lang/blog" element={<BlogList />} />
+      <Route path="/:lang/blog/:id" element={<BlogDetail />} />
+
       <Route path="/payment/:ref" element={<PaymentPage />} />
 
       {/* 🔐 Auth Routes */}

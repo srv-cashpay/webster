@@ -1,6 +1,10 @@
 // HardwareGrid.jsx
-import React from "react";
+import React, { useRef } from "react";
 import "./hardwarepage.css";
+import Navbar from "../../../components/navbar/Navbar";
+import Footer from "../../../components/footer/Footer";
+import text from "../../../locales/text";
+import {  useNavigate, useParams } from "react-router-dom";
 
 const hardware = [
   {
@@ -26,9 +30,26 @@ const hardware = [
 ];
 
 export default function HardwareGrid() {
+    const heroRef = useRef(null);
+    const featuresRef = useRef(null);
+    const aboutRef = useRef(null);
+    const priceRef = useRef(null);
+    const navigate = useNavigate();
+  const { lang } = useParams();
+  const language = lang === "en" ? "en" : "id";
+  const t = text[language];
+
   return (
     <div className="hardware-container">
-      <h1 className="hardware-title">Hardware CashPay</h1>
+       {/* Navbar */}
+            <Navbar
+              heroRef={heroRef}
+              featuresRef={featuresRef}
+              aboutRef={aboutRef}
+              priceRef={priceRef}
+              language={language}
+              t={t}
+            />
 
       <div className="hardware-grid">
         {hardware.map((item, index) => (
@@ -42,6 +63,8 @@ export default function HardwareGrid() {
           </div>
         ))}
       </div>
+            <Footer language={language} />
+      
     </div>
   );
 }

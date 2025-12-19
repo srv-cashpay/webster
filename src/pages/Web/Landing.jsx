@@ -2,10 +2,13 @@ import React, { useRef, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "./LandingPage.css";
 import text from "../../locales/text";
-import ChatWidget from "./ChatWidget"; 
-import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
+import ChatWidget from "../../components/widget/ChatWidget"; 
+import Navbar from "../../components/navbar/Navbar";
+import Hero from "../../components/hero/Hero";
+import Pricing from "../../components/pricing/Pricing";
 
-import heroImage from "../../assets/head.png";
+import Footer from "../../components/footer/Footer";
+
 import addImage from "../../assets/add.png";
 import scanImage from "../../assets/scan1.png";
 import dashboard1 from "../../assets/dashboard1.png";
@@ -33,111 +36,22 @@ export default function LandingPage() {
     }
   }, [ref]);
 
-  const scrollToSection = (ref) => {
-    if (ref.current) ref.current.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
-  };
-
   const t = text[language];
 
   return (
     <div className="landing-container">
       {/* Navbar */}
-      <nav className="navbar">
-        <div className="logo" onClick={() => scrollToSection(heroRef)}>
-          CashPay
-        </div>
-
-        <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? "✖" : "☰"}
-        </div>
-
-        <div className={`nav-right ${menuOpen ? "active" : ""}`}>
-          <div className="nav-links">
-            <button onClick={() => scrollToSection(featuresRef)}>
-              {t.features}
-            </button>
-            <button onClick={() => scrollToSection(aboutRef)}>
-              {t.about}
-            </button>
-             <button onClick={() => scrollToSection(priceRef)}>
-              {t.price}
-            </button>
-            {/* 🔥 MENU TopUp */}
-            <button onClick={() => navigate(`/${language}/hardware`)}>
-              {t.hardware}
-            </button>
-             <button onClick={() => navigate(`/${language}/topup`)}>
-              Top Up
-            </button>
-             <button onClick={() => navigate(`/${language}/topup`)}>
-              Blog
-            </button>
-          </div>
-
-          <div className="language-toggle">
-            <button
-              className={language === "id" ? "active-lang" : ""}
-              onClick={() => navigate("/id")}
-            >
-              ID
-            </button>
-            <button
-              className={language === "en" ? "active-lang" : ""}
-              onClick={() => navigate("/en")}
-            >
-              EN
-            </button>
-          </div>
-
-          <button
-            className="btn-login"
-            onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
-          >
-            {t.tryFree}
-          </button>
-        </div>
-      </nav>
+      <Navbar
+        heroRef={heroRef}
+        featuresRef={featuresRef}
+        aboutRef={aboutRef}
+        priceRef={priceRef}
+        language={language}
+        t={t}
+      />
 
       {/* HERO */}
-      <section ref={heroRef} className="hero">
-        <div className="hero-text">
-          <h1>{t.heroTitle}</h1>
-          <p>{t.heroDesc}</p>
-
-          <div className="hero-buttons">
-            <button
-              className="btn-playstore"
-              onClick={() =>
-                window.open(
-                  "https://play.google.com/store/apps/details?id=com.app.cashpay",
-                  "_blank"
-                )
-              }
-            >
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                alt="Play Store"
-              />
-            </button>
-
-            <button
-              className="btn-windows"
-              onClick={() => navigate(`/${language}/download`)}
-            >
-              <div className="btn-windows-content">
-                <img
-                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg"
-                  alt="Windows Logo"
-                />
-                <span>Download for Windows</span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <img src={heroImage} alt="Hero" className="hero-image"  fetchpriority="high" />
-      </section>
+      <Hero heroRef={heroRef} t={t} language={language} />
 
       {/* FEATURES */}
       <section ref={featuresRef} className="section features">
@@ -214,109 +128,10 @@ export default function LandingPage() {
         </div>
       </section>
       {/* PRICING */}
-      <section ref={priceRef} className="section pricing">
-        <h2 className="pricing-title">{language === "id" ? "Harga Paket" : "Pricing Plans"}</h2>
-
-        <div className="pricing-container">
-
-          {/* Paket Basic */}
-          <div className="pricing-card">
-            <h3>Basic</h3>
-            <p className="price">Rp 0<span>/bulan</span></p>
-            <ul>
-              <li>• 1 Device</li>
-              <li>• Fitur Kasir Dasar</li>
-              <li>• Riwayat Transaksi</li>
-              <li>• Support Chat</li>
-            </ul>
-            <button
-              onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
-              className="pricing-btn"
-            >
-              {language === "id" ? "Mulai Gratis" : "Start Free"}
-            </button>
-          </div>
-
-          {/* Paket Pro */}
-          <div className="pricing-card highlight">
-            <h3>Pro</h3>
-            <p className="price">Rp 49.000<span>/bulan</span></p>
-            <ul>
-              <li>• Unlimited Device</li>
-              <li>• Semua Fitur Premium</li>
-              <li>• Laporan & Grafik</li>
-              <li>• Support Prioritas</li>
-            </ul>
-            <button
-              onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
-              className="pricing-btn"
-            >
-              {language === "id" ? "Pilih Pro" : "Choose Pro"}
-            </button>
-          </div>
-
-          {/* Paket Enterprise */}
-          <div className="pricing-card">
-            <h3>Enterprise</h3>
-            <p className="price">Konsultasi Harga</p>
-            <ul>
-              <li>• Integrasi API</li>
-              <li>• Dukungan 24/7</li>
-              <li>• Training Tim</li>
-              <li>• SLA Khusus</li>
-            </ul>
-            <button
-              onClick={() => navigate(`/${language}/contact`)}
-              className="pricing-btn"
-            >
-              {language === "id" ? "Hubungi Kami" : "Contact Us"}
-            </button>
-          </div>
-
-        </div>
-      </section>
+      <Pricing priceRef={priceRef} language={language} />
 
       {/* FOOTER */}
-      <footer className="footer">
-        <div className="footer-top">
-          <span>© {new Date().getFullYear()} CashPay. All rights reserved.</span>
-
-        </div>
-          <button
-            onClick={() => navigate(`/${language}/privacy`)}
-            className="privacy-link"
-          >
-            Privacy Policy
-          </button>
-
-        <div className="footer-social">
-          <a
-          href="https://instagram.com/cashpay"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-icon"
-        >
-          <FaInstagram size={26} />
-        </a>
-        <a
-          href="https://www.facebook.com/share/1AqYgAzggh/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-icon"
-        >
-          <FaFacebook size={26} />
-        </a>
-        <a
-          href="https://www.youtube.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-icon"
-        >
-          <FaYoutube size={26} />
-        </a>
-        </div>
-      </footer>
-
+      <Footer language={language} />
       <ChatWidget />
     </div>
   );
