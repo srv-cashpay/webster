@@ -93,7 +93,21 @@ const faqRef = useRef(null);
             <p>{t.visionP2}</p>
           </div>
           <div className="vision-image">
-            <img src="https://res.cloudinary.com/dafzliys4/image/upload/v1766223109/add_c6liaq.png" alt="Vision" />
+            {/* <img src="https://res.cloudinary.com/dafzliys4/image/upload/v1766223109/add_c6liaq.png" alt="Vision" /> */}
+            <img
+              src="https://res.cloudinary.com/dafzliys4/image/upload/w_400,q_auto,f_auto/v1766223109/add_c6liaq.png"
+              srcset="
+                https://res.cloudinary.com/dafzliys4/image/upload/w_320,q_auto,f_auto/v1766223109/add_c6liaq.png 320w,
+                https://res.cloudinary.com/dafzliys4/image/upload/w_480,q_auto,f_auto/v1766223109/add_c6liaq.png 480w,
+                https://res.cloudinary.com/dafzliys4/image/upload/w_768,q_auto,f_auto/v1766223109/add_c6liaq.png 768w
+              "
+              sizes="(max-width: 768px) 90vw, 400px"
+              width="400"
+              height="865"
+              loading="lazy"
+              alt="Vision"
+            />
+
           </div>
         </div>
       </section>
