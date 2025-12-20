@@ -6,7 +6,7 @@ import ChatWidget from "../../components/widget/ChatWidget";
 import Navbar from "../../components/navbar/Navbar";
 import Hero from "../../components/hero/Hero";
 import Pricing from "../../components/pricing/Pricing";
-import About from "../../components/About/About";
+import About from "../../components/about/About";
 import Footer from "../../components/footer/Footer";
 import FAQ from "../../components/faq/FAQ";
 
