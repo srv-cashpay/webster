@@ -36,6 +36,7 @@ export default function Hero({ heroRef, t, language }) {
               <img
                 src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg"
                 alt="Windows"
+                loading="lazy"
               />
               <span>Download for Windows</span>
             </div>
