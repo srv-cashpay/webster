@@ -44,7 +44,7 @@ export default function Hero({ heroRef, t, language }) {
       </div>
 
       <img
-        src={heroImage}
+        src="https://res.cloudinary.com/dafzliys4/image/upload/v1766222923/head_vbctkm.png"
         alt="Hero"
         className="hero-image"
         fetchPriority="high"

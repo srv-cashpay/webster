@@ -10,9 +10,9 @@ import About from "../../components/about/About";
 import Footer from "../../components/footer/Footer";
 import FAQ from "../../components/faq/FAQ";
 
-import addImage from "../../assets/add.png";
-import scanImage from "../../assets/scan1.png";
-import dashboard1 from "../../assets/dashboard1.png";
+// import addImage from "../../assets/add.png";
+// import scanImage from "../../assets/scan1.png";
+// import dashboard1 from "../../assets/dashboard1.png";
 
 export default function LandingPage() {
   const heroRef = useRef(null);
@@ -60,7 +60,7 @@ const faqRef = useRef(null);
       <section className="section about">
         <div className="about-container">
           <div className="about-image">
-            <img src={dashboard1} alt="About" />
+            <img src="https://res.cloudinary.com/dafzliys4/image/upload/v1766223109/dashboard1_jhjnrg.png" alt="About" />
           </div>
           <div className="about-text">
             <h2>{t.aboutTitle}</h2>
@@ -74,7 +74,7 @@ const faqRef = useRef(null);
       <section className="section mission">
         <div className="mission-container">
           <div className="mission-image">
-            <img src={scanImage} alt="Mission" />
+            <img src="https://res.cloudinary.com/dafzliys4/image/upload/v1766223109/scan1_hiy9s9.png" alt="Mission" />
           </div>
           <div className="mission-text">
             <h2>{t.missionTitle}</h2>
@@ -93,7 +93,7 @@ const faqRef = useRef(null);
             <p>{t.visionP2}</p>
           </div>
           <div className="vision-image">
-            <img src={addImage} alt="Vision" />
+            <img src="https://res.cloudinary.com/dafzliys4/image/upload/v1766223109/add_c6liaq.png" alt="Vision" />
           </div>
         </div>
       </section>
