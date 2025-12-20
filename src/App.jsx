@@ -240,8 +240,11 @@ function App() {
 
 export default function RootApp() {
   return (
-    <Router>
+ 
+     <Router>
+      <main id="main-content">
       <App />
+      </main>
     </Router>
   );
 }
