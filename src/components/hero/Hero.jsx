@@ -49,6 +49,7 @@ export default function Hero({ heroRef, t, language }) {
         alt="Hero"
         className="hero-image"
         fetchPriority="high"
+        loading="eager"
       />
     </section>
   );
