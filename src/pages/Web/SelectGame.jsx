@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./SelectGame.css";
 
 // IMPORT ASSET GAMBAR HEADER
-import headerImage from "../../assets/head.png";
+import headerImage from "../../assets/head.webp";
 
 // IMPORT GAME ICONS
 import mlIcon from "../../assets/ml.jpg";
