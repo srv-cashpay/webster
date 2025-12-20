@@ -52,20 +52,6 @@
   min-height: 80px;
 }
 
-/* === Feature Cards === */
-.cms-feature-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 14px;
-  transition: transform 0.15s ease;
-}
-
-.cms-feature-card:hover {
-  transform: translateY(-3px);
-}
-
 /* === Image Preview === */
 .cms-preview {
   margin-top: 10px;

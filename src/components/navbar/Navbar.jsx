@@ -4,7 +4,6 @@ import "./Navbar.css";
 
 export default function Navbar({
   heroRef,
-  featuresRef,
   aboutRef,
   priceRef,
   language,
@@ -32,9 +31,6 @@ export default function Navbar({
 
       <div className={`nav-right ${menuOpen ? "active" : ""}`}>
         <div className="nav-links">
-          <button onClick={() => scrollToSection(featuresRef)}>
-            {t.features}
-          </button>
           <button onClick={() => scrollToSection(aboutRef)}>
             {t.about}
           </button>

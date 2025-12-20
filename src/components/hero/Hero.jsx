@@ -47,7 +47,7 @@ export default function Hero({ heroRef, t, language }) {
         src={heroImage}
         alt="Hero"
         className="hero-image"
-        fetchpriority="high"
+        fetchPriority="high"
       />
     </section>
   );

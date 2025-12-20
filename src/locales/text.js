@@ -43,6 +43,16 @@ const text = {
     visionP2:
       "CashPay strives to be at the forefront of digital transformation by providing tools that help businesses grow effortlessly.",
     privacy: "Privacy Policy",
+    faqTitle: "Frequently Asked Questions (FAQ)",
+faqQ1: "What is this Cashpay or Cashier Payment?",
+faqA1: "This platform helps you manage data and business processes more efficiently and securely.",
+faqQ2: "Is my data secure?",
+faqA2: "Yes, we use encryption and high security standards to protect your data.",
+faqQ3: "Is there a free plan?",
+faqA3: "We offer a free plan with basic features for getting started.",
+faqQ4: "How can I contact support?",
+faqA4: "You can reach us anytime via chat or the contact page.",
+
   },
 
   id: {
@@ -90,6 +100,16 @@ const text = {
     visionP2:
       "CashPay berkomitmen menjadi pelopor transformasi digital dengan menyediakan alat bantu yang memudahkan pertumbuhan bisnis.",
     privacy: "Kebijakan Privasi",
+    faqTitle: "Pertanyaan yang Sering Diajukan (FAQ)",
+faqQ1: "Apa itu Cashpay Atau Cashier Payment?",
+faqA1: "Platform ini membantu Anda mengelola data dan proses bisnis secara lebih efisien dan aman.",
+faqQ2: "Apakah data saya aman?",
+faqA2: "Ya, kami menggunakan enkripsi dan standar keamanan tinggi untuk melindungi data Anda.",
+faqQ3: "Apakah tersedia versi gratis?",
+faqA3: "Kami menyediakan paket gratis dengan fitur dasar untuk kebutuhan awal.",
+faqQ4: "Bagaimana cara menghubungi support?",
+faqA4: "Anda dapat menghubungi kami melalui chat atau halaman kontak kapan saja.",
+
   },
 };
 

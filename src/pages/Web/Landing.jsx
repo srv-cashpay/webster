@@ -6,8 +6,9 @@ import ChatWidget from "../../components/widget/ChatWidget";
 import Navbar from "../../components/navbar/Navbar";
 import Hero from "../../components/hero/Hero";
 import Pricing from "../../components/pricing/Pricing";
-
+import About from "../../components/About/About";
 import Footer from "../../components/footer/Footer";
+import FAQ from "../../components/faq/FAQ";
 
 import addImage from "../../assets/add.png";
 import scanImage from "../../assets/scan1.png";
@@ -15,13 +16,13 @@ import dashboard1 from "../../assets/dashboard1.png";
 
 export default function LandingPage() {
   const heroRef = useRef(null);
-  const featuresRef = useRef(null);
   const aboutRef = useRef(null);
   const priceRef = useRef(null);
   const [demoOpen, setDemoOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { lang } = useParams();
+const faqRef = useRef(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -43,7 +44,6 @@ export default function LandingPage() {
       {/* Navbar */}
       <Navbar
         heroRef={heroRef}
-        featuresRef={featuresRef}
         aboutRef={aboutRef}
         priceRef={priceRef}
         language={language}
@@ -53,41 +53,11 @@ export default function LandingPage() {
       {/* HERO */}
       <Hero heroRef={heroRef} t={t} language={language} />
 
-      {/* FEATURES */}
-      <section ref={featuresRef} className="section features">
-        <h2>{t.ourFeatures}</h2>
-        <div className="feature-grid">
-          <div className="feature-card">
-            <h3>{t.f1}</h3>
-            <p>{t.f1desc}</p>
-          </div>
-          <div className="feature-card">
-            <h3>{t.f2}</h3>
-            <p>{t.f2desc}</p>
-          </div>
-          <div className="feature-card">
-            <h3>{t.f3}</h3>
-            <p>{t.f3desc}</p>
-          </div>
-        </div>
-        <div className="feature-grid">
-          <div className="feature-card">
-            <h3>{t.f4}</h3>
-            <p>{t.f1desc}</p>
-          </div>
-          <div className="feature-card">
-            <h3>{t.f5}</h3>
-            <p>{t.f2desc}</p>
-          </div>
-          <div className="feature-card">
-            <h3>{t.f6}</h3>
-            <p>{t.f3desc}</p>
-          </div>
-        </div>
-      </section>
+      {/* About */}
+      <About aboutRef={aboutRef} t={t} />
 
-      {/* ABOUT */}
-      <section ref={aboutRef} className="section about">
+      {/* Body About */}
+      <section className="section about">
         <div className="about-container">
           <div className="about-image">
             <img src={dashboard1} alt="About" />
@@ -129,6 +99,9 @@ export default function LandingPage() {
       </section>
       {/* PRICING */}
       <Pricing priceRef={priceRef} language={language} />
+
+      {/* FAQ */}
+      <FAQ faqRef={faqRef} t={t} />
 
       {/* FOOTER */}
       <Footer language={language} />
