@@ -32,7 +32,7 @@ import Cms from "./pages/Web/Cms";
 import Pos from "./pages/Pos/Pos";
 import LandingPage from "./pages/Web/Landing";
 import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
-import Download from "./pages/Web/Download";
+import Download from "./pages/Web/download/Download";
 import SignupForm from "./pages/Auth/SignupForm";
 import OtpForm from "./pages/Auth/OtpForm";
 import MenuList from "./pages/Web/order/MenuList";

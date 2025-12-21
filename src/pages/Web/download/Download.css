@@ -17,6 +17,11 @@
   box-sizing: border-box;
 }
 
+.download-page .specs h2 {
+  color: #ffffff; /* ganti dari #dcdcdc ke putih */
+  margin-bottom: 10px;
+}
+
 /* Content wrapper */
 .download-page .download-container {
   text-align: center;

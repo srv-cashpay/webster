@@ -26,7 +26,7 @@ const DownloadPage = () => {
           <div className="download-info">
             <p className="desc">Version 1.2.0 — Updated October 2025</p>
 
-            <a href="/downloads/CashPaySetup.exe" className="btn-primary">
+            <a href="/downloads/MyWinReactApp.exe" className="btn-primary">
               Download for Windows
             </a>
 
