@@ -159,7 +159,7 @@ function App() {
             <Navigate to={`/${currentLang}/harbour`} replace />
           ) : (
             // jika belum login, arahkan ke landing page
-            <Navigate to="/id" replace />
+            <LandingPage />
           )
         }
       />

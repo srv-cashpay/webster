@@ -52,7 +52,7 @@ export default function Navbar({
         <div className="language-toggle">
           <button
             className={language === "id" ? "active-lang" : ""}
-            onClick={() => navigate("/id")}
+            onClick={() => navigate("/")}
           >
             ID
           </button>
