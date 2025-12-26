@@ -22,7 +22,7 @@ const Login = ({ onLogin }) => {
   const location = useLocation();
 
   // Deteksi bahasa dari prefix URL
-  const currentLang = location.pathname.startsWith("/id") ? "id" : "en";
+const currentLang = location.pathname.startsWith("/en") ? "en" : "id";
   const [language, setLanguage] = useState(currentLang);
   const t = loginLocales[language];
 const [cfToken, setCfToken] = useState("");
@@ -138,15 +138,24 @@ const [cfToken, setCfToken] = useState("");
   // -----------------------------
   // 🌐 HANDLE GANTI BAHASA
   // -----------------------------
-  const handleLanguageToggle = () => {
-    const newLang = language === "id" ? "en" : "id";
-    setLanguage(newLang);
-    localStorage.setItem("lang", newLang);
+const handleLanguageToggle = () => {
+  const isEnglish = location.pathname.startsWith("/en");
+  const newLang = isEnglish ? "id" : "en";
+  setLanguage(newLang);
+  localStorage.setItem("lang", newLang);
 
-    // ubah prefix di URL, misalnya /id/auth → /en/auth
-    const newPath = location.pathname.replace(/^\/(id|en)/, `/${newLang}`);
-    navigate(`${newPath}${location.search}`, { replace: true });
-  };
+  let newPath;
+
+  if (newLang === "en") {
+    // ID → EN
+    newPath = `/en${location.pathname}`;
+  } else {
+    // EN → ID (hapus /en)
+    newPath = location.pathname.replace(/^\/en/, "");
+  }
+
+  navigate(`${newPath}${location.search}`, { replace: true });
+};
 
   // -----------------------------
   // 🔁 REDIRECT SCREEN

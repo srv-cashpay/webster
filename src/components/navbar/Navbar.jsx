@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
 export default function Navbar({
   heroRef,
   aboutRef,
   priceRef,
-  language,
   t,
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // 🔥 sumber kebenaran bahasa = URL
+  const isEnglish = location.pathname.startsWith("/en");
+  const langPrefix = isEnglish ? "/en" : "";
 
   const scrollToSection = (ref) => {
     if (ref?.current) {
@@ -31,42 +35,49 @@ export default function Navbar({
 
       <div className={`nav-right ${menuOpen ? "active" : ""}`}>
         <div className="nav-links">
-          <button onClick={() => scrollToSection(aboutRef)}>
-            {t.about}
-          </button>
-          <button onClick={() => scrollToSection(priceRef)}>
-            {t.price}
-          </button>
+          <button onClick={() => scrollToSection(aboutRef)}>{t.about}</button>
+          <button onClick={() => scrollToSection(priceRef)}>{t.price}</button>
 
-          <button onClick={() => navigate(`/${language}/hardware`)}>
+          <button onClick={() => navigate(`${langPrefix}/hardware`)}>
             {t.hardware}
           </button>
-          <button onClick={() => navigate(`/${language}/topup`)}>
+
+          <button onClick={() => navigate(`${langPrefix}/topup`)}>
             Top Up
           </button>
-          <button onClick={() => navigate(`/${language}/blog`)}>
+
+          <button onClick={() => navigate(`${langPrefix}/blog`)}>
             Blog
           </button>
         </div>
 
+        {/* 🌐 Toggle Bahasa */}
         <div className="language-toggle">
           <button
-            className={language === "id" ? "active-lang" : ""}
-            onClick={() => navigate("/")}
+            className={!isEnglish ? "active-lang" : ""}
+            onClick={() => {
+              const path = location.pathname.replace(/^\/en/, "") || "/";
+              navigate(`${path}${location.search}`);
+            }}
           >
             ID
           </button>
+
           <button
-            className={language === "en" ? "active-lang" : ""}
-            onClick={() => navigate("/en")}
+            className={isEnglish ? "active-lang" : ""}
+            onClick={() => {
+              const path = location.pathname.replace(/^\/en/, "");
+              navigate(`/en${path}${location.search}`);
+            }}
           >
             EN
           </button>
         </div>
 
+        {/* 🔐 LOGIN — INI YANG PALING PENTING */}
         <button
           className="btn-login"
-          onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
+          onClick={() => navigate(`${langPrefix}/auth?ref=encrypt`)}
         >
           {t.tryFree}
         </button>

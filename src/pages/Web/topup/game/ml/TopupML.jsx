@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./TopupML.css";
 
 export default function TopupML() {
   const navigate = useNavigate();
-  const { lang } = useParams();
+  const location = useLocation();
+
+  // 🔥 bahasa dari URL
+  const isEnglish = location.pathname.startsWith("/en");
+  const langPrefix = isEnglish ? "/en" : "";
 
   const [userId, setUserId] = useState("");
   const [zoneId, setZoneId] = useState("");
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
-const closePopup = () => setApiResponse(null);
+
+  const closePopup = () => setApiResponse(null);
 
   const diamondList = [
     { id: 1, amount: "86 Diamonds", price: 20000, sku: "ml50" },
@@ -25,50 +30,49 @@ const closePopup = () => setApiResponse(null);
   ];
 
   const handleChoose = async (item) => {
-  if (!userId.trim() || !zoneId.trim()) {
-    alert("User ID dan Zone ID wajib diisi!");
-    return;
-  }
-
-  const payload = {
-    buyer_sku_code: item.sku,
-    user_id: userId,
-    zone_id: zoneId
-  };
-
-  setLoading(true);
-  setApiResponse(null);
-
-  try {
-    const response = await fetch(
-      "https://cashpay.co.id:2360/api/product/topup/mobilelegend",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      }
-    );
-
-    const data = await response.json();
-    setApiResponse(data);
-
-    // 🔥 Jika sukses → langsung redirect ke payment gateway
-    if (data.data && data.data.status === "Gagal") {
-      navigate(`/payment/${data.data.ref_id}`);
+    if (!userId.trim() || !zoneId.trim()) {
+      alert("User ID dan Zone ID wajib diisi!");
+      return;
     }
 
-  } catch (err) {
-    setApiResponse({ error: err.message });
-  }
+    const payload = {
+      buyer_sku_code: item.sku,
+      user_id: userId,
+      zone_id: zoneId
+    };
 
-  setLoading(false);
-};
+    setLoading(true);
+    setApiResponse(null);
 
+    try {
+      const response = await fetch(
+        "https://cashpay.co.id:2360/api/product/topup/mobilelegend",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        }
+      );
 
+      const data = await response.json();
+      setApiResponse(data);
+
+      // ✅ sukses → redirect payment (ikut bahasa)
+      if (data.data?.status === "Sukses") {
+        navigate(`${langPrefix}/payment/${data.data.ref_id}`);
+      }
+
+    } catch (err) {
+      setApiResponse({ error: err.message });
+    }
+
+    setLoading(false);
+  };
 
   return (
     <div className="topup-wrapper">
       <div className="topup-container">
+
         <div className="mlbb-header">
           <h1>TopUp Mobile Legends</h1>
         </div>
@@ -108,33 +112,38 @@ const closePopup = () => setApiResponse(null);
 
         {loading && <p className="loading">Memproses transaksi...</p>}
 
-        {apiResponse && apiResponse.data && (
-  <div className="popup-overlay" onClick={closePopup}>
-    <div
-      className={`popup-box ${
-        apiResponse.data.status === "Sukses"
-          ? "popup-success"
-          : "popup-failed"
-      }`}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <h3>
-        {apiResponse.data.status === "Sukses" ? "Berhasil" : "Gagal"}
-      </h3>
-      <p>{apiResponse.data.message}</p>
+        {apiResponse?.data && (
+          <div className="popup-overlay" onClick={closePopup}>
+            <div
+              className={`popup-box ${
+                apiResponse.data.status === "Sukses"
+                  ? "popup-success"
+                  : "popup-failed"
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3>
+                {apiResponse.data.status === "Sukses"
+                  ? "Berhasil"
+                  : "Gagal"}
+              </h3>
+              <p>{apiResponse.data.message}</p>
 
-      <button className="popup-btn" onClick={closePopup}>
-        OK
-      </button>
-    </div>
-  </div>
-)}
+              <button className="popup-btn" onClick={closePopup}>
+                OK
+              </button>
+            </div>
+          </div>
+        )}
 
-
-
-        <button className="back-btn" onClick={() => navigate(`/${lang}`)}>
+        {/* 🔥 tombol kembali aman */}
+        <button
+          className="back-btn"
+          onClick={() => navigate(langPrefix || "/")}
+        >
           Kembali
         </button>
+
       </div>
     </div>
   );

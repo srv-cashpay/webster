@@ -21,14 +21,13 @@ import Merk from "./pages/Merk/List";
 import Discount from "./pages/Discount/List";
 import Tax from "./pages/Tax/List";
 import Users from "./pages/UserMerchant/List";
-
+import TransactionMethode from "./pages/TransactionMethode/Qris/List";
 import RoleUserPermission from "./pages/RoleUserPermission/List";
 import RoleUser from "./pages/RoleUser/List";
 import Role from "./pages/Role/List";
 import Permission from "./pages/Permission/List";
 import UserList from "./pages/User/List";
 import Cms from "./pages/Web/Cms";
-
 import Pos from "./pages/Pos/Pos";
 import LandingPage from "./pages/Web/Landing";
 import PrivacyPolicy from "./pages/Web/PrivacyPolicy";
@@ -50,19 +49,10 @@ import SelectGame  from "./pages/Web/SelectGame";
 import PaymentPage from "./pages/Web/payment/PaymentGateway";
 import BlogList from "./pages/Web/blog/BlogList";
 import BlogDetail from "./pages/Web/blog/BlogDetail";
-
-
-
 import Cookies from "js-cookie";
 import "./App.css";
-import RoleUserPermissionDetailModal from "./pages/RoleUserPermission/RoleUserPermissionDetailModal";
 
-function ProtectedLayout({
-  onLogout,
-  sidebarCollapsed,
-  onToggleSidebar,
-  setSidebarCollapsed,
-}) {
+function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar, setSidebarCollapsed }) {
   const location = useLocation();
 
   useEffect(() => {
@@ -86,27 +76,56 @@ function ProtectedLayout({
         }}
       >
         <Routes>
-          <Route path="/:lang/harbour" element={<Dashboard />} />
-          <Route path="/:lang/setting" element={<Setting />} />
-          <Route path="/:lang/search" element={<Search />} />
-          <Route path="/:lang/user-merchant/list" element={<Users />} />
-          <Route path="/:lang/product/list" element={<Product />} />
-          <Route path="/:lang/category/list" element={<Category />} />
-          <Route path="/:lang/merk/list" element={<Merk />} />
-          <Route path="/:lang/discount/list" element={<Discount />} />
-          <Route path="/:lang/tax/list" element={<Tax />} />
-          <Route path="/:lang/permission/list" element={<Permission />} />
-          <Route path="/:lang/role/list" element={<Role />} />
-          <Route path="/:lang/role_user/list" element={<RoleUser />} />
-          <Route path="/:lang/role_user_permission/list" element={<RoleUserPermission />} />
-          <Route path="/:lang/user/list" element={<UserList />} />
-          <Route path="/:lang/content_setting" element={<Cms />} />
-          <Route path="/:lang/reservation" element={<Reservation />} />
-          <Route path="/:lang/order-web" element={<OrderWeb />} />
-          <Route path="/:lang/subscribe/list" element={<Subscribe />} />
-          
-          <Route path="/:lang/pos" element={<Pos />} />
-          <Route path="/" element={<Navigate to="/id/harbour" replace />} />
+          {/* Default Indonesia routes */}
+          <Route path="/harbour" element={<Dashboard />} />
+          <Route path="/setting" element={<Setting />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/user-merchant/list" element={<Users />} />
+          <Route path="/product/list" element={<Product />} />
+          <Route path="/category/list" element={<Category />} />
+          <Route path="/merk/list" element={<Merk />} />
+          <Route path="/transaction-methode/qris/list" element={<TransactionMethode />} />
+          <Route path="/discount/list" element={<Discount />} />
+          <Route path="/tax/list" element={<Tax />} />
+          <Route path="/permission/list" element={<Permission />} />
+          <Route path="/role/list" element={<Role />} />
+          <Route path="/role_user/list" element={<RoleUser />} />
+          <Route path="/role_user_permission/list" element={<RoleUserPermission />} />
+          <Route path="/user/list" element={<UserList />} />
+          <Route path="/content_setting" element={<Cms />} />
+          <Route path="/reservation" element={<Reservation />} />
+          <Route path="/order-web" element={<OrderWeb />} />
+          <Route path="/subscribe/list" element={<Subscribe />} />
+          <Route path="/pos" element={<Pos />} />
+
+          {/* ... semua route lainnya tanpa /id */}
+
+          {/* English routes */}
+          <Route path="/en/harbour" element={<Dashboard />} />
+          <Route path="/en/setting" element={<Setting />} />
+          <Route path="/en/search" element={<Search />} />
+          <Route path="/en/user-merchant/list" element={<Users />} />
+          <Route path="/en/product/list" element={<Product />} />
+          <Route path="/en/category/list" element={<Category />} />
+          <Route path="/en/merk/list" element={<Merk />} />
+          <Route path="/en/transaction-methode/list" element={<TransactionMethode />} />
+          <Route path="/en/discount/list" element={<Discount />} />
+          <Route path="/en/tax/list" element={<Tax />} />
+          <Route path="/en/permission/list" element={<Permission />} />
+          <Route path="/en/role/list" element={<Role />} />
+          <Route path="/en/role_user/list" element={<RoleUser />} />
+          <Route path="/en/role_user_permission/list" element={<RoleUserPermission />} />
+          <Route path="/en/user/list" element={<UserList />} />
+          <Route path="/en/content_setting" element={<Cms />} />
+          <Route path="/en/reservation" element={<Reservation />} />
+          <Route path="/en/order-web" element={<OrderWeb />} />
+          <Route path="/en/subscribe/list" element={<Subscribe />} />
+          <Route path="/en/pos" element={<Pos />} />
+
+          {/* ... semua route English dengan /en */}
+
+          {/* Redirect default root */}
+          <Route path="/" element={<Navigate to="/harbour" replace />} />
         </Routes>
       </div>
     </div>
@@ -119,8 +138,8 @@ function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
 
-  // ambil lang dari URL (default ke id)
-  const currentLang = location.pathname.split("/")[1] || "id";
+  // default language = id
+  const currentLang = location.pathname.startsWith("/en") ? "en" : "id";
 
   useEffect(() => {
     const accessToken = Cookies.get("token");
@@ -150,100 +169,88 @@ function App() {
 
   return (
     <Routes>
-      {/* 🟢 Jika buka root "/" */}
+      {/* Root */}
       <Route
         path="/"
         element={
           token ? (
-            // jika sudah login, arahkan ke dashboard default
-            <Navigate to={`/${currentLang}/harbour`} replace />
+            <Navigate to="/harbour" replace />
           ) : (
-            // jika belum login, arahkan ke landing page
             <LandingPage />
           )
         }
       />
 
-      {/* 🌍 Public Routes */}
-      <Route path="/:lang" element={<LandingPage />} />
-      <Route path="/:lang/privacy" element={<PrivacyPolicy />} />
-      <Route path="/:lang/download" element={<Download />} />
-      <Route path="/:lang/signup/form" element={<SignupForm />} />
-      <Route path="/:lang/signup/otp" element={<OtpForm />} />
-      <Route path="/:lang/forgot-password" element={<Forgot />} />
-      <Route path="/:lang/verify-reset" element={<VerifyOtp />} />
-      <Route path="/:lang/reset-password" element={<ResetPassword />} />
-      <Route path="/:lang/menu" element={<MenuList />} />
-      <Route path="/:lang/topup" element={<TopUp />} />
-      <Route path="/:lang/hardware" element={<Hardware />} />
-      <Route path="/:lang/topup/games" element={<SelectGame />} />
-      <Route path="/:lang/topup/mobile-legend" element={<TopupML />} />
-      <Route path="/:lang/topup/pubg-mobile" element={<Pubg />} />
-      <Route path="/:lang/topup/point-blank" element={<Pointblank />} />
-      <Route path="/:lang/topup/pulsa-telkomsel" element={<Telkomsel />} />
-      <Route path="/:lang/blog" element={<BlogList />} />
-      <Route path="/:lang/blog/:id" element={<BlogDetail />} />
-
+      {/* Public routes */}
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/download" element={<Download />} />
+      <Route path="/signup/form" element={<SignupForm />} />
+      <Route path="/signup/otp" element={<OtpForm />} />
+      <Route path="/forgot-password" element={<Forgot />} />
+      <Route path="/verify-reset" element={<VerifyOtp />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/menu" element={<MenuList />} />
+      <Route path="/topup" element={<TopUp />} />
+      <Route path="/hardware" element={<Hardware />} />
+      <Route path="/topup/games" element={<SelectGame />} />
+      <Route path="/topup/mobile-legend" element={<TopupML />} />
+      <Route path="/topup/pubg-mobile" element={<Pubg />} />
+      <Route path="/topup/point-blank" element={<Pointblank />} />
+      <Route path="/topup/pulsa-telkomsel" element={<Telkomsel />} />
+      <Route path="/blog" element={<BlogList />} />
+      <Route path="/blog/:id" element={<BlogDetail />} />
       <Route path="/payment/:ref" element={<PaymentPage />} />
 
-      {/* 🔐 Auth Routes */}
+      {/* English routes */}
+      <Route path="/en" element={<LandingPage />} />
+      <Route path="/en/privacy" element={<PrivacyPolicy />} />
+      <Route path="/en/download" element={<Download />} />
+      <Route path="/en/signup/form" element={<SignupForm />} />
+      <Route path="/en/signup/otp" element={<OtpForm />} />
+      <Route path="/en/forgot-password" element={<Forgot />} />
+      <Route path="/en/verify-reset" element={<VerifyOtp />} />
+      <Route path="/en/reset-password" element={<ResetPassword />} />
+      <Route path="/en/menu" element={<MenuList />} />
+      <Route path="/en/topup" element={<TopUp />} />
+      <Route path="/en/hardware" element={<Hardware />} />
+      <Route path="/en/topup/games" element={<SelectGame />} />
+      <Route path="/en/topup/mobile-legend" element={<TopupML />} />
+      <Route path="/en/topup/pubg-mobile" element={<Pubg />} />
+      <Route path="/en/topup/point-blank" element={<Pointblank />} />
+      <Route path="/en/topup/pulsa-telkomsel" element={<Telkomsel />} />
+      <Route path="/en/blog" element={<BlogList />} />
+      <Route path="/en/blog/:id" element={<BlogDetail />} />
+
+      {/* Auth routes */}
       <Route
-        path="/:lang/auth"
-        element={
-          token ? (
-            <Navigate to={`/${currentLang}/harbour`} replace />
-          ) : (
-            <Login onLogin={handleLoginSuccess} />
-          )
-        }
+        path="/auth"
+        element={token ? <Navigate to="/harbour" replace /> : <Login onLogin={handleLoginSuccess} />}
       />
       <Route
-        path="/:lang/signup"
-        element={
-          token ? (
-            <Navigate to={`/${currentLang}/harbour`} replace />
-          ) : (
-            <Signup />
-          )
-        }
+    path="/en/auth"
+    element={
+      token ? <Navigate to="/en/harbour" replace /> : <Login onLogin={handleLoginSuccess} />
+    }
+  />
+      <Route
+        path="/signup"
+        element={token ? <Navigate to="/harbour" replace /> : <Signup />}
       />
 
-      {/* 🔒 Protected Routes */}
-      {token ? (
-        <Route
-          path="*"
-          element={
-            <ProtectedLayout
-              onLogout={handleLogout}
-              sidebarCollapsed={sidebarCollapsed}
-              onToggleSidebar={() => setSidebarCollapsed((prev) => !prev)}
-              setSidebarCollapsed={setSidebarCollapsed}
-            />
-          }
-        />
-      ) : (
-        // kalau belum login dan buka route yang tidak dikenal
-        <Route
-          path="*"
-          element={
-            location.pathname === "/" ? (
-              <Navigate to="/id" replace />
-            ) : (
-              <Navigate to={`/${currentLang}/auth?ref=encrypt`} replace />
-            )
-          }
-        />
-      )}
+      {/* Protected routes */}
+      {token && <Route path="*" element={<ProtectedLayout onLogout={() => {Cookies.remove("token"); setToken(null)}} sidebarCollapsed={sidebarCollapsed} onToggleSidebar={() => setSidebarCollapsed(prev => !prev)} setSidebarCollapsed={setSidebarCollapsed} />} />}
+
+
+      {/* Jika user belum login dan buka route protected */}
     </Routes>
   );
 }
 
 export default function RootApp() {
   return (
- 
-     <Router>
+    <Router>
       <main id="main-content">
-      <App />
+        <App />
       </main>
     </Router>
   );

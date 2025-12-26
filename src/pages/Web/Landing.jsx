@@ -26,7 +26,7 @@ const faqRef = useRef(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const language = lang === "en" ? "en" : "id";
+const language = location.pathname.startsWith("/en") ? "en" : "id";
 
   const queryParams = new URLSearchParams(location.search);
   const ref = queryParams.get("ref");

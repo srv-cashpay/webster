@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Telkomsel.css";
 
 export default function Telkomsel() {
   const navigate = useNavigate();
-  const { lang } = useParams();
+  const location = useLocation();
+
+  // 🔥 bahasa dari URL
+  const isEnglish = location.pathname.startsWith("/en");
+  const langPrefix = isEnglish ? "/en" : "";
 
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,7 +16,6 @@ export default function Telkomsel() {
 
   const closePopup = () => setApiResponse(null);
 
-  // LIST PULSA TELKOMSEL
   const pulsaList = [
     { id: 1, amount: "Pulsa 5.000", price: 7000, sku: "tsel5" },
     { id: 2, amount: "Pulsa 10.000", price: 12000, sku: "tsel10" },
@@ -49,10 +52,11 @@ export default function Telkomsel() {
       const data = await response.json();
       setApiResponse(data);
 
-      // Redirect ke payment gateway jika perlu
-      if (data.data && data.data.ref_id) {
-        navigate(`/payment/${data.data.ref_id}`);
+      // ✅ redirect payment ikut bahasa
+      if (data.data?.status === "Sukses") {
+        navigate(`${langPrefix}/payment/${data.data.ref_id}`);
       }
+
     } catch (err) {
       setApiResponse({ error: err.message });
     }
@@ -63,6 +67,7 @@ export default function Telkomsel() {
   return (
     <div className="topup-wrapper">
       <div className="topup-container">
+
         <div className="mlbb-header">
           <h1>Pengisian Pulsa Telkomsel</h1>
         </div>
@@ -95,7 +100,7 @@ export default function Telkomsel() {
 
         {loading && <p className="loading">Memproses transaksi...</p>}
 
-        {apiResponse && apiResponse.data && (
+        {apiResponse?.data && (
           <div className="popup-overlay" onClick={closePopup}>
             <div
               className={`popup-box ${
@@ -118,9 +123,14 @@ export default function Telkomsel() {
           </div>
         )}
 
-        <button className="back-btn" onClick={() => navigate(`/${lang}`)}>
+        {/* 🔥 tombol kembali aman */}
+        <button
+          className="back-btn"
+          onClick={() => navigate(`${langPrefix}/topup`)}
+        >
           Kembali
         </button>
+
       </div>
     </div>
   );

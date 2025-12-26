@@ -1,6 +1,6 @@
 // src/components/Sidebar.jsx
 import { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   FaSearch,
   FaUser,
@@ -45,53 +45,63 @@ const iconMap = {
 };
 
 const Sidebar = ({ collapsed }) => {
-  const { lang } = useParams();
-  const currentLang = lang || "id";
+const location = useLocation();
+
+  // ✅ Bahasa dari URL (TANPA /id)
+  const isEnglish = location.pathname.startsWith("/en");
+  const basePath = isEnglish ? "/en" : "";
 
   const [dynamicMenu, setDynamicMenu] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // STATE MODAL
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
   const [showSetting, setShowSetting] = useState(false);
-
+  const [openMenu, setOpenMenu] = useState(null);
   // Static menu
   const staticMenuItems = [
-    { label: "Search", to: `/${currentLang}/search`, icon: <FaSearch /> },
-    { label: "Products", to: `/${currentLang}/product/list`, icon: <FaBoxOpen /> },
-    { label: "Category", to: `/${currentLang}/category/list`, icon: <FaTags /> },
-    { label: "Merk", to: `/${currentLang}/merk/list`, icon: <FaTrademark /> },
-    { label: "Discount", to: `/${currentLang}/discount/list`, icon: <FaPercent /> },
-    { label: "Tax", to: `/${currentLang}/tax/list`, icon: <FaBalanceScale /> },
-    { label: "Reservation", to: `/${currentLang}/reservation`, icon: <FaCalendarCheck /> },
-    { label: "Qris", to: `/${currentLang}/qris`, icon: <FaBarcode /> },
-    { label: "POS", to: `/${currentLang}/pos`, icon: <FaCashRegister /> },
-    { label: "Customers", to: `/${currentLang}/customers`, icon: <FaUsers /> },
-    { label: "Reports", to: `/${currentLang}/reports`, icon: <FaChartLine /> },
-    { label: "Finance", to: `/${currentLang}/finance`, icon: <FaMoneyBillWave /> },
-    { label: "Invoices", to: `/${currentLang}/invoices`, icon: <FaFileInvoice /> },
-    { label: "Messages", to: `/${currentLang}/messages`, icon: <FaEnvelope /> },
-    { label: "Support", to: `/${currentLang}/support`, icon: <FaLifeRing /> },
-    { label: "Users", to: `/${currentLang}/user-merchant/list`, icon: <FaUsersCog /> },
+    { label: "Search", to: `${basePath}/search`, icon: <FaSearch /> },
+    { label: "Products", to: `${basePath}/product/list`, icon: <FaBoxOpen /> },
+    { label: "Category", to: `${basePath}/category/list`, icon: <FaTags /> },
+    { label: "Merk", to: `${basePath}/merk/list`, icon: <FaTrademark /> },
+    { label: "Discount", to: `${basePath}/discount/list`, icon: <FaPercent /> },
+    { label: "Tax", to: `${basePath}/tax/list`, icon: <FaBalanceScale /> },
+    { label: "Reservation", to: `${basePath}/reservation`, icon: <FaCalendarCheck /> },
+    {
+  label: "Transaction Methode",
+  icon: <FaBarcode />,
+  children: [
+        { label: "Qris", to: `${basePath}/transaction-methode/qris/list`, icon: <FaBarcode /> },
+        { label: "Bank", to: `${basePath}/transaction-methode/bank`, icon: <FaBalanceScale /> },
+        { label: "Kartu Debit", to: `${basePath}/transaction-methode/debit`, icon: <FaPercent /> },
+        { label: "E-Wallet", to: `${basePath}/transaction-methode/ewallet`, icon: <FaPercent /> },
+  ],
+},
+    { label: "POS", to: `${basePath}/pos`, icon: <FaCashRegister /> },
+    { label: "Customers", to: `${basePath}/customers`, icon: <FaUsers /> },
+    { label: "Reports", to: `${basePath}/reports`, icon: <FaChartLine /> },
+    { label: "Finance", to: `${basePath}/finance`, icon: <FaMoneyBillWave /> },
+    { label: "Invoices", to: `${basePath}/invoices`, icon: <FaFileInvoice /> },
+    { label: "Messages", to: `${basePath}/messages`, icon: <FaEnvelope /> },
+    { label: "Support", to: `${basePath}/support`, icon: <FaLifeRing /> },
+    { label: "Users", to: `${basePath}/user-merchant/list`, icon: <FaUsersCog /> },
+
     { label: "Subscribe", action: () => setShowSubscribeModal(true), icon: <FaBell /> },
-     // ➤ Divider (pemisah)
     { type: "divider" },
     { label: "Setting", action: () => setShowSetting(true), icon: <FaUserCog /> },
   ];
 
-  useEffect(() => {
+useEffect(() => {
     const loadDynamicMenu = async () => {
       try {
         const rows = await fetchSider();
-const formatted = rows.map((p) => ({
-  label: p.label,
-  to: `/${currentLang}${p.to}`,
-  icon: iconMap[p.label] || <FaQuestionCircle />,
-}));
-
+        const formatted = rows.map((p) => ({
+          label: p.label,
+          to: `${basePath}${p.to}`,
+          icon: iconMap[p.label] || <FaQuestionCircle />,
+        }));
         setDynamicMenu(formatted);
-      } catch (err) {
+      } catch {
         setError("Gagal memuat menu tambahan.");
       } finally {
         setLoading(false);
@@ -99,63 +109,140 @@ const formatted = rows.map((p) => ({
     };
 
     loadDynamicMenu();
-  }, [currentLang]);
+  }, [basePath]);
 
-  const linkClass = ({ isActive }) => (isActive ? "active" : "");
 
+  const linkClass = ({ isActive }) =>
+  isActive ? "sidebar-link active" : "sidebar-link";
+
+const toggleMenu = (label) => {
+  setOpenMenu(openMenu === label ? null : label);
+};
   // RENDER menu + mendukung "divider"
-  const renderMenu = (items) =>
-    items.map((item, index) => {
-      // Divider UI
-      if (item.type === "divider") {
-        return (
-          <li
-            key={`divider-${index}`}
-            style={{
-              borderTop: "1px solid #ddd",
-              margin: "12px 0",
-            }}
-          />
-        );
-      }
-
+const renderMenu = (items) =>
+  items.map((item, index) => {
+    // Divider
+    if (item.type === "divider") {
       return (
-        <li key={item.label} style={{ marginBottom: "10px" }}>
-          {item.to ? (
-            <NavLink
-              to={item.to}
-              className={linkClass}
+        <li
+          key={`divider-${index}`}
+          style={{ borderTop: "1px solid #ddd", margin: "12px 0" }}
+        />
+      );
+    }
+
+    const hasChildren = item.children && item.children.length > 0;
+    const isOpen = openMenu === item.label;
+
+    // ===============================
+    // 1. MENU PARENT (PUNYA CHILDREN)
+    // ===============================
+    if (hasChildren) {
+      return (
+        <li key={item.label} style={{ marginBottom: "6px" }}>
+          <div
+            onClick={() => toggleMenu(item.label)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "6px",
+              cursor: "pointer",
+              fontWeight: 600,
+                color: "#111",
+
+            }}
+          >
+            <span style={{ fontSize: "12px" }}>{item.icon}</span>
+            {!collapsed && <span>{item.label}</span>}
+            {!collapsed && (
+              <span style={{ marginLeft: "auto", fontSize: "10px" }}>
+                {isOpen ? "▼" : "▶"}
+              </span>
+            )}
+          </div>
+
+          {/* SUB MENU */}
+          {isOpen && !collapsed && (
+            <ul
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                color: "#333",
-                textDecoration: "none",
-                padding: "6px",
+                listStyle: "none",
+                paddingLeft: "22px",
+                marginTop: "4px",
               }}
             >
-              <span style={{ fontSize: "12px" }}>{item.icon}</span>
-              {!collapsed && <span>{item.label}</span>}
-            </NavLink>
-          ) : (
-            <div
-              onClick={item.action}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "6px",
-                cursor: "pointer",
-                color: "#333",
-              }}
-            >
-              <span style={{ fontSize: "12px" }}>{item.icon}</span>
-              {!collapsed && <span>{item.label}</span>}
-            </div>
+              {item.children.map((child) => (
+                <li key={child.label} style={{ marginBottom: "4px" }}>
+                  <NavLink
+                    to={child.to}
+                    className={linkClass}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "5px",
+                      fontSize: "13px",
+                      color: "#555",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <span style={{ fontSize: "11px" }}>{child.icon}</span>
+                    <span>{child.label}</span>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           )}
         </li>
       );
-    });
+    }
+
+    // ===============================
+    // 2. MENU ACTION (SUBSCRIBE, SETTING)
+    // ===============================
+    if (item.action) {
+      return (
+        <li key={item.label} style={{ marginBottom: "6px" }}>
+          <div
+            onClick={item.action}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "6px",
+              cursor: "pointer",
+            }}
+          >
+            <span style={{ fontSize: "12px" }}>{item.icon}</span>
+            {!collapsed && <span>{item.label}</span>}
+          </div>
+        </li>
+      );
+    }
+
+    // ===============================
+    // 3. MENU LINK BIASA
+    // ===============================
+    return (
+      <li key={item.label} style={{ marginBottom: "6px" }}>
+        <NavLink
+          to={item.to}
+          className={linkClass}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "6px",
+            textDecoration: "none",
+            color: "#333",
+          }}
+        >
+          <span style={{ fontSize: "12px" }}>{item.icon}</span>
+          {!collapsed && <span>{item.label}</span>}
+        </NavLink>
+      </li>
+    );
+  });
 
   return (
     <>

@@ -85,4 +85,24 @@ export const getProducts = async (limit = 10, page = 1) => {
   }
 };
 
+
+// 📦 API: Ambil kategori produk
+export const getProductCategories = async () => {
+  try {
+    const response = await axiosInstance.get(
+      "https://cashpay.co.id:2388/api/merchant/product/category"
+    );
+
+    // hanya kategori aktif
+    return (response.data || []).filter((c) => c.status === 1);
+  } catch (error) {
+    console.error("❌ Gagal mengambil kategori produk:", error);
+    return [];
+  }
+};
+
+
+
 export default axiosInstance;
+
+

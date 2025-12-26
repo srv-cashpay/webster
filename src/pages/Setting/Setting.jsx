@@ -51,7 +51,7 @@ const Setting = ({ onClose }) => {
       toast.success("Logout successful!", { autoClose: 1500 });
 
       setTimeout(() => {
-        window.location.href = "/login";
+        window.location.href = "/";
       }, 1500);
     } catch (error) {
       toast.error(error.response?.data?.meta?.message || "Logout failed");

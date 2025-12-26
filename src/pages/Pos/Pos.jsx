@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Pos.css";
 import Headbar from "./Headbar";
-import { getProducts } from "../../services/pos/get_product";
+import { getProducts, getProductCategories } from "../../services/pos/get_product";
 import PaymentModal from "./PaymentModal/PaymentModal";
 import MemberModal from "./MemberModal";
 import ProductViewModal from "./ProductModal/ProductModal";
@@ -11,12 +11,13 @@ const POS = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [barcode, setBarcode] = useState("");
   const [search, setSearch] = useState("");
-  const [searchCategory, setSearchCategory] = useState("all");
   const [limit, setLimit] = useState(10);
   const [products, setProducts] = useState([]);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showMemberModal, setShowMemberModal] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
+const [categories, setCategories] = useState([]);
+const [activeCategory, setActiveCategory] = useState("all");
 
   // Ambil data produk dari API
   useEffect(() => {
@@ -29,24 +30,27 @@ const POS = () => {
 
   // Filter produk
   const filteredProducts = products.filter((product) => {
-    const keyword = search.toLowerCase();
-    const name = product.product_name?.toLowerCase() || "";
-    const id = product.barcode?.toLowerCase() || "";
-    const price = product.price?.toString() || "";
+  const keyword = search.toLowerCase();
 
-    switch (searchCategory) {
-      case "name":
-        return name.includes(keyword);
-      case "barcode":
-      case "id":
-        return id.includes(keyword);
-      case "price":
-        return price.includes(keyword);
-      case "all":
-      default:
-        return name.includes(keyword) || id.includes(keyword) || price.includes(keyword);
-    }
-  });
+  const matchCategory =
+    activeCategory === "all" ||
+    product.category_name === activeCategory;
+
+  const matchSearch =
+    product.product_name?.toLowerCase().includes(keyword) ||
+    product.barcode?.toLowerCase().includes(keyword) ||
+    product.price?.toString().includes(keyword);
+
+  return matchCategory && matchSearch;
+});
+
+useEffect(() => {
+  const fetchCategories = async () => {
+    const data = await getProductCategories();
+    setCategories(data);
+  };
+  fetchCategories();
+}, []);
 
     const handleSaveMember = (memberData) => {
     console.log("Member baru:", memberData);
@@ -105,8 +109,6 @@ const POS = () => {
       <Headbar
         search={search}
         setSearch={setSearch}
-        searchCategory={searchCategory}
-        setSearchCategory={setSearchCategory}
         limit={limit}
         setLimit={setLimit}
         selectedRows={[]}
@@ -120,6 +122,9 @@ const POS = () => {
         setBarcode={setBarcode}
         onAddMember={() => setShowMemberModal(true)}
         onViewProducts={() => setShowProductModal(true)}
+        categories={categories}            // 👈 NEW
+        activeCategory={activeCategory}    // 👈 NEW
+        setActiveCategory={setActiveCategory}
       />
 
       <div className="pos-content">

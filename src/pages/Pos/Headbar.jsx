@@ -6,8 +6,6 @@ const Headbar = ({
   setSearch,
   barcode,
   setBarcode,
-  searchCategory,
-  setSearchCategory,
   limit,
   setLimit,
   onAddNew,
@@ -15,8 +13,20 @@ const Headbar = ({
   onViewProducts,
   viewMode,
   setViewMode,
+  categories = [],
+  activeCategory,
+  setActiveCategory,
 }) => {
+
   const [isFullScreen, setIsFullScreen] = useState(false);
+const categoryBtn = {
+  padding: "6px 14px",
+  borderRadius: "20px",
+  border: "1px solid #d1d5db",
+  fontSize: "12px",
+  cursor: "pointer",
+  whiteSpace: "nowrap",
+};
 
   // 🔹 Deteksi perubahan fullscreen
   useEffect(() => {
@@ -34,13 +44,6 @@ const Headbar = ({
       document.exitFullscreen();
       setIsFullScreen(false);
     }
-  };
-
-  // 🔹 Ubah kategori / mode tampilan
-  const handleCategoryChange = (e) => {
-    const value = e.target.value;
-    setSearchCategory(value);
-    if (value === "grid" || value === "list") setViewMode(value);
   };
 
   return (
@@ -83,14 +86,19 @@ const Headbar = ({
         </button>
       </div>
 
-      {/* 🔹 Dropdown kategori + mode */}
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <select value={searchCategory} onChange={handleCategoryChange} style={selectStyle}>
-          <option value="all">Kategori</option>
-          <option value="grid">🟦 Grid View</option>
-          <option value="list">📋 List View</option>
-        </select>
-      </div>
+      {/* 🔽 DROPDOWN KATEGORI */}
+      <select
+        value={activeCategory}
+        onChange={(e) => setActiveCategory(e.target.value)}
+        style={selectStyle}
+      >
+        <option value="all">Semua Kategori</option>
+        {categories.map((cat) => (
+          <option key={cat.id} value={cat.category_name}>
+            {cat.category_name}
+          </option>
+        ))}
+      </select>
 
       {/* 🔹 Search utama + barcode + limit + fullscreen */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>

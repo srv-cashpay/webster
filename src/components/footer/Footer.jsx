@@ -1,10 +1,15 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin } from "react-icons/fa";
 import "./Footer.css";
 
-export default function Footer({ language }) {
+export default function Footer() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // 🔥 bahasa ditentukan dari URL
+  const isEnglish = location.pathname.startsWith("/en");
+  const langPrefix = isEnglish ? "/en" : "";
 
   return (
     <footer className="footer">
@@ -15,7 +20,7 @@ export default function Footer({ language }) {
       </div>
 
       <button
-        onClick={() => navigate(`/${language}/privacy`)}
+        onClick={() => navigate(`${langPrefix}/privacy`)}
         className="privacy-link"
       >
         Privacy Policy
@@ -31,15 +36,17 @@ export default function Footer({ language }) {
         >
           <FaInstagram size={26} />
         </a>
+
         <a
           href="https://www.facebook.com/share/1AqYgAzggh/"
           target="_blank"
           rel="noopener noreferrer"
           className="footer-icon"
-           aria-label="Facebook Cashpay"
+          aria-label="Facebook Cashpay"
         >
           <FaFacebook size={26} />
         </a>
+
         <a
           href="https://www.youtube.com/"
           target="_blank"
@@ -49,6 +56,7 @@ export default function Footer({ language }) {
         >
           <FaYoutube size={26} />
         </a>
+
         <a
           href="https://www.linkedin.com/company/cashpay-link"
           target="_blank"
