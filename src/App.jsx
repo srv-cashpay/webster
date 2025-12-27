@@ -49,6 +49,7 @@ import SelectGame  from "./pages/Web/SelectGame";
 import PaymentPage from "./pages/Web/payment/PaymentGateway";
 import BlogList from "./pages/Web/blog/BlogList";
 import BlogDetail from "./pages/Web/blog/BlogDetail";
+import NotFound from "./pages/Web/NotFound";
 import Cookies from "js-cookie";
 import "./App.css";
 
@@ -242,6 +243,8 @@ function App() {
 
 
       {/* Jika user belum login dan buka route protected */}
+      <Route path="*" element={<NotFound />} />
+
     </Routes>
   );
 }
