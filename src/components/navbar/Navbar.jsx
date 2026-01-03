@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
+import logo from "/android-chrome-512x512.png"; // ⬅️ import logo
 
 export default function Navbar({
   heroRef,
@@ -25,10 +26,10 @@ export default function Navbar({
 
   return (
     <nav className="navbar">
-      <div className="logo" onClick={() => scrollToSection(heroRef)}>
-        CashPay
+    <div className="logo-wrapper" onClick={() => scrollToSection(heroRef)}>
+        <img src={logo} alt="CashPay Logo" className="logo-img" />
+        <span className="logo-text">CashPay</span>
       </div>
-
       <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
         {menuOpen ? "✖" : "☰"}
       </div>

@@ -15,12 +15,44 @@
 }
 
 /* Logo */
-.logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #000;
+/* ==============================
+   LOGO
+============================== */
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
 }
+
+.logo-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: 0.5px;
+}
+
+
+/* ==============================
+   MOBILE
+============================== */
+@media (max-width: 768px) {
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  .logo-img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
 
 /* Toggle icon (mobile) */
 .menu-toggle {
