@@ -15,7 +15,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-top">
         <span>
-          © {new Date().getFullYear()} CashPay. All rights reserved.
+          © {new Date().getFullYear()} PT Pembayaran Integrasi Digital.
         </span>
       </div>
 
