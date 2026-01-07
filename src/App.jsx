@@ -237,6 +237,10 @@ function App() {
         path="/signup"
         element={token ? <Navigate to="/harbour" replace /> : <Signup />}
       />
+      <Route
+        path="/en/signup"
+        element={token ? <Navigate to="/en/harbour" replace /> : <Signup />}
+      />
 
       {/* Protected routes */}
       {token && <Route path="*" element={<ProtectedLayout onLogout={() => {Cookies.remove("token"); setToken(null)}} sidebarCollapsed={sidebarCollapsed} onToggleSidebar={() => setSidebarCollapsed(prev => !prev)} setSidebarCollapsed={setSidebarCollapsed} />} />}

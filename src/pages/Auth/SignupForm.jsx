@@ -95,9 +95,10 @@ export default function SignupForm() {
       );
 
       if (res.data.status) {
+        const token = res.data.data.token;
         toast.success(t.success);
         setTimeout(
-          () => navigate(`/${currentLang}/signup/otp`, { state: { email, whatsapp } }),
+          () => navigate(`/${currentLang}/signup/otp`, { state: { email, whatsapp, token } }),
           2000
         );
       } else {

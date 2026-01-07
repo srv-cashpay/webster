@@ -22,9 +22,10 @@ const Login = ({ onLogin }) => {
   const location = useLocation();
 
   // Deteksi bahasa dari prefix URL
-const currentLang = location.pathname.startsWith("/en") ? "en" : "id";
-  const [language, setLanguage] = useState(currentLang);
-  const t = loginLocales[language];
+
+const isEnglish = location.pathname.startsWith("/en");
+const langPrefix = isEnglish ? "/en" : "";
+const t = loginLocales[isEnglish ? "en" : "id"];
 const [cfToken, setCfToken] = useState("");
 
   const queryParams = new URLSearchParams(location.search);
@@ -139,23 +140,13 @@ const [cfToken, setCfToken] = useState("");
   // 🌐 HANDLE GANTI BAHASA
   // -----------------------------
 const handleLanguageToggle = () => {
-  const isEnglish = location.pathname.startsWith("/en");
-  const newLang = isEnglish ? "id" : "en";
-  setLanguage(newLang);
-  localStorage.setItem("lang", newLang);
-
-  let newPath;
-
-  if (newLang === "en") {
-    // ID → EN
-    newPath = `/en${location.pathname}`;
-  } else {
-    // EN → ID (hapus /en)
-    newPath = location.pathname.replace(/^\/en/, "");
-  }
+  const newPath = isEnglish
+    ? location.pathname.replace(/^\/en/, "") || "/"
+    : `/en${location.pathname}`;
 
   navigate(`${newPath}${location.search}`, { replace: true });
 };
+
 
   // -----------------------------
   // 🔁 REDIRECT SCREEN
@@ -392,7 +383,7 @@ const handleLanguageToggle = () => {
 
         {/* 🔹 Forgot Password */}
         <p
-          onClick={() => navigate(`/${language}/forgot-password`)}
+          onClick={() => navigate(`${langPrefix}/forgot-password`)}
           style={{
             alignSelf: "flex-end",
             width: "130px",
@@ -467,7 +458,7 @@ const handleLanguageToggle = () => {
       <p style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
         {t.noAccount}{" "}
         <span
-          onClick={() => navigate(`/${language}/signup`)}
+          onClick={() => navigate(`${langPrefix}/signup`)}
           style={{
             color: "#2a9d8f",
             fontWeight: "bold",
@@ -490,7 +481,7 @@ const handleLanguageToggle = () => {
         }}
         onClick={handleLanguageToggle}
       >
-        {language === "id" ? "ID | EN" : "EN | ID"}
+      {isEnglish ? "EN | ID" : "ID | EN"}
       </div>
     </div>
   );
