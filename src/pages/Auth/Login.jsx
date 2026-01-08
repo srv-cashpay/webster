@@ -123,7 +123,7 @@ const [cfToken, setCfToken] = useState("");
           ) {
             window.location.href = "/input-whatsapp-google";
           } else {
-            window.location.href = "/en/harbour";
+            window.location.href = "/harbour";
           }
         } else {
           toast.error(t.googleLoginFailed);
@@ -377,9 +377,9 @@ const handleLanguageToggle = () => {
           </div>
         )}
         {/* Turnstile Verification */}
-      <div style={{ marginBottom: "20px" }}>
-        <TurnstileComponent onVerify={(token) => setCfToken(token)} />
-      </div>
+         <div style={{ marginBottom: "20px" }}>
+          <TurnstileComponent onVerify={(token) => setCfToken(token)} />
+        </div>
 
         {/* 🔹 Forgot Password */}
         <p
