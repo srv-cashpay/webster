@@ -15,7 +15,7 @@ const GoogleCallback = () => {
     }
 
     axios
-      .post("https://cashpay.co.id:2356/api/auth/web/google", { code }) // ✅ BENAR
+      .post("https://cashpay.co.id/api/auth/web/google", { code }) // ✅ BENAR
       .then((res) => {
         const data = res.data;
 
