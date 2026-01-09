@@ -10,6 +10,7 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Auth/Login";
+import GoogleCallback from "./pages/Auth/GoogleCallback";
 import Signup from "./pages/Auth/Signup";
 import Forgot from "./pages/Auth/Forgot/ForgotPassword";
 import VerifyOtp from "./pages/Auth/Forgot/VerifyReset";
@@ -221,6 +222,9 @@ function App() {
       <Route path="/en/topup/pulsa-telkomsel" element={<Telkomsel />} />
       <Route path="/en/blog" element={<BlogList />} />
       <Route path="/en/blog/:id" element={<BlogDetail />} />
+
+    <Route path="/auth/google/callback" element={<GoogleCallback />} />
+    <Route path="/en/auth/google/callback" element={<GoogleCallback />} />
 
       {/* Auth routes */}
       <Route
