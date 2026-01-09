@@ -20,7 +20,7 @@ const GoogleCallback = () => {
         const data = res.data.data;
 
         localStorage.setItem("token", data.token);
-        localStorage.setItem("refresh_token", data.refreshToken);
+        localStorage.setItem("refresh_token", data.refresh_token);
 
         navigate("/harbour");
       })
