@@ -184,6 +184,9 @@ function App() {
       />
 
       {/* Public routes */}
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
+    <Route path="/en/auth/google/callback" element={<GoogleCallback />} />
+    
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/download" element={<Download />} />
       <Route path="/signup/form" element={<SignupForm />} />
@@ -222,9 +225,6 @@ function App() {
       <Route path="/en/topup/pulsa-telkomsel" element={<Telkomsel />} />
       <Route path="/en/blog" element={<BlogList />} />
       <Route path="/en/blog/:id" element={<BlogDetail />} />
-
-    <Route path="/auth/google/callback" element={<GoogleCallback />} />
-    <Route path="/en/auth/google/callback" element={<GoogleCallback />} />
 
       {/* Auth routes */}
       <Route

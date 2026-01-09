@@ -22,11 +22,11 @@ export const loginUser = async (payload) => {
 /**
  * 🔹 Login Google (web)
  */
-export const loginWithGoogle = async (accessToken) => {
+export const loginWithGoogle = async (payload) => {
   try {
     const response = await axios.post(
       `${WEB_BASE_URL}/google`,
-      { accessToken },
+       payload ,
       { headers: { "Content-Type": "application/json" } }
     );
     return response.data;

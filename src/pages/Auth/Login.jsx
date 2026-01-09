@@ -111,7 +111,7 @@
   const handleGoogleLogin = () => {
     const clientId = "424973742981-7g8kjb308peguc13kebh526f2nii37c5.apps.googleusercontent.com";
 
-    const redirectUri = `${window.location.origin}/auth/google/callback`;
+    const redirectUri = `http://localhost:5173/auth/google/callback`;
 
     const scope = "openid email profile";
 
