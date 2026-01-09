@@ -15,18 +15,17 @@ const GoogleCallback = () => {
     }
 
     axios
-      .post("https://cashpay.co.id:2356/api/auth/web/google", {
-        code: code, // ⬅️ MASUK KE req.Code
-      })
+      .post("https://cashpay.co.id:2356/api/auth/web/google", { code }) // ✅ BENAR
       .then((res) => {
         const data = res.data;
 
-        localStorage.setItem("access_token", data.token);
+        localStorage.setItem("token", data.token);
         localStorage.setItem("refresh_token", data.refreshToken);
 
-        navigate("/dashboard");
+        navigate("/harbour");
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("Google login error:", err);
         navigate("/login?error=google");
       });
   }, [navigate]);
