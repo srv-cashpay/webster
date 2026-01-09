@@ -22,7 +22,8 @@ const GoogleCallback = () => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("refresh_token", data.refresh_token);
 
-        navigate("/harbour");
+        window.location.href = "/";
+
       })
       .catch((err) => {
         console.error("Google login error:", err);
