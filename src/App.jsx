@@ -251,8 +251,8 @@ function App() {
 
 
       {/* Jika user belum login dan buka route protected */}
-      <Route path="*" element={<NotFound />} />
 
+      {!token && <Route path="*" element={<NotFound />} />}
     </Routes>
   );
 }
