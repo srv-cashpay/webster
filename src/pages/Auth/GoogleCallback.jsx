@@ -31,8 +31,7 @@ const GoogleCallback = () => {
         navigate(`${langPrefix}/harbour`, { replace: true });
       })
       .catch((err) => {
-        console.error("Google login error:", err);
-        navigate(`${langPrefix}/login?error=google`);
+        navigate(`${langPrefix}/auth?ref=encrypt`);
       });
   }, [navigate, langPrefix]);
 

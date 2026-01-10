@@ -27,7 +27,7 @@ export default function ChatWidget() {
     };
 
     try {
-      const res = await fetch("https://cashpay.co.id:2369/api/widget/create/chat", {
+      const res = await fetch("https://cashpay.co.id/api/widget/create/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

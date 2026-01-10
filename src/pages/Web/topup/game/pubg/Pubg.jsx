@@ -34,7 +34,7 @@ const closePopup = () => setApiResponse(null);
 
   try {
     const response = await fetch(
-      "https://cashpay.co.id:2360/api/product/topup/mobilelegend",
+      "https://cashpay.co.id/api/product/topup/mobilelegend",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

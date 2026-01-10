@@ -41,7 +41,7 @@ export default function Telkomsel() {
 
     try {
       const response = await fetch(
-        "https://cashpay.co.id:2360/api/product/topup/pulsa",
+        "https://cashpay.co.id/api/product/topup/pulsa",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

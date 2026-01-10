@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://cashpay.co.id:2356/api";
+const API_BASE_URL = "https://cashpay.co.id/api";
 
 // instance axios (lebih rapi & reusable)
 const api = axios.create({

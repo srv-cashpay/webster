@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const API_BASE_URL = "https://cashpay.co.id:2360/api";
+const API_BASE_URL = "https://cashpay.co.id/api";
 
 // 🔧 Buat instance axios
 const axiosInstance = axios.create({
@@ -22,7 +22,7 @@ const refreshToken = async () => {
 
   try {
     const response = await axios.post(
-      "https://cashpay.co.id:2356/api/auth/refresh",
+      "https://cashpay.co.id/api/auth/refresh",
       { refresh_token: rToken },
       {
         headers: {
@@ -90,7 +90,7 @@ export const getProducts = async (limit = 10, page = 1) => {
 export const getProductCategories = async () => {
   try {
     const response = await axiosInstance.get(
-      "https://cashpay.co.id:2388/api/merchant/product/category"
+      "https://cashpay.co.id/api/merchant/product/category"
     );
 
     // hanya kategori aktif
