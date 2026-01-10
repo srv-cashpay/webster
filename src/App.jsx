@@ -6,14 +6,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
-import "./App.css";
-
-/* ===== Layout ===== */
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
-
-/* ===== Pages ===== */
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Auth/Login";
 import GoogleCallback from "./pages/Auth/GoogleCallback";
@@ -52,19 +46,15 @@ import Pubg from "./pages/Web/topup/game/pubg/Pubg";
 import Pointblank from "./pages/Web/topup/game/pointblank/Pointblank";
 import Telkomsel from "./pages/Web/topup/pulsa/telkomsel/Telkomsel";
 import TopUp from "./pages/Web/TopUp";
-import SelectGame from "./pages/Web/SelectGame";
+import SelectGame  from "./pages/Web/SelectGame";
 import PaymentPage from "./pages/Web/payment/PaymentGateway";
 import BlogList from "./pages/Web/blog/BlogList";
 import BlogDetail from "./pages/Web/blog/BlogDetail";
 import NotFound from "./pages/Web/NotFound";
+import Cookies from "js-cookie";
+import "./App.css";
 
-/* ================= PROTECTED LAYOUT ================= */
-function ProtectedLayout({
-  onLogout,
-  sidebarCollapsed,
-  onToggleSidebar,
-  setSidebarCollapsed,
-}) {
+function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar, setSidebarCollapsed }) {
   const location = useLocation();
 
   useEffect(() => {
@@ -79,7 +69,6 @@ function ProtectedLayout({
     <div className="app-container">
       <Topbar onLogout={onLogout} onToggleSidebar={onToggleSidebar} />
       <Sidebar collapsed={sidebarCollapsed} />
-
       <div
         className="content"
         style={{
@@ -89,7 +78,7 @@ function ProtectedLayout({
         }}
       >
         <Routes>
-          {/* ===== ID ===== */}
+          {/* Default Indonesia routes */}
           <Route path="/harbour" element={<Dashboard />} />
           <Route path="/setting" element={<Setting />} />
           <Route path="/search" element={<Search />} />
@@ -111,7 +100,9 @@ function ProtectedLayout({
           <Route path="/subscribe/list" element={<Subscribe />} />
           <Route path="/pos" element={<Pos />} />
 
-          {/* ===== EN ===== */}
+          {/* ... semua route lainnya tanpa /id */}
+
+          {/* English routes */}
           <Route path="/en/harbour" element={<Dashboard />} />
           <Route path="/en/setting" element={<Setting />} />
           <Route path="/en/search" element={<Search />} />
@@ -133,30 +124,40 @@ function ProtectedLayout({
           <Route path="/en/subscribe/list" element={<Subscribe />} />
           <Route path="/en/pos" element={<Pos />} />
 
-          <Route path="*" element={<Navigate to="/harbour" replace />} />
+          {/* ... semua route English dengan /en */}
+
+          {/* Redirect default root */}
+          <Route path="/" element={<Navigate to="/harbour" replace />} />
         </Routes>
       </div>
     </div>
   );
 }
 
-/* ================= APP ================= */
 function App() {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const location = useLocation();
+
+  // default language = id
+  const currentLang = location.pathname.startsWith("/en") ? "en" : "id";
 
   useEffect(() => {
-    const access = Cookies.get("token");
-    const refresh = Cookies.get("refresh_token");
-    if (access || refresh) setToken(access || refresh);
+    const accessToken = Cookies.get("token");
+    const refreshToken = Cookies.get("refresh_token");
+    if (accessToken || refreshToken) {
+      setToken(accessToken || refreshToken);
+    }
     setLoading(false);
   }, []);
 
   const handleLoginSuccess = () => {
-    const access = Cookies.get("token");
-    const refresh = Cookies.get("refresh_token");
-    if (access || refresh) setToken(access || refresh);
+    const accessToken = Cookies.get("token");
+    const refreshToken = Cookies.get("refresh_token");
+    if (accessToken || refreshToken) {
+      setToken(accessToken || refreshToken);
+    }
   };
 
   const handleLogout = () => {
@@ -170,16 +171,22 @@ function App() {
 
   return (
     <Routes>
-      {/* ===== ROOT ===== */}
+      {/* Root */}
       <Route
         path="/"
-        element={token ? <Navigate to="/harbour" replace /> : <LandingPage />}
+        element={
+          token ? (
+            <Navigate to="/harbour" replace />
+          ) : (
+            <LandingPage />
+          )
+        }
       />
 
-      {/* ===== PUBLIC ===== */}
-      <Route path="/auth/google/callback" element={<GoogleCallback />} />
-      <Route path="/en/auth/google/callback" element={<GoogleCallback />} />
-
+      {/* Public routes */}
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
+    <Route path="/en/auth/google/callback" element={<GoogleCallback />} />
+    
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/download" element={<Download />} />
       <Route path="/signup/form" element={<SignupForm />} />
@@ -199,38 +206,57 @@ function App() {
       <Route path="/blog/:id" element={<BlogDetail />} />
       <Route path="/payment/:ref" element={<PaymentPage />} />
 
-      {/* ===== AUTH ===== */}
+      {/* English routes */}
+      <Route path="/en" element={<LandingPage />} />
+      <Route path="/en/privacy" element={<PrivacyPolicy />} />
+      <Route path="/en/download" element={<Download />} />
+      <Route path="/en/signup/form" element={<SignupForm />} />
+      <Route path="/en/signup/otp" element={<OtpForm />} />
+      <Route path="/en/forgot-password" element={<Forgot />} />
+      <Route path="/en/verify-reset" element={<VerifyOtp />} />
+      <Route path="/en/reset-password" element={<ResetPassword />} />
+      <Route path="/en/menu" element={<MenuList />} />
+      <Route path="/en/topup" element={<TopUp />} />
+      <Route path="/en/hardware" element={<Hardware />} />
+      <Route path="/en/topup/games" element={<SelectGame />} />
+      <Route path="/en/topup/mobile-legend" element={<TopupML />} />
+      <Route path="/en/topup/pubg-mobile" element={<Pubg />} />
+      <Route path="/en/topup/point-blank" element={<Pointblank />} />
+      <Route path="/en/topup/pulsa-telkomsel" element={<Telkomsel />} />
+      <Route path="/en/blog" element={<BlogList />} />
+      <Route path="/en/blog/:id" element={<BlogDetail />} />
+
+      {/* Auth routes */}
       <Route
         path="/auth"
         element={token ? <Navigate to="/harbour" replace /> : <Login onLogin={handleLoginSuccess} />}
       />
       <Route
+    path="/en/auth"
+    element={
+      token ? <Navigate to="/en/harbour" replace /> : <Login onLogin={handleLoginSuccess} />
+    }
+  />
+      <Route
         path="/signup"
         element={token ? <Navigate to="/harbour" replace /> : <Signup />}
       />
+      <Route
+        path="/en/signup"
+        element={token ? <Navigate to="/en/harbour" replace /> : <Signup />}
+      />
 
-      {/* ===== PROTECTED ===== */}
-      {token && (
-        <Route
-          path="*"
-          element={
-            <ProtectedLayout
-              onLogout={handleLogout}
-              sidebarCollapsed={sidebarCollapsed}
-              onToggleSidebar={() => setSidebarCollapsed(v => !v)}
-              setSidebarCollapsed={setSidebarCollapsed}
-            />
-          }
-        />
-      )}
+      {/* Protected routes */}
+      {token && <Route path="*" element={<ProtectedLayout onLogout={() => {Cookies.remove("token"); setToken(null)}} sidebarCollapsed={sidebarCollapsed} onToggleSidebar={() => setSidebarCollapsed(prev => !prev)} setSidebarCollapsed={setSidebarCollapsed} />} />}
 
-      {/* ===== NOT FOUND (HANYA SAAT BELUM LOGIN) ===== */}
-      {!token && <Route path="*" element={<NotFound />} />}
+
+      {/* Jika user belum login dan buka route protected */}
+      <Route path="*" element={<NotFound />} />
+
     </Routes>
   );
 }
 
-/* ================= ROOT ================= */
 export default function RootApp() {
   return (
     <Router>
