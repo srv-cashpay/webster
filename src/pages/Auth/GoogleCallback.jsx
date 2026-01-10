@@ -26,6 +26,7 @@ const GoogleCallback = () => {
 
         Cookies.set("token", data.token);
         Cookies.set("refresh_token", data.refresh_token);
+        localStorage.setItem("token", data.merchant_id || data.token);
 
         // ✅ FIX DI SINI
         navigate(`${langPrefix}/harbour`, { replace: true });
