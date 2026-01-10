@@ -15,7 +15,7 @@ const GoogleCallback = () => {
     const code = params.get("code");
 
     if (!code) {
-      navigate(`${langPrefix}/login?error=google`);
+      navigate(`${langPrefix}/auth?error=google`, { replace: true });
       return;
     }
 
@@ -28,11 +28,10 @@ const GoogleCallback = () => {
         Cookies.set("refresh_token", data.refresh_token);
         localStorage.setItem("token", data.merchant_id || data.token);
 
-        // ✅ FIX DI SINI
         navigate(`${langPrefix}/harbour`, { replace: true });
       })
-      .catch((err) => {
-        navigate(`${langPrefix}/auth?ref=encrypt`);
+      .catch(() => {
+        navigate(`${langPrefix}/auth?ref=encrypt`, { replace: true });
       });
   }, [navigate, langPrefix]);
 
