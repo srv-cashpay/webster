@@ -23,7 +23,7 @@ const GoogleCallback = () => {
         Cookies.set("token", data.token);
         Cookies.set("refresh_token", data.refresh_token);
 
-        window.location.href = "/";
+        navigate("/harbour");
 
       })
       .catch((err) => {
