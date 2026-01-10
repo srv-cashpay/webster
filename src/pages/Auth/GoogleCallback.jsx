@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
@@ -19,8 +20,8 @@ const GoogleCallback = () => {
       .then((res) => {
         const data = res.data.data;
 
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("refresh_token", data.refresh_token);
+        Cookies.set("token", data.token);
+        Cookies.set("refresh_token", data.refresh_token);
 
         window.location.href = "/";
 
