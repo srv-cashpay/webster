@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useNavigate, useParams} from "react-router-dom";
 import "./Blog.css";
 import xl from "../../../../src/assets/xl.png";
-import head from "../../../../src/assets/head.webp";
+import head from "../../../../src/assets/head.png";
 import text from "../../../locales/text";
 import Navbar from "../../../components/navbar/Navbar";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import heroImage from "../../assets/head.webp";
+import heroImage from "../../assets/head.png";
 import "./Hero.css";
 
 export default function Hero({ heroRef, t, language }) {

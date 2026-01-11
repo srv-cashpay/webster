@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
-import logo from "/android-chrome-512x512.png"; // ⬅️ import logo
+import logo from "/android-chrome-56x56.png"; // ⬅️ import logo
 
 export default function Navbar({
   heroRef,
