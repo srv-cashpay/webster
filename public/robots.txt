@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /id
 
 Sitemap: https://cashpay.co.id/sitemap.xml
