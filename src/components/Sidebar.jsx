@@ -85,7 +85,6 @@ const location = useLocation();
     { label: "Messages", to: `${basePath}/messages`, icon: <FaEnvelope /> },
     { label: "Support", to: `${basePath}/support`, icon: <FaLifeRing /> },
     { label: "Users", to: `${basePath}/user-merchant/list`, icon: <FaUsersCog /> },
-
     { label: "Subscribe", action: () => setShowSubscribeModal(true), icon: <FaBell /> },
     { type: "divider" },
     { label: "Setting", action: () => setShowSetting(true), icon: <FaUserCog /> },
@@ -201,24 +200,29 @@ const renderMenu = (items) =>
     // 2. MENU ACTION (SUBSCRIBE, SETTING)
     // ===============================
     if (item.action) {
-      return (
-        <li key={item.label} style={{ marginBottom: "6px" }}>
-          <div
-            onClick={item.action}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              padding: "6px",
-              cursor: "pointer",
-            }}
-          >
-            <span style={{ fontSize: "12px" }}>{item.icon}</span>
-            {!collapsed && <span>{item.label}</span>}
-          </div>
-        </li>
-      );
-    }
+  return (
+    <li key={item.label} style={{ marginBottom: "6px" }}>
+      <div
+        onClick={item.action}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "6px",
+          cursor: "pointer",
+          color: "#000",          // 👈 teks hitam
+          fontWeight: 500,        // opsional biar rapi
+        }}
+      >
+        <span style={{ fontSize: "12px", color: "#000" }}>
+          {item.icon}
+        </span>
+        {!collapsed && <span>{item.label}</span>}
+      </div>
+    </li>
+  );
+}
+
 
     // ===============================
     // 3. MENU LINK BIASA
