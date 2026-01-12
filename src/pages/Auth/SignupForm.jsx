@@ -80,7 +80,7 @@ export default function SignupForm() {
 
     try {
       const res = await axios.post(
-        "https://cashpay.co.id/api/auth/signup",
+        "https://api.cashpay.co.id/auth/signup",
         {
           full_name: fullName,
           email,

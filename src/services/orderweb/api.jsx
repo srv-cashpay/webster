@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 // 🔹 Buat instance axios utama
 const axiosInstance = axios.create({
-  baseURL: "https://cashpay.co.id/api", // Ganti sesuai server
+  baseURL: "https://api.cashpay.co.id", // Ganti sesuai server
   headers: {
     "Content-Type": "application/json",
   },

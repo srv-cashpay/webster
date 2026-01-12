@@ -102,7 +102,7 @@ const DataTable = ({
                     <img
                       src={
                         row.image?.file_path
-                          ? `https://cashpay.co.id/api/merchant/${row.image.file_path}`
+                          ? `https://api.cashpay.co.id/merchant/${row.image.file_path}`
                           : "https://via.placeholder.com/40"
                       }
                       alt={row.product_name}

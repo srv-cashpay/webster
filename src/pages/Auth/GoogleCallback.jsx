@@ -20,7 +20,7 @@ const GoogleCallback = () => {
     }
 
     axios
-      .post("https://cashpay.co.id/api/auth/web/google", { code })
+      .post("https://api.cashpay.co.id/auth/web/google", { code })
       .then((res) => {
         const data = res.data.data;
 

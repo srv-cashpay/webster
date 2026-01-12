@@ -39,7 +39,7 @@ const Setting = ({ onClose }) => {
     try {
       const token = Cookies.get("token");
       await axios.post(
-        "https://cashpay.co.id/api/auth/logout",
+        "https://api.cashpay.co.id/auth/logout",
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
