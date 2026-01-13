@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 public/downloads/*.exe
 
+# ENV files
+.env
+.env.*
+!.env.example
