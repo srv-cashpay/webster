@@ -33,7 +33,7 @@ const goToLogin = () => {
   }
 
   const langPath = isEnglish ? "/en" : "";
-  window.location.href = `${consoleUrl}${langPath}/auth?ref=encrypt`;
+  window.location.href = `${consoleUrl}${langPath}/login?ref=encrypt`;
 };
 
   return (
