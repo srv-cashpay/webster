@@ -24,10 +24,16 @@ export default function Navbar({
     setMenuOpen(false);
   };
 
-  const goToLogin = () => {
+const goToLogin = () => {
   const consoleUrl = import.meta.env.VITE_CONSOLE_URL;
 
-  window.location.href = `${consoleUrl}${langPrefix}/auth?ref=encrypt`;
+  if (!consoleUrl) {
+    console.error("VITE_CONSOLE_URL is undefined");
+    return;
+  }
+
+  const langPath = isEnglish ? "/en" : "";
+  window.location.href = `${consoleUrl}${langPath}/auth?ref=encrypt`;
 };
 
   return (
