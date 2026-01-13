@@ -228,11 +228,11 @@ function App() {
 
       {/* Auth routes */}
       <Route
-        path="/auth"
+        path="/login"
         element={token ? <Navigate to="/harbour" replace /> : <Login onLogin={handleLoginSuccess} />}
       />
       <Route
-    path="/en/auth"
+    path="/en/login"
     element={
       token ? <Navigate to="/en/harbour" replace /> : <Login onLogin={handleLoginSuccess} />
     }
