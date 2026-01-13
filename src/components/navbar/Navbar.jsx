@@ -24,6 +24,12 @@ export default function Navbar({
     setMenuOpen(false);
   };
 
+  const goToLogin = () => {
+  const consoleUrl = import.meta.env.VITE_CONSOLE_URL;
+
+  window.location.href = `${consoleUrl}${langPrefix}/auth?ref=encrypt`;
+};
+
   return (
     <nav className="navbar">
     <div className="logo-wrapper" onClick={() => scrollToSection(heroRef)}>
@@ -78,7 +84,7 @@ export default function Navbar({
         {/* 🔐 LOGIN — INI YANG PALING PENTING */}
         <button
           className="btn-login"
-          onClick={() => navigate(`${langPrefix}/auth?ref=encrypt`)}
+          onClick={goToLogin}
         >
           {t.tryFree}
         </button>
