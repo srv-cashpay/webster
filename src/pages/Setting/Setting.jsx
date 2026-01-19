@@ -49,9 +49,11 @@ const Setting = ({ onClose }) => {
       localStorage.removeItem("token");
 
       toast.success("Logout successful!", { autoClose: 1500 });
+      const mainSite = import.meta.env.VITE_MAIN_SITE_URL;
 
       setTimeout(() => {
-        window.location.href = "/";
+        window.location.href = mainSite;
+
       }, 1500);
     } catch (error) {
       toast.error(error.response?.data?.meta?.message || "Logout failed");

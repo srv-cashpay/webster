@@ -1,24 +1,92 @@
 /* ======================================================
+   📦 RESI BOX
+====================================================== */
+.resi-box {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  max-width: 420px;
+}
+
+.resi-box input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  outline: none;
+}
+
+.resi-box input:focus {
+  border-color: #4f46e5;
+}
+
+.resi-box button {
+  padding: 14px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #ff3131;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.resi-box button:hover {
+  background: #e62b2b;
+}
+
+/* ======================================================
+   🚚 COURIER LIST
+====================================================== */
+.courier-list {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.courier-list button {
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.courier-list button:hover {
+  background: #ff3131;
+  color: #fff;
+  border-color: #ff3131;
+}
+
+/* ======================================================
    🦸 HERO SECTION
 ====================================================== */
 .hero {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
   padding: 80px 40px;
   background: #fff;
+  gap: 40px;
 }
 
 .hero-text {
   flex: 1;
   min-width: 300px;
+  text-align: left;
 }
 
 .hero-text h1 {
   font-size: 2.8rem;
   font-weight: 800;
   color: #000;
+  line-height: 1.2;
+  text-align: left;
 }
 
 .hero-text h1 span {
@@ -31,41 +99,7 @@
   color: #000;
   font-size: 1.1rem;
   max-width: 500px;
-}
-
-/* ======================================================
-   📱 APP STORE & PLAY STORE BUTTONS
-====================================================== */
-.hero-buttons {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 20px;
-  margin-top: 30px;
-}
-
-.btn-appstore,
-.btn-playstore {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: transform 0.2s ease;
-}
-
-.btn-appstore img,
-.btn-playstore img {
-  height: 60px;
-  width: auto;
-  display: block;
-}
-
-.btn-appstore:hover img,
-.btn-playstore:hover img {
-  transform: scale(1.05);
+  text-align: left;
 }
 
 /* ======================================================
@@ -74,34 +108,12 @@
 .hero-image {
   width: 420px;
   max-width: 100%;
+  object-fit: contain;
 }
 
 /* ======================================================
-   📱 RESPONSIVE HERO
+   📱 RESPONSIVE
 ====================================================== */
-@media (max-width: 768px) {
-  .hero {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .hero-buttons {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .btn-appstore img,
-  .btn-playstore img {
-    height: 50px;
-  }
-
-  .hero-image {
-    margin-top: 25px;
-    max-width: 320px;
-  }
-}
-
 @media (max-width: 1300px) {
   .hero {
     padding: 70px 30px;
@@ -116,7 +128,45 @@
   }
 }
 
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center; /* 📱 mobile center */
+  }
+
+  .hero-text {
+    width: 100%;
+    text-align: center;
+  }
+
+  .hero-text h1,
+  .hero-text p {
+    text-align: center;
+  }
+
+  .resi-box {
+    justify-content: center; /* input + button center */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .courier-list {
+    justify-content: center;
+  }
+
+  .hero-image {
+    margin-top: 25px;
+    max-width: 320px;
+    align-self: center;
+  }
+}
+
+
 @media (max-width: 480px) {
+  .hero {
+    padding: 60px 20px;
+  }
+
   .hero-text h1 {
     font-size: 1.7rem;
   }

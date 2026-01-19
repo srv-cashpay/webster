@@ -25,6 +25,10 @@ export default function FAQ({ faqRef, t }) {
       question: t.faqQ4,
       answer: t.faqA4,
     },
+    {
+      question: t.faqQ5,
+      answer: t.faqA5,
+    },
   ];
 
   return (

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
-import logo from "/android-chrome-56x56.png"; // ⬅️ import logo
+import logo from "/2.png";
 
 export default function Navbar({
   heroRef,
@@ -9,14 +9,44 @@ export default function Navbar({
   priceRef,
   t,
 }) {
+  // ===============================
+  // SERVICE LIST (single source)
+  // ===============================
+  const services = [
+    {
+      key: "kirim_paket",
+      label: { id: "Kirim Paket", en: "Kirim Paket" },
+      path: "/kirim-paket",
+    },
+    {
+      key: "kirim_pindahan",
+      label: { id: "Kirim Pindahan", en: "Kirim Pindahan" },
+      path: "/kirim-pindahan",
+    },
+    {
+      key: "kirim_bantuan",
+      label: { id: "Kirim Bantuan", en: "Kirim Bantuan" },
+      path: "/kirim-barang",
+    },
+  ];
+
   const navigate = useNavigate();
   const location = useLocation();
-  const [menuOpen, setMenuOpen] = useState(false);
 
-  // 🔥 sumber kebenaran bahasa = URL
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [serviceOpen, setServiceOpen] = useState(false);
+
+  const dropdownRef = useRef(null);
+
+  // ===============================
+  // LANGUAGE FROM URL
+  // ===============================
   const isEnglish = location.pathname.startsWith("/en");
   const langPrefix = isEnglish ? "/en" : "";
 
+  // ===============================
+  // HELPERS
+  // ===============================
   const scrollToSection = (ref) => {
     if (ref?.current) {
       ref.current.scrollIntoView({ behavior: "smooth" });
@@ -24,36 +54,82 @@ export default function Navbar({
     setMenuOpen(false);
   };
 
-const goToLogin = () => {
-  const consoleUrl = import.meta.env.VITE_CONSOLE_URL;
+  const goToService = (path) => {
+    navigate(`${langPrefix}${path}`);
+    setServiceOpen(false);
+    setMenuOpen(false);
+  };
 
-  if (!consoleUrl) {
-    console.error("VITE_CONSOLE_URL is undefined");
-    return;
-  }
+  const goToLogin = () => {
+    const consoleUrl = import.meta.env.VITE_CONSOLE_URL;
+    if (!consoleUrl) {
+      console.error("VITE_CONSOLE_URL is undefined");
+      return;
+    }
 
-  const langPath = isEnglish ? "/en" : "";
-  window.location.href = `${consoleUrl}${langPath}/login?ref=encrypt`;
-};
+    const langPath = isEnglish ? "/en" : "";
+    window.location.href = `${consoleUrl}${langPath}/login?ref=encrypt`;
+  };
 
+  // ===============================
+  // CLOSE DROPDOWN WHEN CLICK OUTSIDE
+  // ===============================
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setServiceOpen(false);
+      }
+    };
+
+ document.addEventListener("click", handleClickOutside);
+    return () =>
+   document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  // ===============================
+  // RENDER
+  // ===============================
   return (
     <nav className="navbar">
-    <div className="logo-wrapper" onClick={() => scrollToSection(heroRef)}>
-        <img src={logo} alt="CashPay Logo" className="logo-img" />
-        <span className="logo-text">CashPay</span>
+      {/* LOGO */}
+      <div className="logo-wrapper" onClick={() => scrollToSection(heroRef)}>
+        <img src={logo} alt="Kirim Logo" className="logo-img" />
+        <span className="logo-text">Kirim</span>
       </div>
+
+      {/* MOBILE TOGGLE */}
       <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
         {menuOpen ? "✖" : "☰"}
       </div>
 
+      {/* RIGHT MENU */}
       <div className={`nav-right ${menuOpen ? "active" : ""}`}>
         <div className="nav-links">
-          <button onClick={() => scrollToSection(aboutRef)}>{t.about}</button>
-          <button onClick={() => scrollToSection(priceRef)}>{t.price}</button>
+          {/* SERVICE DROPDOWN */}
+          <div
+            className="service-dropdown"
+            ref={dropdownRef}
+          >
+            <button
+              className="dropdown-trigger"
+              onClick={() => setServiceOpen(!serviceOpen)}
+            >
+              {t.service} ▾
+            </button>
 
-          <button onClick={() => navigate(`${langPrefix}/hardware`)}>
-            {t.hardware}
-          </button>
+            {serviceOpen && (
+              <div className="dropdown-menu">
+                {services.map((item) => (
+                  <button
+                    key={item.key}
+                    onClick={() => goToService(item.path)}
+                  >
+                    {isEnglish ? item.label.en : item.label.id}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           <button onClick={() => navigate(`${langPrefix}/topup`)}>
             Top Up
@@ -64,7 +140,7 @@ const goToLogin = () => {
           </button>
         </div>
 
-        {/* 🌐 Toggle Bahasa */}
+        {/* LANGUAGE TOGGLE */}
         <div className="language-toggle">
           <button
             className={!isEnglish ? "active-lang" : ""}
@@ -87,13 +163,10 @@ const goToLogin = () => {
           </button>
         </div>
 
-        {/* 🔐 LOGIN — INI YANG PALING PENTING */}
-        <button
-          className="btn-login"
-          onClick={goToLogin}
-        >
+        {/* LOGIN */}
+        {/* <button className="btn-login" onClick={goToLogin}>
           {t.tryFree}
-        </button>
+        </button> */}
       </div>
     </nav>
   );

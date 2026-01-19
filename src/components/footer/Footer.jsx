@@ -15,7 +15,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-top">
         <span>
-          © {new Date().getFullYear()} PT Pembayaran Integrasi Digital.
+          © {new Date().getFullYear()} PT Kirim Integrasi Digital.
         </span>
       </div>
 
@@ -28,7 +28,7 @@ export default function Footer() {
 
       <div className="footer-social">
         <a
-          href="https://instagram.com/cashpay"
+          href="https://instagram.com/kirim_co"
           target="_blank"
           rel="noopener noreferrer"
           className="footer-icon"
@@ -52,7 +52,7 @@ export default function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           className="footer-icon"
-          aria-label="YouTube Cashpay"
+          aria-label="YouTube Kirim"
         >
           <FaYoutube size={26} />
         </a>

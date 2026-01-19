@@ -27,7 +27,7 @@ export default function ChatWidget() {
     };
 
     try {
-      const res = await fetch("https://api.cashpay.co.id/widget/create/chat", {
+      const res = await fetch("https://cashpay.co.id/widget/create/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -56,7 +56,7 @@ export default function ChatWidget() {
   return (
     <>
       <button className="chat-button" onClick={() => setOpen(!open)}>
-        Hallo Admin <FaComments size={16} />
+        Kirim Chat <FaComments size={16} />
       </button>
 
       {open && (
@@ -84,7 +84,7 @@ export default function ChatWidget() {
                 </button>
 
                 <h3 className="powered-by">
-                  Powered by <span>Scrumly</span>
+                  Powered by <span>KirimChat</span>
                 </h3>
               </form>
             </>

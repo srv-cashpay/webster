@@ -1,7 +1,10 @@
+/* =========================
+   BLOG CONTAINER
+========================= */
 .blog-container {
-  max-width: 100%;
+  max-width: 1200px;
   margin: auto;
-  padding: 40px 20px;
+  padding: 7px 10px;
 }
 
 .blog-title {
@@ -11,14 +14,32 @@
   text-align: center;
 }
 
-/* GRID */
+/* =========================
+   PAGE LAYOUT
+========================= */
+.blog-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  align-items: start;
+}
+
+.blog-main {
+  width: 100%;
+}
+
+/* =========================
+   BLOG GRID (2 COLUMN FIX)
+========================= */
 .blog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
-/* CARD */
+/* =========================
+   BLOG CARD
+========================= */
 .blog-card {
   background: #ffffff;
   border-radius: 14px;
@@ -44,6 +65,7 @@
 
 .blog-content h3 {
   font-size: 18px;
+  text-align: left;
   margin: 8px 0;
 }
 
@@ -57,35 +79,95 @@
   color: #94a3b8;
 }
 
-/* DETAIL */
-.blog-detail {
-  max-width: 800px;
-  margin: auto;
-  padding: 40px 20px;
-}
-
-.blog-detail-img {
-  width: 100%;
+/* =========================
+   SIDEBAR
+========================= */
+.blog-sidebar {
+  background: #ffffff;
   border-radius: 16px;
-  margin-bottom: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 100px;
 }
 
-.blog-detail h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
+.sidebar-section {
+  margin-bottom: 28px;
 }
 
-.blog-detail p {
+.sidebar-section h4 {
   font-size: 16px;
-  line-height: 1.7;
-  margin-top: 16px;
+  font-weight: 600;
+  margin-bottom: 14px;
 }
 
-.back-btn {
-  background: none;
-  border: none;
-  color: #2563eb;
+/* SEARCH */
+.sidebar-search input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
   font-size: 14px;
+  outline: none;
+}
+
+.sidebar-search input:focus {
+  border-color: #2563eb;
+}
+
+/* CATEGORY */
+.sidebar-category ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-category li {
+  font-size: 14px;
+  padding: 10px 0;
   cursor: pointer;
-  margin-bottom: 20px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.sidebar-category li:hover {
+  color: #2563eb;
+}
+
+/* RECENT POST */
+.sidebar-post {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  cursor: pointer;
+}
+
+.sidebar-post img {
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.sidebar-post span {
+  font-size: 13px;
+  color: #475569;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .blog-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-sidebar {
+    position: relative;
+    top: 0;
+  }
 }
