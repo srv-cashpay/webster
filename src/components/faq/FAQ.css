@@ -19,6 +19,11 @@
   margin-bottom: 16px;
   cursor: pointer;
   transition: box-shadow 0.2s ease;
+  text-align: left;
+}
+
+.faq.section {
+  display: block;
 }
 
 .faq-item:hover {

@@ -3,33 +3,35 @@
 ====================================================== */
 .resi-box {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin: 20px 0;
-  max-width: 420px;
+  max-width: 400px;
 }
 
 .resi-box input {
   flex: 1;
-  padding: 14px 16px;
+  padding: 10px 14px;        /* ⬅️ lebih kecil */
   border-radius: 8px;
   border: 1px solid #ddd;
-  font-size: 16px;
+  font-size: 14px;           /* ⬅️ lebih kecil */
   outline: none;
 }
 
 .resi-box input:focus {
-  border-color: #4f46e5;
+  border-color: #ff3131;     /* konsisten brand */
 }
 
 .resi-box button {
-  padding: 14px 20px;
+  padding: 10px 16px;        /* ⬅️ lebih kecil */
   border-radius: 8px;
   border: none;
   background: #ff3131;
-  color: #fff;
+  color: #fff7f7;
+  font-size: 14px;           /* ⬅️ lebih kecil */
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+  transition: background 0.2s ease;
 }
 
 .resi-box button:hover {
@@ -41,17 +43,18 @@
 ====================================================== */
 .courier-list {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   margin-top: 14px;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
 
 .courier-list button {
-  padding: 10px 16px;
-  border-radius: 20px;
+  padding: 8px 14px;         /* ⬅️ sedikit diperkecil */
+  border-radius: 18px;
   border: 1px solid #ddd;
   background: #fff;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -89,15 +92,10 @@
   text-align: left;
 }
 
-.hero-text h1 span {
-  color: #000;
-  text-shadow: 0 0 15px rgba(0, 255, 128, 0.6);
-}
-
 .hero-text p {
   margin: 20px 0 30px;
   color: #000;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   max-width: 500px;
   text-align: left;
 }
@@ -122,7 +120,6 @@
   .hero-text h1 {
     font-size: 2.6rem;
   }
-
   .hero-text p {
     max-width: 450px;
   }
@@ -131,21 +128,20 @@
 @media (max-width: 768px) {
   .hero {
     flex-direction: column;
-    text-align: center; /* 📱 mobile center */
+    text-align: center;
   }
 
   .hero-text {
     width: 100%;
     text-align: center;
   }
-
   .hero-text h1,
   .hero-text p {
     text-align: center;
   }
 
   .resi-box {
-    justify-content: center; /* input + button center */
+    justify-content: center;
     margin-left: auto;
     margin-right: auto;
   }
@@ -157,10 +153,8 @@
   .hero-image {
     margin-top: 25px;
     max-width: 320px;
-    align-self: center;
   }
 }
-
 
 @media (max-width: 480px) {
   .hero {
@@ -169,5 +163,11 @@
 
   .hero-text h1 {
     font-size: 1.7rem;
+  }
+
+  .resi-box input,
+  .resi-box button {
+    font-size: 13px;         /* ⬅️ mobile lebih ringkas */
+    padding: 9px 12px;
   }
 }

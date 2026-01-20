@@ -45,14 +45,17 @@ const text = {
       "CashPay strives to be at the forefront of digital transformation by providing tools that help businesses grow effortlessly.",
     privacy: "Privacy Policy",
     faqTitle: "Frequently Asked Questions (FAQ)",
-faqQ1: "What is this Cashpay or Cashier Payment?",
-faqA1: "This platform helps you manage data and business processes more efficiently and securely.",
+faqQ1: "What is Kirim?",
+faqA1: "Kirim is an aggregator for tracking your shipped packages from multiple courier services.",
 faqQ2: "Is my data secure?",
 faqA2: "Yes, we use encryption and high security standards to protect your data.",
-faqQ3: "Is there a free plan?",
-faqA3: "We offer a free plan with basic features for getting started.",
+faqQ3: "Which courier services can be tracked?",
+faqA3: "Almost all major courier services in Indonesia such as JNE, J&T, SiCepat, AnterAja, Ninja Xpress, TIKI, and others.",
 faqQ4: "How can I contact support?",
-faqA4: "You can reach us anytime via chat or the contact page.",
+faqA4: "You can contact us anytime via chat or through the contact page.",
+faqQ5: "Why hasn’t the shipment status been updated?",
+faqA5: "The shipment status may not be updated yet because the courier data is not available or is still being processed.",
+
 
   },
 
