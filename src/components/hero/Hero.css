@@ -18,15 +18,15 @@
 }
 
 .resi-box input:focus {
-  border-color: #ff3131;     /* konsisten brand */
+  border-color: #dc2626;     /* konsisten brand */
 }
 
 .resi-box button {
   padding: 10px 16px;        /* ⬅️ lebih kecil */
   border-radius: 8px;
   border: none;
-  background: #ff3131;
-  color: #fff7f7;
+  background: #ff2e2e;
+  color: #fff;
   font-size: 14px;           /* ⬅️ lebih kecil */
   font-weight: 600;
   cursor: pointer;
@@ -61,9 +61,9 @@
 }
 
 .courier-list button:hover {
-  background: #ff3131;
-  color: #fff;
-  border-color: #ff3131;
+  background: #ff2e2e;
+  color: #fff7f7;
+  border-color: #ff2e2e;
 }
 
 /* ======================================================

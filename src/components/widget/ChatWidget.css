@@ -4,7 +4,7 @@
   bottom: 24px;
   right: 24px;
   z-index: 999;
-  background: #ff3131;
+  background: #ff2e2e;
   color: #fff7f7;
   border: none;
   padding: 14px 20px;
@@ -80,7 +80,7 @@
 
 .chat-form button {
   background: #fff;
-  color: #ff3131;
+  color: #ff2e2e;
   padding: 12px;
   border-radius: 8px;
   border-width: 1px;

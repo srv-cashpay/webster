@@ -93,7 +93,15 @@ export default function Navbar({
     <nav className="navbar">
       {/* LOGO */}
       <div className="logo-wrapper" onClick={() => scrollToSection(heroRef)}>
-        <img src={logo} alt="Kirim Logo" className="logo-img" />
+        <img
+          src="/56x56.png"
+          srcSet="/36x36.png 36w, /56x56.png 56w"
+          sizes="(max-width: 768px) 36px, 56px"
+          width="56"
+          height="56"
+          alt="Kirim Logo"
+          className="logo-img"
+        />
         <span className="logo-text">Kirim</span>
       </div>
 
