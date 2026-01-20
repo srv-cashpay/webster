@@ -165,7 +165,7 @@ export default function Navbar({
 
         {/* LOGIN */}
         <button className="btn-login" onClick={goToLogin}>
-          {t.tryFree}
+          {t.login}
         </button>
       </div>
     </nav>
