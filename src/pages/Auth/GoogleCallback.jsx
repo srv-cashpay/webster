@@ -32,12 +32,17 @@ const GoogleCallback = () => {
           throw new Error("Token tidak ditemukan");
         }
 
-        Cookies.set("token", data.token);
-        Cookies.set("refresh_token", data.refresh_token);
-        localStorage.setItem("token", data.merchant_id || data.token);
+        // simpan auth
+        Cookies.set("token", data.token, { domain: ".cashpay.co.id" });
+        Cookies.set("refresh_token", data.refresh_token, {
+          domain: ".cashpay.co.id",
+        });
 
+        localStorage.setItem("token", data.token);
+
+        // 🔥 REDIRECT KE CONSOLE (FULL URL)
         window.location.replace(
-          `${langPrefix}/harbour`
+          `https://console.cashpay.co.id${langPrefix}/harbour`
         );
       } catch (error) {
         console.error("Google OAuth failed:", error);
