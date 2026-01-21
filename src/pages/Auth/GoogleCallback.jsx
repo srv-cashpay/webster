@@ -27,20 +27,29 @@ const GoogleCallback = () => {
         );
 
         const data = res.data?.data;
-
-        if (!data?.token) {
-          throw new Error("Token tidak ditemukan");
+        if (!data?.token || !data?.refresh_token) {
+          throw new Error("Token / refresh_token tidak ada");
         }
 
-        // simpan auth
-        Cookies.set("token", data.token, { domain: ".cashpay.co.id" });
-        Cookies.set("refresh_token", data.refresh_token, {
+        // ✅ COOKIE GLOBAL (PENTING)
+        Cookies.set("token", data.token, {
           domain: ".cashpay.co.id",
+          path: "/",
+          secure: true,
+          sameSite: "Lax",
         });
 
+        Cookies.set("refresh_token", data.refresh_token, {
+          domain: ".cashpay.co.id",
+          path: "/",
+          secure: true,
+          sameSite: "Lax",
+        });
+
+        // (opsional)
         localStorage.setItem("token", data.token);
 
-        // 🔥 REDIRECT KE CONSOLE (FULL URL)
+        // ✅ LANGSUNG KE CONSOLE
         window.location.replace(
           `https://console.cashpay.co.id${langPrefix}/harbour`
         );
