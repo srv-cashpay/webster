@@ -37,7 +37,7 @@ const GoogleCallback = () => {
         localStorage.setItem("token", data.merchant_id || data.token);
 
         window.location.replace(
-          `https://console.cashpay.co.id${langPrefix}/harbour`
+          `https://console.cashpay.co.id/${langPrefix}/harbour`
         );
       } catch (error) {
         console.error("Google OAuth failed:", error);
