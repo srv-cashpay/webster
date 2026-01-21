@@ -17,31 +17,30 @@ const GoogleCallback = () => {
         const res = await axios.post(
           "https://api.cashpay.co.id/auth/web/google",
           { code },
-          { withCredentials: true } // 🔥 WAJIB
+          { withCredentials: true }
         );
 
         const data = res.data?.data;
-        if (!data?.token) throw new Error("Token tidak ditemukan");
+        if (!data?.token || !data?.refresh_token) throw new Error("Token tidak ditemukan");
 
-        // 🔑 COOKIE HARUS SHARED
+        // ❌ Tanpa HttpOnly → bisa diakses JS
         Cookies.set("token", data.token, {
           domain: ".cashpay.co.id",
+          path: "/",
           secure: true,
           sameSite: "None",
         });
 
         Cookies.set("refresh_token", data.refresh_token, {
           domain: ".cashpay.co.id",
+          path: "/",
           secure: true,
           sameSite: "None",
         });
 
-        // 🚀 PINDAH KE CONSOLE
-        window.location.replace(
-          "https://console.cashpay.co.id/harbour"
-        );
-      } catch (error) {
-        console.error("Google OAuth failed:", error);
+        window.location.replace("https://console.cashpay.co.id/harbour");
+      } catch (err) {
+        console.error(err);
         window.location.replace("/login");
       }
     };

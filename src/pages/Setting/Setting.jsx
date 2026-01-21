@@ -34,40 +34,27 @@ const Setting = ({ onClose }) => {
     { key: "merchant", label: "Merchant" },
   ];
 
-  const handleLogout = async () => {
+const handleLogout = async () => {
   setLoadingLogout(true);
 
   try {
-    const token = Cookies.get("token");
+    await axios.post(
+      "https://api.cashpay.co.id/auth/logout",
+      {},
+      { withCredentials: true }
+    );
 
-    if (token) {
-      await axios.post(
-        "https://api.cashpay.co.id/auth/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-    }
+    // 🔥 Hapus cookie manual karena bisa diakses JS
+    Cookies.remove("token", { domain: ".cashpay.co.id", path: "/" });
+    Cookies.remove("refresh_token", { domain: ".cashpay.co.id", path: "/" });
 
-    // 🔥 HAPUS COOKIE DENGAN DOMAIN YANG BENAR
-    Cookies.remove("token", { domain: "console.cashpay.co.id" });
-    Cookies.remove("refresh_token", { domain: "console.cashpay.co.id" });
+    toast.success("Logout successful", { autoClose: 1000 });
 
-    localStorage.removeItem("token");
-
-    toast.success("Logout successful!", { autoClose: 1200 });
-
-    // 🔥 REDIRECT FIX (JANGAN PAKE ENV YANG BELUM PASTI)
     setTimeout(() => {
-      window.location.replace("https://cashpay.co.id");
-    }, 1200);
-
-  } catch (error) {
-    console.error("Logout failed:", error);
+      window.location.replace("https://console.cashpay.co.id/login");
+    }, 1000);
+  } catch (err) {
+    console.error(err);
     toast.error("Logout failed");
   } finally {
     setLoadingLogout(false);
