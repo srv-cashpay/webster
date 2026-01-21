@@ -54,8 +54,8 @@ const Setting = ({ onClose }) => {
     }
 
     // 🔥 HAPUS COOKIE DENGAN DOMAIN YANG BENAR
-    Cookies.remove("token", { domain: ".cashpay.co.id" });
-    Cookies.remove("refresh_token", { domain: ".cashpay.co.id" });
+    Cookies.remove("token", { domain: "console.cashpay.co.id" });
+    Cookies.remove("refresh_token", { domain: "console.cashpay.co.id" });
 
     localStorage.removeItem("token");
 
