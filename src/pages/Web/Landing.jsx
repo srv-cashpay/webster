@@ -39,36 +39,32 @@ export default function LandingPage() {
   });
 
   const handleTrack = async ({ courier, resi }) => {
-    try {
-      setLoading(true);
-      setError("");
+  try {
+    setLoading(true);
+    setError("");
 
-      const result = await trackPackage({ courier, resi });
+    const result = await trackPackage({ courier, resi });
 
-      setTracking({
-        courier,
-        resi,
-        data: result.data, // ⬅️ SIMPAN FULL DATA
+    setTracking({
+      courier,
+      resi,
+      data: result.data, // simpan semua data
+    });
+
+    setTimeout(() => {
+      trackingRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
       });
+    }, 150);
+  } catch (err) {
+    setError("Gagal mengambil data resi");
+    setTracking({ courier: "", resi: "", data: null });
+  } finally {
+    setLoading(false);
+  }
+};
 
-      // scroll setelah render
-      setTimeout(() => {
-        trackingRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 150);
-    } catch (err) {
-      setError("Gagal mengambil data resi");
-      setTracking({
-        courier: "",
-        resi: "",
-        data: null,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="landing-container">

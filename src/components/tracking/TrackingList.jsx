@@ -1,9 +1,10 @@
 import "./TrackingList.css";
 
-import "./TrackingList.css";
-
 export default function TrackingList({ courier, resi, data }) {
   if (!courier || !resi) return null;
+
+  const hasHistory =
+    data?.history?.length > 0 && data.history[0].desc !== "";
 
   return (
     <section className="tracking-section">
@@ -13,16 +14,13 @@ export default function TrackingList({ courier, resi, data }) {
         </h3>
 
         <ul>
-          {data?.history?.length > 0 && data.history[0].desc !== "" ? (
+          {hasHistory ? (
             data.history.map((item, i) => (
               <li key={i}>
-                <div className="date">{item.date}</div>
-
+                <div className="date">{item.date || "-"}</div>
                 <div>
                   <div className="desc">{item.desc}</div>
-                  {item.location && (
-                    <div className="location">{item.location}</div>
-                  )}
+                  {item.location && <div className="location">{item.location}</div>}
                 </div>
               </li>
             ))
@@ -32,6 +30,15 @@ export default function TrackingList({ courier, resi, data }) {
             </li>
           )}
         </ul>
+
+        {/* Summary jika ada */}
+        {data?.summary && (
+          <div className="tracking-summary">
+            <p>Status: {data.summary.status || "-"}</p>
+            <p>Tanggal: {data.summary.date || "-"}</p>
+            <p>Layanan: {data.summary.service || "-"}</p>
+          </div>
+        )}
       </div>
     </section>
   );
