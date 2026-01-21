@@ -68,7 +68,7 @@ export default function Navbar({
     }
 
     const langPath = isEnglish ? "/en" : "";
-    window.location.href = `${consoleUrl}${langPath}/login?ref=encrypt`;
+    window.location.href = `${consoleUrl}${langPath}/login`;
   };
 
   // ===============================

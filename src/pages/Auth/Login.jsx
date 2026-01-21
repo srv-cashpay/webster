@@ -28,9 +28,6 @@
   const t = loginLocales[isEnglish ? "en" : "id"];
   const [cfToken, setCfToken] = useState("");
 
-    const queryParams = new URLSearchParams(location.search);
-    const ref = queryParams.get("ref");
-
     // -----------------------------
     // 🔹 STATE MANAGEMENT
     // -----------------------------
@@ -41,16 +38,6 @@
     const [loading, setLoading] = useState(false);
     const [loginWithWhatsapp, setLoginWithWhatsapp] = useState(false);
     const [countryCode, setCountryCode] = useState("+62");
-
-    // -----------------------------
-    // 🔒 CEK AKSES URL
-    // -----------------------------
-    useEffect(() => {
-      if (ref !== "encrypt") {
-        toast.warn("Akses tidak diizinkan", { autoClose: 1800 });
-        setTimeout(() => navigate("/", { replace: true }), 1500);
-      }
-    }, [ref, navigate]);
 
     // -----------------------------
     // ✉️ HANDLE EMAIL SUBMIT
@@ -138,28 +125,6 @@
 
     navigate(`${newPath}${location.search}`, { replace: true });
   };
-
-
-    // -----------------------------
-    // 🔁 REDIRECT SCREEN
-    // -----------------------------
-    if (ref !== "encrypt") {
-      return (
-        <div
-          style={{
-            height: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#333",
-            fontFamily: "sans-serif",
-          }}
-        >
-          <p>Redirecting...</p>
-          <ToastContainer />
-        </div>
-      );
-    }
 
     // -----------------------------
     // 🧩 UI LOGIN PAGE

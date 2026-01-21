@@ -15,7 +15,7 @@ const GoogleCallback = () => {
     const code = params.get("code");
 
     if (!code) {
-      navigate(`${langPrefix}/auth?error=google`, { replace: true });
+      navigate(`${langPrefix}/login`, { replace: true });
       return;
     }
 
@@ -28,10 +28,10 @@ const GoogleCallback = () => {
         Cookies.set("refresh_token", data.refresh_token);
         localStorage.setItem("token", data.merchant_id || data.token);
 
-        navigate(`${langPrefix}/harbour`, { replace: true });
+        navigate(`https://console.cashpay.co.id/${langPrefix}/harbour`, { replace: true });
       })
       .catch(() => {
-        navigate(`${langPrefix}/auth?ref=encrypt`, { replace: true });
+        navigate(`${langPrefix}/login`, { replace: true });
       });
   }, [navigate, langPrefix]);
 

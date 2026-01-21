@@ -1,241 +1,155 @@
 import React, { useState } from "react";
 import "./LandingPageCMS.css";
 
-export default function LandingPageCMS() {
-  const [topbar, setTopbar] = useState({
+export default function BlogCMS() {
+  const [post, setPost] = useState({
     title: "",
-    contact: "",
-    buttons: [""],
+    slug: "",
+    category: "",
+    author: "",
+    status: "draft",
+    excerpt: "",
+    content: "",
+    thumbnail: null,
+    metaTitle: "",
+    metaDescription: "",
   });
 
-  const [header, setHeader] = useState({
-    title: "",
-    subtitle: "",
-    image: null,
-  });
-
-  const [features, setFeatures] = useState([
-    { title: "", desc: "", image: null },
-  ]);
-
-  const [footer, setFooter] = useState({
-    company: "",
-    year: "",
-    social: "",
-  });
-
-  // -----------------------------
-  // HANDLER SECTION
-  // -----------------------------
-  const handleTopbarChange = (e) => {
-    const { name, value } = e.target;
-    setTopbar({ ...topbar, [name]: value });
-  };
-
-  const handleButtonChange = (index, e) => {
-    const newButtons = [...topbar.buttons];
-    newButtons[index] = e.target.value;
-    setTopbar({ ...topbar, buttons: newButtons });
-  };
-
-  const addButton = () =>
-    setTopbar({ ...topbar, buttons: [...topbar.buttons, ""] });
-
-  const removeButton = (index) =>
-    setTopbar({
-      ...topbar,
-      buttons: topbar.buttons.filter((_, i) => i !== index),
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setPost({
+      ...post,
+      [name]: files ? files[0] : value,
     });
-
-  const handleHeaderChange = (e) => {
-    const { name, value, files } = e.target;
-    setHeader({ ...header, [name]: files ? files[0] : value });
   };
 
-  const handleFeatureChange = (index, e) => {
-    const { name, value, files } = e.target;
-    const newFeatures = [...features];
-    newFeatures[index][name] = files ? files[0] : value;
-    setFeatures(newFeatures);
+  const handleSave = () => {
+    const payload = {
+      ...post,
+      thumbnail: post.thumbnail?.name,
+    };
+    console.log("📰 Blog Post Data:", payload);
+    alert("✅ Artikel berhasil disimpan (cek console)");
   };
 
-  const addFeature = () =>
-    setFeatures([...features, { title: "", desc: "", image: null }]);
-
-  const removeFeature = (index) =>
-    setFeatures(features.filter((_, i) => i !== index));
-
-  const handleFooterChange = (e) => {
-    const { name, value } = e.target;
-    setFooter({ ...footer, [name]: value });
-  };
-
-  const handleSaveAll = () => {
-    const payload = { topbar, header, features, footer };
-    console.log("📦 Data CMS:", payload);
-    alert("✅ Data berhasil disimpan! (Cek console)");
-  };
-
-  // -----------------------------
-  // UI SECTION
-  // -----------------------------
   return (
     <div className="cms-container">
-      {/* Topbar */}
+      {/* Basic Info */}
       <section className="cms-section">
-        <h2 className="cms-section-title">🧭 Topbar</h2>
+        <h2 className="cms-section-title">📰 Artikel</h2>
+
         <input
-          type="text"
+          className="cms-input"
           name="title"
-          value={topbar.title}
-          onChange={handleTopbarChange}
-          placeholder="Judul kecil"
-          className="cms-input"
-        />
-        <input
-          type="text"
-          name="contact"
-          value={topbar.contact}
-          onChange={handleTopbarChange}
-          placeholder="Kontak / Email"
-          className="cms-input"
+          value={post.title}
+          onChange={handleChange}
+          placeholder="Judul Artikel"
         />
 
-        <h4 className="cms-subtitle">Teks Tombol</h4>
-        {topbar.buttons.map((btn, i) => (
-          <div key={i} className="cms-feature-card">
-            <input
-              type="text"
-              value={btn}
-              onChange={(e) => handleButtonChange(i, e)}
-              placeholder={`Teks tombol ${i + 1}`}
-              className="cms-input"
-            />
-            <button
-              type="button"
-              onClick={() => removeButton(i)}
-              className="cms-btn-delete"
-            >
-              ✖
-            </button>
-          </div>
-        ))}
-        <button onClick={addButton} className="cms-btn-add">
-          ➕ Tambah Teks Tombol
-        </button>
+        <input
+          className="cms-input"
+          name="slug"
+          value={post.slug}
+          onChange={handleChange}
+          placeholder="Slug (contoh: berita-ekonomi-2025)"
+        />
+
+        <select
+          className="cms-select"
+          name="category"
+          value={post.category}
+          onChange={handleChange}
+        >
+          <option value="">Pilih Kategori</option>
+          <option value="news">News</option>
+          <option value="blog">Blog</option>
+          <option value="tech">Tech</option>
+          <option value="business">Business</option>
+        </select>
+
+        <input
+          className="cms-input"
+          name="author"
+          value={post.author}
+          onChange={handleChange}
+          placeholder="Nama Penulis"
+        />
+
+        <select
+          className="cms-select"
+          name="status"
+          value={post.status}
+          onChange={handleChange}
+        >
+          <option value="draft">Draft</option>
+          <option value="publish">Publish</option>
+        </select>
       </section>
 
-      {/* Header */}
+      {/* Content */}
       <section className="cms-section">
-        <h2 className="cms-section-title">🏠 Header</h2>
-        <input
-          type="text"
-          name="title"
-          value={header.title}
-          onChange={handleHeaderChange}
-          placeholder="Judul utama"
-          className="cms-input"
+        <h2 className="cms-section-title">✍️ Konten</h2>
+
+        <textarea
+          className="cms-textarea"
+          name="excerpt"
+          value={post.excerpt}
+          onChange={handleChange}
+          placeholder="Ringkasan singkat (excerpt)"
         />
-        <input
-          type="text"
-          name="subtitle"
-          value={header.subtitle}
-          onChange={handleHeaderChange}
-          placeholder="Subjudul"
-          className="cms-input"
+
+        <textarea
+          className="cms-textarea"
+          name="content"
+          value={post.content}
+          onChange={handleChange}
+          placeholder="Isi artikel lengkap"
         />
+      </section>
+
+      {/* Thumbnail */}
+      <section className="cms-section">
+        <h2 className="cms-section-title">🖼 Thumbnail</h2>
+
         <input
           type="file"
-          name="image"
-          onChange={handleHeaderChange}
+          name="thumbnail"
           className="cms-file"
+          onChange={handleChange}
         />
-        {header.image && (
+
+        {post.thumbnail && (
           <img
-            src={URL.createObjectURL(header.image)}
+            src={URL.createObjectURL(post.thumbnail)}
             alt="preview"
             className="cms-preview"
           />
         )}
       </section>
 
-      {/* Features */}
+      {/* SEO */}
       <section className="cms-section">
-        <h2 className="cms-section-title">⚙️ Fitur</h2>
-        {features.map((feature, i) => (
-          <div key={i} className="cms-feature-card">
-            <input
-              name="title"
-              value={feature.title}
-              onChange={(e) => handleFeatureChange(i, e)}
-              placeholder={`Judul fitur ${i + 1}`}
-              className="cms-input"
-            />
-            <textarea
-              name="desc"
-              value={feature.desc}
-              onChange={(e) => handleFeatureChange(i, e)}
-              placeholder="Deskripsi fitur"
-              className="cms-textarea"
-            ></textarea>
-            <input
-              type="file"
-              name="image"
-              onChange={(e) => handleFeatureChange(i, e)}
-              className="cms-file"
-            />
-            {feature.image && (
-              <img
-                src={URL.createObjectURL(feature.image)}
-                alt="preview"
-                className="cms-preview"
-              />
-            )}
-            <button
-              type="button"
-              onClick={() => removeFeature(i)}
-              className="cms-btn-delete"
-            >
-              ✖ Hapus Fitur
-            </button>
-          </div>
-        ))}
-        <button onClick={addFeature} className="cms-btn-add">
-          ➕ Tambah Fitur
-        </button>
-      </section>
+        <h2 className="cms-section-title">🔍 SEO</h2>
 
-      {/* Footer */}
-      <section className="cms-section">
-        <h2 className="cms-section-title">🦶 Footer</h2>
         <input
-          type="text"
-          name="company"
-          value={footer.company}
-          onChange={handleFooterChange}
-          placeholder="Nama perusahaan"
           className="cms-input"
+          name="metaTitle"
+          value={post.metaTitle}
+          onChange={handleChange}
+          placeholder="Meta Title"
         />
-        <input
-          type="text"
-          name="year"
-          value={footer.year}
-          onChange={handleFooterChange}
-          placeholder="Tahun (misal: 2025)"
-          className="cms-input"
-        />
-        <input
-          type="text"
-          name="social"
-          value={footer.social}
-          onChange={handleFooterChange}
-          placeholder="Link sosial media"
-          className="cms-input"
+
+        <textarea
+          className="cms-textarea"
+          name="metaDescription"
+          value={post.metaDescription}
+          onChange={handleChange}
+          placeholder="Meta Description"
         />
       </section>
 
-      <button onClick={handleSaveAll} className="cms-btn-save">
-        💾 Simpan Semua
+      <button onClick={handleSave} className="cms-btn-save">
+        💾 Simpan Artikel
       </button>
     </div>
   );

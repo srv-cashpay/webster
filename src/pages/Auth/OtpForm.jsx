@@ -96,7 +96,7 @@ if (!token || typeof token !== "string") {
 
 
       toast.success("OTP verified successfully!");
-      setTimeout(() => navigate("/auth?ref=encrypt"), 1500);
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       toast.error(
         err?.response?.data?.message || "Invalid OTP. Try again."

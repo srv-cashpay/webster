@@ -141,7 +141,7 @@ const Signup = () => {
         <p style={{ marginTop: "15px", color: "#333", fontSize: "14px" }}>
           {t.haveAccount}{" "}
           <span
-            onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
+            onClick={() => navigate(`/${language}/login`)}
             style={{
               color: "#2a9d8f",
               fontWeight: "bold",

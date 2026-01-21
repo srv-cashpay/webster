@@ -24,7 +24,7 @@ export default function Pricing({ priceRef, language }) {
           </ul>
           <button
             className="pricing-btn"
-            onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
+            onClick={() => navigate(`/${language}/login`)}
           >
             {language === "id" ? "Mulai Gratis" : "Start Free"}
           </button>
@@ -42,7 +42,7 @@ export default function Pricing({ priceRef, language }) {
           </ul>
           <button
             className="pricing-btn"
-            onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
+            onClick={() => navigate(`/${language}/login`)}
           >
             {language === "id" ? "Pilih Pro" : "Choose Pro"}
           </button>

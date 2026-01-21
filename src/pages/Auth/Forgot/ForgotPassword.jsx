@@ -136,7 +136,7 @@ const ForgotPassword = () => {
 
       <p style={{ marginTop: "20px", color: "#333", fontSize: "14px" }}>
         <span
-          onClick={() => navigate(`/${language}/auth?ref=encrypt`)}
+          onClick={() => navigate(`/${language}/login`)}
           style={{
             color: "#2a9d8f",
             fontWeight: "bold",
