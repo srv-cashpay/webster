@@ -26,9 +26,9 @@ const GoogleCallback = () => {
           { code }
         );
 
-        const data = res.data?.data;
+        const data = res.data.data;
 
-        if (!data?.token) {
+        if (!data.token) {
           throw new Error("Token tidak ditemukan");
         }
 
