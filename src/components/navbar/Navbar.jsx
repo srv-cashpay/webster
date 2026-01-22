@@ -9,9 +9,7 @@ export default function Navbar({
   priceRef,
   t,
 }) {
-  // ===============================
-  // SERVICE LIST (single source)
-  // ===============================
+
   const services = [
     {
       key: "kirim_paket",

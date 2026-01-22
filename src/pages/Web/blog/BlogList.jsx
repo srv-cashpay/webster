@@ -1,120 +1,84 @@
-import React, { useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import "./Blog.css";
-import xl from "../../../../src/assets/xl.png";
-import head from "../../../../src/assets/head.png";
-import text from "../../../locales/text";
 import Navbar from "../../../components/navbar/Navbar";
-
-const blogs = [
-  {
-    id: 1,
-    title: "Cara Top Up Game dengan Mudah",
-    image: xl,
-    excerpt: "Pelajari cara top up game favoritmu dengan cepat dan aman",
-    date: "18 Des 2025",
-  },
-  {
-    id: 2,
-    title: "Keuntungan Pakai CashPay",
-    image: head,
-    excerpt: "Kenapa CashPay jadi pilihan terbaik untuk pembayaran digital",
-    date: "17 Des 2025",
-  },
-  {
-    id: 3,
-    title: "Keuntungan Pakai CashPay",
-    image: head,
-    excerpt: "Kenapa CashPay jadi pilihan terbaik untuk pembayaran digital",
-    date: "17 Des 2025",
-  },
-  {
-    id: 4,
-    title: "Keuntungan Pakai CashPay",
-    image: head,
-    excerpt: "Kenapa CashPay jadi pilihan terbaik untuk pembayaran digital",
-    date: "17 Des 2025",
-  },
-];
+import loginLocales from "../../../locales/loginLocales";
+import { getNewsList } from "../../../services/web/news/newsApi";
+import BlogSidebar from "./BlogSidebar";
 
 export default function BlogList() {
   const navigate = useNavigate();
   const { lang } = useParams();
-  const language = lang === "en" ? "en" : "id";
-  const t = text[language];
+  const location = useLocation();
+
+  const isEnglish = location.pathname.startsWith("/en");
+  const langPrefix = isEnglish ? "/en" : "";
+  const t = loginLocales[isEnglish ? "en" : "id"];
 
   const heroRef = useRef(null);
   const featuresRef = useRef(null);
-  const aboutRef = useRef(null);
-  const priceRef = useRef(null);
+
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getNewsList()
+      .then(setBlogs)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <div className="blog-container">
       <Navbar
         heroRef={heroRef}
         featuresRef={featuresRef}
-        aboutRef={aboutRef}
-        priceRef={priceRef}
-        language={language}
+        language={langPrefix}
         t={t}
       />
 
       <div className="blog-layout">
-        {/* BLOG GRID (2 KARTU) */}
-        <div className="blog-main">
-          <div className="blog-grid">
-            {blogs.map((blog) => (
-              <div
-                key={blog.id}
-                className="blog-card"
-                onClick={() =>
-                  navigate(`/${language}/blog/${blog.id}`)
-                }
-              >
-                <img src={blog.image} alt={blog.title} />
-                <div className="blog-content">
-                  <span className="blog-date">{blog.date}</span>
-                  <h3>{blog.title}</h3>
-                  <p>{blog.excerpt}</p>
+        {/* ===== MAIN GRID ===== */}
+        <main className="blog-main">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <div className="blog-grid">
+              {blogs.map((blog) => (
+                <div
+                  key={blog.slug}
+                  className="blog-card"
+                  onClick={() =>
+                    navigate(`${langPrefix}/blog/${blog.slug}`)
+                  }
+                >
+                  <img
+                    src={
+                      blog.image_url ||
+                      "https://via.placeholder.com/400x240?text=No+Image"
+                    }
+                    alt={blog.title}
+                  />
+
+                  <div className="blog-content">
+                    <span className="blog-date">
+                      {blog.created_at
+                        ? new Date(blog.created_at).toLocaleDateString(
+                            isEnglish ? "en-US" : "id-ID"
+                          )
+                        : ""}
+                    </span>
+                    <h3>{blog.title}</h3>
+                    <p>{blog.excerpt}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          )}
+        </main>
 
-        {/* SIDEBAR */}
-        <aside className="blog-sidebar">
-          <div className="sidebar-section sidebar-search">
-            <h4>Cari Artikel</h4>
-            <input type="text" placeholder="Cari blog..." />
-          </div>
-
-          <div className="sidebar-section sidebar-category">
-            <h4>Kategori</h4>
-            <ul>
-              <li>Top Up Game</li>
-              <li>Pembayaran Digital</li>
-              <li>Promo & Tips</li>
-              <li>Berita Teknologi</li>
-            </ul>
-          </div>
-
-          <div className="sidebar-section">
-            <h4>Artikel Terbaru</h4>
-            {blogs.map((blog) => (
-              <div
-                key={blog.id}
-                className="sidebar-post"
-                onClick={() =>
-                  navigate(`/${language}/blog/${blog.id}`)
-                }
-              >
-                <img src={blog.image} alt={blog.title} />
-                <span>{blog.title}</span>
-              </div>
-            ))}
-          </div>
-        </aside>
+        {/* ===== SIDEBAR ===== */}
+        <BlogSidebar blogs={blogs} />
       </div>
     </div>
   );

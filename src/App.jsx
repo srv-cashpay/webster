@@ -203,7 +203,7 @@ function App() {
       <Route path="/topup/point-blank" element={<Pointblank />} />
       <Route path="/topup/pulsa-telkomsel" element={<Telkomsel />} />
       <Route path="/blog" element={<BlogList />} />
-      <Route path="/blog/:id" element={<BlogDetail />} />
+      <Route path="/blog/:slug" element={<BlogDetail />} />
       <Route path="/payment/:ref" element={<PaymentPage />} />
 
       {/* English routes */}
@@ -224,7 +224,7 @@ function App() {
       <Route path="/en/topup/point-blank" element={<Pointblank />} />
       <Route path="/en/topup/pulsa-telkomsel" element={<Telkomsel />} />
       <Route path="/en/blog" element={<BlogList />} />
-      <Route path="/en/blog/:id" element={<BlogDetail />} />
+      <Route path="/en/blog/:slug" element={<BlogDetail />} />
 
       {/* Auth routes */}
       <Route
