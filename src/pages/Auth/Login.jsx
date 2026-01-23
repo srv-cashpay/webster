@@ -6,6 +6,7 @@
   import "react-toastify/dist/ReactToastify.css";
   // import { useGoogleLogin } from "@react-oauth/google";
   import loginLocales from "../../locales/loginLocales";
+  import TurnstileComponent from "./TurnstileComponent";
 
   import {
     loginUser,
@@ -58,7 +59,10 @@
     // -----------------------------
     const handleLogin = async (e) => {
       e.preventDefault();
-        
+        if (!cfToken) {
+      toast.warn("Harap verifikasi Cloudflare sebelum login");
+      return;
+    }
 
       if (!password.trim()) {
         toast.warn(t.emptyPasswordWarning);
@@ -329,7 +333,11 @@
               </span>
             </div>
           )}
-       
+          {/* Turnstile Verification */}
+          <div style={{ marginBottom: "20px" }}>
+            <TurnstileComponent onVerify={(token) => setCfToken(token)} />
+          </div>
+
           {/* 🔹 Forgot Password */}
           <p
             onClick={() => navigate(`${langPrefix}/forgot-password`)}

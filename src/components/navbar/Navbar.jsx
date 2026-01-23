@@ -69,6 +69,23 @@ export default function Navbar({
     window.location.href = `${consoleUrl}${langPath}/login`;
   };
 
+  const handleLogoClick = () => {
+  // kalau bukan di halaman home → pindah ke home
+  if (location.pathname !== `${langPrefix}/` && location.pathname !== "/") {
+    navigate(`${langPrefix}/`);
+    return;
+  }
+
+  // kalau sudah di home → scroll ke atas / hero
+  if (heroRef?.current) {
+    heroRef.current.scrollIntoView({ behavior: "smooth" });
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  setMenuOpen(false);
+};
+
   // ===============================
   // CLOSE DROPDOWN WHEN CLICK OUTSIDE
   // ===============================
@@ -89,8 +106,7 @@ export default function Navbar({
   // ===============================
   return (
     <nav className="navbar">
-      {/* LOGO */}
-      <div className="logo-wrapper" onClick={() => scrollToSection(heroRef)}>
+      <div className="logo-wrapper" onClick={handleLogoClick}>
         <img
           src="/56x56.png"
           srcSet="/36x36.png 36w, /56x56.png 56w"

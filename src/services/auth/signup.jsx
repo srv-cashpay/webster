@@ -18,7 +18,7 @@ export const resendOtp = (token) => {
 
 // ✅ Verify OTP (kalau backend sudah ada)
 export const verifyOtp = (token, otp) => {
-  return api.post(`/verify?token=${token}`, {
+  return api.post(`/auth/verify?token=${token}`, {
     otp,
   });
 };

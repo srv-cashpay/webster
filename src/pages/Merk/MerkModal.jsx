@@ -11,29 +11,41 @@ const MerkModal = ({ setShowModal, onSuccess }) => {
   });
 
 
-  const handleAddMerk = async () => {
-    if (!newMerk.merk_name) {
-      toast.warning("Harap isi semua field wajib");
+ const handleAddMerk = async () => {
+  if (!newMerk.merk_name) {
+    toast.warning("Harap isi semua field wajib");
+    return;
+  }
+
+  try {
+    const payload = {
+      merk_name: newMerk.merk_name,
+      description: newMerk.description,
+      status: newMerk.status === "active" ? 1 : 2,
+    };
+
+    const res = await createMerk(payload);
+
+    if (res?.status === false) {
+      toast.error(res?.message || res?.meta?.message );
       return;
     }
 
-    try {
-      const payload = {
-        merk_name: newMerk.merk_name,
-        description: newMerk.description,
-        status: newMerk.status === "active" ? 1 : 2,
+    toast.success(res?.message );
+    setShowModal(false);
+    onSuccess?.();
 
-      };
+  } catch (error) {
+    // fallback kalau error dari axios
+    const msg =
+      error?.response?.data?.message ||
+      error?.response?.data?.meta?.message ||
+      "Terjadi kesalahan";
 
-      await createMerk(payload);
-      toast.success("success!");
-      setShowModal(false);
-      if (onSuccess) onSuccess();
-    } catch (error) {
-      console.error("failed:", error);
-      toast.error("failed!");
-    }
-  };
+    toast.error(msg);
+  }
+};
+
 
   return (
     <div style={modalOverlay}>
