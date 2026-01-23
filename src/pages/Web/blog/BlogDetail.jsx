@@ -169,10 +169,9 @@ export default function BlogDetail() {
             className="blog-detail-img"
           />
 
-          <div
-            className="blog-body"
-            dangerouslySetInnerHTML={{ __html: blog.body }}
-          />
+          <div className="blog-body">
+            {blog.body}
+          </div>
 
           {/* =======================
               COMMENTS LIST

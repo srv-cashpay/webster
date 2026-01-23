@@ -1,40 +1,47 @@
-import React, { useState } from "react";
-import "./LandingPageCMS.css";
+import React, { useState } from "react"
+import { createNews } from "../../services/web/news/newsApi"
+import "./LandingPageCMS.css"
 
 export default function BlogCMS() {
   const [post, setPost] = useState({
+    tag: "",
     title: "",
-    slug: "",
-    category: "",
-    author: "",
-    status: "draft",
+    body: "",
     excerpt: "",
-    content: "",
-    thumbnail: null,
-  });
+    status: "published",
+    image: null,
+  })
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files } = e.target
     setPost({
       ...post,
       [name]: files ? files[0] : value,
-    });
-  };
+    })
+  }
 
-  const handleSave = () => {
-    const payload = {
-      ...post,
-      thumbnail: post.thumbnail?.name,
-    };
-    console.log("📰 Blog Post Data:", payload);
-    alert("✅ Artikel berhasil disimpan (cek console)");
-  };
+  const handleSave = async () => {
+  try {
+    await createNews(post);
+    alert("✅ Artikel berhasil disimpan");
+
+    setPost({
+      tag: "",
+      title: "",
+      body: "",
+      excerpt: "",
+      status: "published",
+      image: null,
+    });
+  } catch (err) {
+    alert("❌ Gagal menyimpan artikel");
+  }
+};
 
   return (
     <div className="cms-container">
-      {/* Basic Info */}
       <section className="cms-section">
-        <h2 className="cms-section-title">📰 Artikel</h2>
+        <h2>📰 Artikel</h2>
 
         <input
           className="cms-input"
@@ -44,18 +51,13 @@ export default function BlogCMS() {
           placeholder="Judul Artikel"
         />
 
-        <select
-          className="cms-select"
-          name="category"
-          value={post.category}
+        <input
+          className="cms-input"
+          name="tag"
+          value={post.tag}
           onChange={handleChange}
-        >
-          <option value="">Pilih Kategori</option>
-          <option value="news">News</option>
-          <option value="blog">Blog</option>
-          <option value="tech">Tech</option>
-          <option value="business">Business</option>
-        </select>
+          placeholder="Tag"
+        />
 
         <select
           className="cms-select"
@@ -63,46 +65,44 @@ export default function BlogCMS() {
           value={post.status}
           onChange={handleChange}
         >
+          <option value="published">Published</option>
           <option value="draft">Draft</option>
-          <option value="publisher">Publish</option>
         </select>
       </section>
 
-      {/* Content */}
       <section className="cms-section">
-        <h2 className="cms-section-title">✍️ Konten</h2>
+        <h2>✍️ Konten</h2>
 
         <textarea
           className="cms-textarea"
           name="excerpt"
           value={post.excerpt}
           onChange={handleChange}
-          placeholder="Ringkasan singkat (excerpt)"
+          placeholder="Excerpt"
         />
 
         <textarea
           className="cms-textarea"
-          name="content"
-          value={post.content}
+          name="body"
+          value={post.body}
           onChange={handleChange}
-          placeholder="Isi artikel lengkap"
+          placeholder="Body berita"
         />
       </section>
 
-      {/* Thumbnail */}
       <section className="cms-section">
-        <h2 className="cms-section-title">🖼 Thumbnail</h2>
+        <h2>🖼 Thumbnail</h2>
 
         <input
           type="file"
-          name="thumbnail"
-          className="cms-file"
+          name="image"
+          accept="image/*"
           onChange={handleChange}
         />
 
-        {post.thumbnail && (
+        {post.image && (
           <img
-            src={URL.createObjectURL(post.thumbnail)}
+            src={URL.createObjectURL(post.image)}
             alt="preview"
             className="cms-preview"
           />
@@ -113,5 +113,5 @@ export default function BlogCMS() {
         💾 Simpan Artikel
       </button>
     </div>
-  );
+  )
 }

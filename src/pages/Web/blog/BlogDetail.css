@@ -50,6 +50,11 @@
   font-size: 1.05rem;
   line-height: 1.8;
   color: #333;
+  white-space: pre-line;
+}
+
+.blog-body p {
+  margin-bottom: 16px;
 }
 
 .blog-body img {
