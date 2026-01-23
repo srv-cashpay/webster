@@ -11,18 +11,56 @@ export default function BlogDetail() {
   const location = useLocation();
   const isEnglish = location.pathname.startsWith("/en");
 
+  /* =======================
+     TRANSLATION
+  ======================= */
   const t = isEnglish
-    ? { comment: "Comments" }
-    : { comment: "Komentar" };
+    ? {
+        comment: "Comments",
+        leaveComment: "Leave a Comment",
+        name: "Your name",
+        email: "Your email",
+        commentPlaceholder: "Write your comment",
+        send: "Send Comment",
+        sending: "Sending...",
+      }
+    : {
+        comment: "Komentar",
+        leaveComment: "Tulis Komentar",
+        name: "Nama",
+        email: "Email",
+        commentPlaceholder: "Tulis komentar",
+        send: "Kirim Komentar",
+        sending: "Mengirim...",
+      };
 
+  /* =======================
+     REFS (Navbar)
+  ======================= */
   const heroRef = useRef(null);
   const featuresRef = useRef(null);
   const aboutRef = useRef(null);
   const priceRef = useRef(null);
 
+  /* =======================
+     BLOG STATE
+  ======================= */
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  /* =======================
+     COMMENT FORM STATE
+  ======================= */
+  const [commentForm, setCommentForm] = useState({
+    name: "",
+    email: "",
+    comment: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+
+  /* =======================
+     FETCH BLOG DETAIL
+  ======================= */
   useEffect(() => {
     fetch(`${API_URL}/${slug}`)
       .then((res) => res.json())
@@ -32,6 +70,66 @@ export default function BlogDetail() {
       .finally(() => setLoading(false));
   }, [slug]);
 
+  /* =======================
+     HANDLERS
+  ======================= */
+  const handleChange = (e) => {
+    setCommentForm({
+      ...commentForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!commentForm.name || !commentForm.email || !commentForm.comment) {
+    alert(isEnglish ? "Please fill all fields" : "Semua kolom wajib diisi");
+    return;
+  }
+
+  try {
+    setSubmitting(true);
+
+    const res = await fetch(`${API_URL}/${slug}/comment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(commentForm),
+    });
+
+    if (!res.ok) throw new Error("Failed");
+
+    // 🔥 COMMENT BARU (optimistic UI)
+    const newComment = {
+      Name: commentForm.name,
+      Comment: commentForm.comment,
+      Email: commentForm.email,
+      CreatedAt: new Date().toISOString(),
+    };
+
+    setBlog((prev) => ({
+      ...prev,
+      Comments: [newComment, ...(prev.Comments || [])],
+    }));
+
+    setCommentForm({
+      name: "",
+      email: "",
+      comment: "",
+    });
+  } catch (err) {
+    alert(isEnglish ? "Failed to send comment" : "Gagal mengirim komentar");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+
+  /* =======================
+     UI STATES
+  ======================= */
   if (loading) return <p style={{ padding: 40 }}>Loading...</p>;
   if (!blog) return <p style={{ padding: 40 }}>Blog tidak ditemukan</p>;
 
@@ -58,7 +156,7 @@ export default function BlogDetail() {
                 { day: "numeric", month: "long", year: "numeric" }
               )}
             </span>
-            {blog.created_by && <span>• {blog.created_by}</span>}
+            {blog.created_by && <span> • {blog.created_by}</span>}
           </div>
 
           <img
@@ -76,7 +174,9 @@ export default function BlogDetail() {
             dangerouslySetInnerHTML={{ __html: blog.body }}
           />
 
-          {/* COMMENTS */}
+          {/* =======================
+              COMMENTS LIST
+          ======================= */}
           {blog.Comments?.length > 0 && (
             <div className="blog-comments">
               <h3>{t.comment}</h3>
@@ -86,7 +186,9 @@ export default function BlogDetail() {
                   <div className="comment-header">
                     <strong>{c.Name}</strong>
                     <span>
-                      {new Date(c.CreatedAt).toLocaleDateString("id-ID")}
+                      {new Date(c.CreatedAt).toLocaleDateString(
+                        isEnglish ? "en-US" : "id-ID"
+                      )}
                     </span>
                   </div>
                   <p>{c.Comment}</p>
@@ -94,6 +196,46 @@ export default function BlogDetail() {
               ))}
             </div>
           )}
+
+          {/* =======================
+              COMMENT FORM
+          ======================= */}
+          <div className="blog-comment-form">
+            <h3>{t.leaveComment}</h3>
+
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                name="name"
+                placeholder={t.name}
+                value={commentForm.name}
+                onChange={handleChange}
+                required
+              />
+
+              <input
+                type="email"
+                name="email"
+                placeholder={t.email}
+                value={commentForm.email}
+                onChange={handleChange}
+                required
+              />
+
+              <textarea
+                name="comment"
+                placeholder={t.commentPlaceholder}
+                value={commentForm.comment}
+                onChange={handleChange}
+                rows="4"
+                required
+              />
+
+              <button type="submit" disabled={submitting}>
+                {submitting ? t.sending : t.send}
+              </button>
+            </form>
+          </div>
         </article>
 
         {/* SIDEBAR */}

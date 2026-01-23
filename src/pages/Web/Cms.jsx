@@ -11,8 +11,6 @@ export default function BlogCMS() {
     excerpt: "",
     content: "",
     thumbnail: null,
-    metaTitle: "",
-    metaDescription: "",
   });
 
   const handleChange = (e) => {
@@ -46,14 +44,6 @@ export default function BlogCMS() {
           placeholder="Judul Artikel"
         />
 
-        <input
-          className="cms-input"
-          name="slug"
-          value={post.slug}
-          onChange={handleChange}
-          placeholder="Slug (contoh: berita-ekonomi-2025)"
-        />
-
         <select
           className="cms-select"
           name="category"
@@ -67,14 +57,6 @@ export default function BlogCMS() {
           <option value="business">Business</option>
         </select>
 
-        <input
-          className="cms-input"
-          name="author"
-          value={post.author}
-          onChange={handleChange}
-          placeholder="Nama Penulis"
-        />
-
         <select
           className="cms-select"
           name="status"
@@ -82,7 +64,7 @@ export default function BlogCMS() {
           onChange={handleChange}
         >
           <option value="draft">Draft</option>
-          <option value="publish">Publish</option>
+          <option value="publisher">Publish</option>
         </select>
       </section>
 
@@ -125,27 +107,6 @@ export default function BlogCMS() {
             className="cms-preview"
           />
         )}
-      </section>
-
-      {/* SEO */}
-      <section className="cms-section">
-        <h2 className="cms-section-title">🔍 SEO</h2>
-
-        <input
-          className="cms-input"
-          name="metaTitle"
-          value={post.metaTitle}
-          onChange={handleChange}
-          placeholder="Meta Title"
-        />
-
-        <textarea
-          className="cms-textarea"
-          name="metaDescription"
-          value={post.metaDescription}
-          onChange={handleChange}
-          placeholder="Meta Description"
-        />
       </section>
 
       <button onClick={handleSave} className="cms-btn-save">
