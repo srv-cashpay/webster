@@ -3,36 +3,17 @@ import { useParams, useLocation } from "react-router-dom";
 import "./BlogDetail.css";
 import Navbar from "../../../components/navbar/Navbar";
 import BlogSidebar from "./BlogSidebar";
+import text from "../../../locales/text";
 
 const API_URL = "https://api.cashpay.co.id/web/news";
 
 export default function BlogDetail() {
   const { slug } = useParams();
   const location = useLocation();
+  
   const isEnglish = location.pathname.startsWith("/en");
-
-  /* =======================
-     TRANSLATION
-  ======================= */
-  const t = isEnglish
-    ? {
-        comment: "Comments",
-        leaveComment: "Leave a Comment",
-        name: "Your name",
-        email: "Your email",
-        commentPlaceholder: "Write your comment",
-        send: "Send Comment",
-        sending: "Sending...",
-      }
-    : {
-        comment: "Komentar",
-        leaveComment: "Tulis Komentar",
-        name: "Nama",
-        email: "Email",
-        commentPlaceholder: "Tulis komentar",
-        send: "Kirim Komentar",
-        sending: "Mengirim...",
-      };
+  const langPrefix = isEnglish ? "/en" : "";
+  const t = text[isEnglish ? "en" : "id"];
 
   /* =======================
      REFS (Navbar)

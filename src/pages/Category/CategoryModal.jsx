@@ -11,29 +11,42 @@ const CategoryModal = ({ setShowModal, onSuccess }) => {
   });
 
 
-  const handleAddCategory = async () => {
-    if (!newCategory.category_name) {
-      toast.warning("Harap isi semua field wajib");
+const handleAddCategory = async () => {
+  if (!newCategory.category_name) {
+    toast.warning("Harap isi semua field wajib");
+    return;
+  }
+
+  try {
+    const payload = {
+      category_name: newCategory.category_name,
+      description: newCategory.description,
+      status: newCategory.status === "active" ? 1 : 2,
+    };
+
+    const res = await createCategory(payload);
+
+    // ❗ cek response backend
+    if (res?.status === false) {
+      toast.error(res?.message || res?.meta?.message);
       return;
     }
 
-    try {
-      const payload = {
-        category_name: newCategory.category_name,
-        description: newCategory.description,
-        status: newCategory.status === "active" ? 1 : 2,
+    toast.success(res?.message || "Kategori berhasil ditambahkan");
+    setShowModal(false);
+    onSuccess?.();
 
-      };
+  } catch (error) {
+    const msg =
+      error?.response?.data?.message ||
+      error?.response?.data?.meta?.message ||
+      error?.message ||
+      "Terjadi kesalahan";
 
-      await createCategory(payload);
-      toast.success("success!");
-      setShowModal(false);
-      if (onSuccess) onSuccess();
-    } catch (error) {
-      console.error("failed:", error);
-      toast.error("failed!");
-    }
-  };
+    toast.error(msg);
+  }
+};
+
 
   return (
     <div style={modalOverlay}>

@@ -11,29 +11,43 @@ const DiscountModal = ({ setShowModal, onSuccess }) => {
   });
 
 
-  const handleAddDiscount = async () => {
-    if (!newDiscount.discount_name) {
-      toast.warning("Harap isi semua field wajib");
+const handleAddDiscount = async () => {
+  if (!newDiscount.discount_name) {
+    toast.warning("Harap isi semua field wajib");
+    return;
+  }
+
+  try {
+    const payload = {
+      discount_name: newDiscount.discount_name,
+      description: newDiscount.description,
+      status: newDiscount.status === "active" ? 1 : 2,
+    };
+
+    const res = await createDiscount(payload);
+
+    // ❗ response backend
+    if (res?.status === false) {
+      toast.error(
+        res?.message || res?.meta?.message );
       return;
     }
 
-    try {
-      const payload = {
-        discount_name: newDiscount.discount_name,
-        description: newDiscount.description,
-        status: newDiscount.status === "active" ? 1 : 2,
+    toast.success(res?.message );
+    setShowModal(false);
+    onSuccess?.();
 
-      };
+  } catch (error) {
+    const msg =
+      error?.response?.data?.message ||
+      error?.response?.data?.meta?.message ||
+      error?.message ||
+      "Terjadi kesalahan";
 
-      await createDiscount(payload);
-      toast.success("success!");
-      setShowModal(false);
-      if (onSuccess) onSuccess();
-    } catch (error) {
-      console.error("failed:", error);
-      toast.error("failed!");
-    }
-  };
+    toast.error(msg);
+  }
+};
+
 
   return (
     <div style={modalOverlay}>

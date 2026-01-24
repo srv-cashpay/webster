@@ -1,5 +1,12 @@
 const text = {
   en: {
+    comment: "Comments",
+    leaveComment: "Leave a Comment",
+    name: "Your name",
+    email: "Your email",
+    commentPlaceholder: "Write your comment",
+    send: "Send Comment",
+    sending: "Sending...",
     features: "Features",
     service: "Service",
     about: "About",
@@ -116,7 +123,13 @@ faqQ4: "Bagaimana cara menghubungi support?",
 faqA4: "Anda dapat menghubungi kami melalui chat atau halaman kontak kapan saja.",
 faqQ5: "Kenapa status pengiriman belum update?",
 faqA5: "Status pengiriman mungkin belum update karena data dari ekspedisi belum tersedia atau sedang diproses.",
-
+comment: "Komentar",
+        leaveComment: "Tulis Komentar",
+        name: "Nama",
+        email: "Email",
+        commentPlaceholder: "Tulis komentar",
+        send: "Kirim Komentar",
+        sending: "Mengirim...",
   },
 };
 

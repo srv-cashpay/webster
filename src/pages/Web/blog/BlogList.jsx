@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import "./Blog.css";
 import Navbar from "../../../components/navbar/Navbar";
-import loginLocales from "../../../locales/loginLocales";
+import loginLocales from "../../../locales/text";
 import { getNewsList } from "../../../services/web/news/newsApi";
 import BlogSidebar from "./BlogSidebar";
 

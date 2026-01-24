@@ -77,7 +77,7 @@ const location = useLocation();
         { label: "E-Wallet", to: `${basePath}/transaction-methode/ewallet`, icon: <FaPercent /> },
   ],
 },
-    { label: "POS", to: `${basePath}/pos`, icon: <FaCashRegister /> },
+    // { label: "POS", to: `${basePath}/pos`, icon: <FaCashRegister /> },
     { label: "Customers", to: `${basePath}/customers`, icon: <FaUsers /> },
     { label: "Reports", to: `${basePath}/reports`, icon: <FaChartLine /> },
     { label: "Finance", to: `${basePath}/finance`, icon: <FaMoneyBillWave /> },
@@ -274,6 +274,7 @@ const renderMenu = (items) =>
             margin: 0,
             fontSize: collapsed ? "11px" : "14px",
             transition: "font-size 0.3s ease",
+            paddingBottom: "50px",
           }}
         >
           {renderMenu(staticMenuItems)}
