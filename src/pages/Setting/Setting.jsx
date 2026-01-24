@@ -28,10 +28,11 @@ const Setting = ({ onClose }) => {
   });
 
   const menuItems = [
-    { key: "personalization", label: "Personalization" },
+    { key: "account", label: "Account" },
+    { key: "merchant", label: "Merchant" },
+    { key: "rekeningbank", label: "Rekening Bank" },
     { key: "notifications", label: "Notifications" },
     { key: "security", label: "Security" },
-    { key: "merchant", label: "Merchant" },
   ];
 
 const handleLogout = async () => {
