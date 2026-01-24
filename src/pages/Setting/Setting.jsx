@@ -45,8 +45,8 @@ const handleLogout = async () => {
     );
 
     // 🔥 Hapus cookie manual karena bisa diakses JS
-    Cookies.remove("token", { domain: ".cashpay.co.id", path: "/" });
-    Cookies.remove("refresh_token", { domain: ".cashpay.co.id", path: "/" });
+    Cookies.remove("refresh_token");
+    Cookies.remove("token");
     localStorage.removeItem("token", { domain: ".cashpay.co.id", path: "/" });
     toast.success("Logout successful", { autoClose: 1000 });
 
