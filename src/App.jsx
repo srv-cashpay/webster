@@ -41,7 +41,7 @@ import Reservation from "./pages/Reservation/TableReservation";
 import OrderWeb from "./pages/OrderWeb/List";
 import Subscribe from "./pages/Subscribe/SubscribeModal";
 import Hardware from "./pages/Web/hardware/Hardware";
-import MerchantPage from "./pages/Web/MerchantPage/MerchantPage";
+import MerchantPage from "./pages/Web/merchant/MerchantPage";
 import TopupML from "./pages/Web/topup/game/ml/TopupML";
 import Pubg from "./pages/Web/topup/game/pubg/Pubg";
 import Pointblank from "./pages/Web/topup/game/pointblank/Pointblank";
