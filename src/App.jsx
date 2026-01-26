@@ -41,6 +41,7 @@ import Reservation from "./pages/Reservation/TableReservation";
 import OrderWeb from "./pages/OrderWeb/List";
 import Subscribe from "./pages/Subscribe/SubscribeModal";
 import Hardware from "./pages/Web/hardware/Hardware";
+import MerchantPage from "./pages/Web/MerchantPage/MerchantPage";
 import TopupML from "./pages/Web/topup/game/ml/TopupML";
 import Pubg from "./pages/Web/topup/game/pubg/Pubg";
 import Pointblank from "./pages/Web/topup/game/pointblank/Pointblank";
@@ -205,6 +206,7 @@ function App() {
       <Route path="/blog" element={<BlogList />} />
       <Route path="/blog/:slug" element={<BlogDetail />} />
       <Route path="/payment/:ref" element={<PaymentPage />} />
+      <Route path="/:merchant_slug" element={<MerchantPage />} />
 
       {/* English routes */}
       <Route path="/en" element={<LandingPage />} />
@@ -225,6 +227,7 @@ function App() {
       <Route path="/en/topup/pulsa-telkomsel" element={<Telkomsel />} />
       <Route path="/en/blog" element={<BlogList />} />
       <Route path="/en/blog/:slug" element={<BlogDetail />} />
+      <Route path="/en/:merchant_slug" element={<MerchantPage />} />
 
       {/* Auth routes */}
       <Route
