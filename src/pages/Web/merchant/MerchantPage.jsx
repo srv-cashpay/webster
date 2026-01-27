@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./MerchantPage.css";
 
-const WHATSAPP_NUMBER = "6281234567890"; // ganti nomor merchant
+const WHATSAPP_NUMBER = "081952944296"; // ganti nomor merchant
 
 export default function MerchantSlugPage() {
   const { merchant_slug } = useParams();
@@ -57,27 +57,25 @@ export default function MerchantSlugPage() {
     0
   );
 
-  const orderViaWhatsapp = () => {
-    const message = encodeURIComponent(
-      `Halo, saya mau pesan produk berikut:%0A%0A` +
-        selectedProducts
-          .map(
-            (p) =>
-              `- ${p.product_name}%0A  Qty: ${p.qty}%0A  Harga: Rp ${p.price.toLocaleString(
-                "id-ID"
-              )}%0A  Subtotal: Rp ${(p.price * p.qty).toLocaleString(
-                "id-ID"
-              )}`
-          )
-          .join("%0A%0A") +
-        `%0A%0ATotal: Rp ${totalPrice.toLocaleString("id-ID")}`
-    );
+const orderViaWhatsapp = () => {
+  let message = "Halo, saya mau pesan produk berikut:\n\n";
 
-    window.open(
-      `https://wa.me/$081952944296?text=${message}`,
-      "_blank"
-    );
-  };
+  selectedProducts.forEach((p, i) => {
+    message += `${i + 1}. ${p.product_name}\n`;
+    message += `   Qty: ${p.qty}\n`;
+    message += `   Harga: Rp ${p.price.toLocaleString("id-ID")}\n`;
+    message += `   Subtotal: Rp ${(p.price * p.qty).toLocaleString("id-ID")}\n\n`;
+  });
+
+  message += `Total: Rp ${totalPrice.toLocaleString("id-ID")}`;
+
+  const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    message
+  )}`;
+
+  window.open(waUrl, "_blank");
+};
+
 
   if (loading) return <p className="loading">Loading...</p>;
 
