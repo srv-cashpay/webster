@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./MerchantPage.css";
 
-const WHATSAPP_NUMBER = "081952944296"; // ganti nomor merchant
+const WHATSAPP_NUMBER = "6281952944296"; // ganti nomor merchant
 
 export default function MerchantSlugPage() {
   const { merchant_slug } = useParams();
