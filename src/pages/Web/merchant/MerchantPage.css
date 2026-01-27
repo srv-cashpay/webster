@@ -8,6 +8,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 /* ===== PAGE ===== */
@@ -61,6 +62,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 16px;
+  padding-bottom: 90px; /* ⬅️ ruang untuk WA bar */
   flex: 1;
 }
 
@@ -84,6 +86,12 @@ body {
   border: 1px solid #e5e5e5;
   border-radius: 10px;
   overflow: hidden;
+  transition: 0.2s ease;
+}
+
+.merchant-page .card.selected {
+  border-color: #1d4ed8;
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.15);
 }
 
 /* ===== IMAGE ===== */
@@ -101,7 +109,7 @@ body {
   gap: 6px;
 }
 
-/* ===== TEXT (INI YANG SEBELUMNYA GAK KEPAKE) ===== */
+/* ===== TEXT ===== */
 .merchant-page .product-name {
   font-size: 14px;
   font-weight: 600;
@@ -126,10 +134,49 @@ body {
   color: #6b7280;
 }
 
+/* ===== CHECKBOX ===== */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.checkbox input {
+  cursor: pointer;
+}
+
+/* ===== QTY ===== */
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.qty button {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.qty span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
 /* ===== PAGINATION ===== */
 .merchant-page .pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 12px;
   margin: 32px 0;
 }
@@ -140,8 +187,52 @@ body {
   background: #1d4ed8;
   color: #fff;
   border-radius: 6px;
+  cursor: pointer;
 }
 
 .merchant-page .pagination button:disabled {
   background: #ccc;
+  cursor: not-allowed;
+}
+
+/* ===== WHATSAPP BAR ===== */
+.wa-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  padding: 14px 16px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  z-index: 50;
+}
+
+
+.wa-button {
+  background: #25d366;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wa-button:hover {
+  background: #1ebe5d;
+}
+
+/* ===== LOADING ===== */
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 16px;
+  color: #6b7280;
 }
