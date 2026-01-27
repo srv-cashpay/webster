@@ -80,7 +80,7 @@ function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar, setSideb
       >
         <Routes>
           {/* Default Indonesia routes */}
-          <Route path="/harbour" element={<Dashboard />} />
+          <Route path="/d/harbour" element={<Dashboard />} />
           <Route path="/setting" element={<Setting />} />
           <Route path="/search" element={<Search />} />
           <Route path="/user-merchant/list" element={<Users />} />
@@ -104,7 +104,7 @@ function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar, setSideb
           {/* ... semua route lainnya tanpa /id */}
 
           {/* English routes */}
-          <Route path="/en/harbour" element={<Dashboard />} />
+          <Route path="/en/d/harbour" element={<Dashboard />} />
           <Route path="/en/setting" element={<Setting />} />
           <Route path="/en/search" element={<Search />} />
           <Route path="/en/user-merchant/list" element={<Users />} />
@@ -128,7 +128,7 @@ function ProtectedLayout({ onLogout, sidebarCollapsed, onToggleSidebar, setSideb
           {/* ... semua route English dengan /en */}
 
           {/* Redirect default root */}
-          <Route path="/" element={<Navigate to="/harbour" replace />} />
+          <Route path="/" element={<Navigate to="/d/harbour" replace />} />
         </Routes>
       </div>
     </div>
@@ -177,7 +177,7 @@ function App() {
         path="/"
         element={
           token ? (
-            <Navigate to="/harbour" replace />
+            <Navigate to="/d/harbour" replace />
           ) : (
             <LandingPage />
           )
@@ -232,17 +232,17 @@ function App() {
       {/* Auth routes */}
       <Route
         path="/login"
-        element={token ? <Navigate to="/harbour" replace /> : <Login onLogin={handleLoginSuccess} />}
+        element={token ? <Navigate to="/d/harbour" replace /> : <Login onLogin={handleLoginSuccess} />}
       />
       <Route
     path="/en/login"
     element={
-      token ? <Navigate to="/en/harbour" replace /> : <Login onLogin={handleLoginSuccess} />
+      token ? <Navigate to="/end/d/harbour" replace /> : <Login onLogin={handleLoginSuccess} />
     }
   />
       <Route
         path="/signup"
-        element={token ? <Navigate to="/harbour" replace /> : <Signup />}
+        element={token ? <Navigate to="/d/harbour" replace /> : <Signup />}
       />
       <Route
         path="/en/signup"

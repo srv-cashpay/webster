@@ -38,7 +38,7 @@ const GoogleCallback = () => {
           sameSite: "None",
         });
 
-        window.location.replace("https://console.cashpay.co.id/harbour");
+        window.location.replace("https://console.cashpay.co.id/d/harbour");
       } catch (err) {
         console.error(err);
         window.location.replace("/login");
